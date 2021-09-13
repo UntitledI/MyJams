@@ -16,7 +16,7 @@ export default function About() {
             </div>
         </div>
         <div className={styles.cards}>
-            <Link href='/'>
+            <Link href='/about/anthony'>
                 <a className={styles.card}>
                     <h3>Anthony Joshua Hizon</h3>
                 </a>
