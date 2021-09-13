@@ -13,21 +13,10 @@ export default function Simon(){
                 <h1>Simon Wu</h1>
             </div>
             <div>
-                <div className={styles.photoContainer}>
-                    <div className={styles.cropped}>
-                        <Image src="/about/stephen/stephen.jpg" width={240} height={320} priority/>
-                    </div>
-                </div>
                 <h2>Github Master</h2>
                 <p>I am a senior at SFSU majoring in Computer Science.</p>
-                <div className={styles.logos}>
-                    <div className={styles.logo}>
-                        <Link href="https://github.com/swu465">
-                            <a>
-                                <Image src="/logos/github.png" width={64} height={64}/>
-                            </a>
-                        </Link>
-                    </div>
+                <div className={styles.photoContainer}>
+                        <Image src="/about/simon/thisisfine.jpg" width={250} height={250} priority/>
                 </div>
             </div>
         </>
