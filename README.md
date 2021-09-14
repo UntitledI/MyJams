@@ -22,8 +22,8 @@
 | Stephen Kelvin Justo      |sjusto@mail.sfsu.edu|     Switch24-7  |
 | Dimitri Rodriquez      |drodriguez@mail.sfsu.edu|UntitledI|
 | Anthony Joshua Hizon     |      ahizon@mail.sfsu.edu         |        AnthonyJHizon         |
-| member4      |               |                 |
-| member5      |               |                 |
+| Cameron Paczek      |        cpaczek@mail.sfsu.edu       |        CPaczek         |
+| Nathaniel Ray Duya      |       nduya@mail.sfsu.edu        |         NRDuya        |
 | Simon Wu      |      swu21@mail.sfsu.edu         |     swu465            |
 
 ## NO code needs to be stored in the root of your repository. You may rename the application folder if you like to your team's application name. But all source code related to your team's application should be stored inside the application folder.
