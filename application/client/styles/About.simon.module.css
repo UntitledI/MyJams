@@ -1,0 +1,23 @@
+.header{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-bottom: 0.15rem solid black;
+}
+.h1{
+    font-size: medium;
+}
+.h2{
+    text-align: center;
+}
+.cropped{
+    overflow: hidden;
+    width:150px;
+    border-radius: 50%;
+    height: 150px;
+    padding: 0px 0px 0px 0px;
+    position: center
+}
