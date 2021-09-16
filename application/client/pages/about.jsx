@@ -21,7 +21,7 @@ export default function About() {
                     <h3>Anthony Joshua Hizon</h3>
                 </a>
             </Link>
-            <Link href='/'>
+            <Link href='/about/cameron'>
                 <a className={styles.card}>
                     <h3>Cameron Paczek</h3>
                 </a>
@@ -45,7 +45,7 @@ export default function About() {
                 <a className={styles.card}>
                     <h3>Stephen Kelvin Justo</h3>
                 </a>
-            </Link> 
+            </Link>
         </div>
     </>
   )
