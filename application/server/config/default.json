@@ -11,7 +11,8 @@
       "redirect": "/",
       "spotify": {
         "key": "SPOTIFY_CLIENT_ID",
-        "secret": "SPOTIFY_CLIENT_SECRET"
+        "secret": "SPOTIFY_CLIENT_SECRET",
+         "scope": ["user-read-email"]
       }
 
     },

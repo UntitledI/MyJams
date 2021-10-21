@@ -2,6 +2,8 @@
 const { Spotify } = require('./spotify.class');
 const hooks = require('./spotify.hooks');
 
+const { Me } = require('./me.class');
+
 module.exports = function (app) {
   const options = {
     paginate: app.get('paginate')
@@ -12,6 +14,10 @@ module.exports = function (app) {
 
   // Get our initialized service so that we can register hooks
   const service = app.service('spotify');
+
+  // Initialize me   
+app.use('/Me', new Me(options, app));
+
 
   service.hooks(hooks);
 };
