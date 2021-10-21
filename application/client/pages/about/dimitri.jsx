@@ -18,7 +18,7 @@ export default function Dimitri(){
             </div>
 
             <div className={styles.photoContainer}>
-                        <Image src="/about/dimitri/dimitri.png" width={640} height={420}/>
+                        <Image src="/about/dimitri/dimitri.jpg" width={640} height={420}/>
             </div>
             <p>SFSU senior studying computer science</p>
             <div>
