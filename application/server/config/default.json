@@ -7,6 +7,15 @@
     "max": 50
   },
   "authentication": {
+    "oauth": {
+      "redirect": "/",
+      "spotify": {
+        "key": "SPOTIFY_CLIENT_ID",
+        "secret": "SPOTIFY_CLIENT_SECRET",
+         "scope": ["user-read-email"]
+      }
+
+    },
     "entity": "spotify",
     "service": "spotify",
     "secret": "GdxTTPdL8TBJ54x/UTd/O8n8LZ0=",
@@ -30,3 +39,4 @@
   },
   "mongodb": "mongodb://localhost:27017/server"
 }
+
