@@ -43,3 +43,15 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: executing remote ssh commands using key
+          uses: appleboy/ssh-action@master
+          with:
+            host: 18.190.25.166
+            username: ubuntu
+            key: ${{ secrets.SSH_KEY }}
+            port: 22
+            script: |
+              cd csc648
+              docker-compose pull
+              docker-compose down
+              docker-compose up -d
