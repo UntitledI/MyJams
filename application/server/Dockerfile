@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 3030
 
-CMD ["/bin/ash", "-c", "sleep", "5000", "&&", "npm", "run", "start"]
+CMD ["npm", "run", "start"]
