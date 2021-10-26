@@ -1,6 +1,7 @@
 <template>
   <div>
-    <a href="" />
+    <h1>Tinder for Music</h1>
+    <a href="http://localhost:3030/oauth/spotify"> Login </a>
   </div>
 </template>
 
@@ -8,7 +9,7 @@
 import axios from 'axios'
 export default {
   mounted () {
-    axios.get('http://localhost:3030').then((response) => {
+    axios.get('http://localhost:3030/me').then((response) => {
       console.log(response)
     })
   }

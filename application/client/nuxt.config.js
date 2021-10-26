@@ -32,7 +32,9 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module'
   ],
-
+  server: {
+    host: '0.0.0.0'
+  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
   ],

@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  caddy:
+    restart: always
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - ./application/Caddyfile:/etc/caddy/Caddyfile
+  feather:
+    build: ./application/server
+    ports:
+      - "3030:3030"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URL=mongodb://root:rootpassword@mongo:27017/mongo?authSource=admin
+      - SPOTIFY_CLIENT_ID=e7c4fac7f9ef4060b49d97456f3d231d
+      - Spotify_CLIENT_SECRET=ceb855a039554ab59ccefd7546eee027
+    depends_on:
+      - mongo
+  nuxt:
+    build: ./application/client
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: mongo
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
