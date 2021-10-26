@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tinder for Music 2</h1>
+    <h1>Tinder for Music</h1>
     <a :href="getLoginUrl"> Login </a>
   </div>
 </template>
