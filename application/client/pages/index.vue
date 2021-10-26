@@ -10,13 +10,11 @@ import axios from 'axios'
 export default {
   computed: {
     getLoginUrl () {
-      return process.env.API_URL + '/oauth/spotify'
+      return this.$config.apiURL + '/oauth/spotify'
     }
   },
   mounted () {
-    console.log('mounted')
-    console.log('API URL' + process.env.API_URL)
-    axios.get(process.env.API_URL + '/me').then((response) => {
+    axios.get(this.$config.apiURL + '/me').then((response) => {
       console.log(response)
     })
   }
