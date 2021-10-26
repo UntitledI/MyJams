@@ -26,12 +26,13 @@ export default {
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
-
+  publicRuntimeConfig: {
+    apiURL: process.env.API_URL
+  },
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
-    ['@nuxtjs/dotenv', { systemvars: true }]
+    '@nuxtjs/eslint-module'
   ],
   server: {
     host: '0.0.0.0'

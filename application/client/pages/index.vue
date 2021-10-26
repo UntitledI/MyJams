@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tinder for Music</h1>
+    <h1>Tinder for Music 2</h1>
     <a :href="getLoginUrl"> Login </a>
   </div>
 </template>
@@ -14,8 +14,9 @@ export default {
     }
   },
   mounted () {
-    const url = process.env.API_URL
-    axios.get(url + '/me').then((response) => {
+    console.log('mounted')
+    console.log('API URL' + process.env.API_URL)
+    axios.get(process.env.API_URL + '/me').then((response) => {
       console.log(response)
     })
   }
