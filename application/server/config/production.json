@@ -8,7 +8,7 @@
   },
   "authentication": {
     "oauth": {
-      "redirect": "/",
+      "redirect": "https://csc.excl.dev/callback",
       "spotify": {
         "key": "SPOTIFY_CLIENT_ID",
         "secret": "SPOTIFY_CLIENT_SECRET",
