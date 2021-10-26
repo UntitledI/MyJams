@@ -1,5 +1,5 @@
 {
-  "host": "localhost",
+  "host": "csc-api.excl.dev",
   "port": 3030,
   "public": "../public/",
   "paginate": {
