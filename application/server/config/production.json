@@ -1,5 +1,5 @@
 {
-  "host": "localhost",
+  "host": "csc-api.excl.dev",
   "port": 3030,
   "public": "../public/",
   "paginate": {
@@ -8,7 +8,7 @@
   },
   "authentication": {
     "oauth": {
-      "redirect": "/",
+      "redirect": "https://csc.excl.dev/callback",
       "spotify": {
         "key": "SPOTIFY_CLIENT_ID",
         "secret": "SPOTIFY_CLIENT_SECRET",

@@ -1,11 +1,11 @@
-name: Build and Deploy Feather 🤩
+name: Build and Deploy Nuxt 🤩
 
 on:
   push:
     branches:
       - 'master'
     paths:
-      - 'application/server/**'
+      - 'application/client/**'
   workflow_dispatch: { }
 
 env:
@@ -15,7 +15,7 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    name: Build & Deploy Feather 🤩
+    name: Build & Deploy Nuxt 🤩
     steps:
       - uses: actions/checkout@v1
       - name: Set up QEMU 🌱
@@ -32,26 +32,26 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/feather
+          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/nuxt
       - name: Build and push Docker image ⚒
         id: build-push-image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ./application/server
+          context: ./application/client
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - id: lowercase-repo
-#        name: executing remote ssh commands using key
-#          uses: appleboy/ssh-action@master
-#          with:
-#            host: 18.190.25.166
-#            username: ubuntu
-#            key: ${{ secrets.SSH_KEY }}
-#            port: 22
-#            script: |
-#              cd csc648
-#              docker-compose pull
-#              docker-compose restart
+      - name: executing remote ssh commands using key
+        uses: appleboy/ssh-action@master
+        with:
+          host: 18.190.25.166
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd csc648
+             docker-compose pull
+             docker-compose down
+             docker-compose up -d
