@@ -14,7 +14,8 @@ export default {
     }
   },
   mounted () {
-    axios.get(process.env.API_URL + '/me').then((response) => {
+    const url = process.env.API_URL
+    axios.get(url + '/me').then((response) => {
       console.log(response)
     })
   }
