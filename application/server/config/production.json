@@ -1,6 +1,6 @@
 {
-  "host": "csc-api.excl.dev",
-  "port": 80,
+  "host": "localhost",
+  "port": 3030,
   "public": "../public/",
   "paginate": {
     "default": 10,
