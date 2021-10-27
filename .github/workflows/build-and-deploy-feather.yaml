@@ -1,0 +1,57 @@
+name: Build and Deploy Feather 🤩
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'application/server/**'
+  workflow_dispatch: { }
+
+env:
+  REGISTRY: ghcr.io
+  REPO_NAME: ${{ github.repository }}
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    name: Build & Deploy Feather 🤩
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up QEMU 🌱
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx 🌱
+        uses: docker/setup-buildx-action@v1
+      - name: Log in to the Container registry 💻🖱
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker ⛏
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/feather
+      - name: Build and push Docker image ⚒
+        id: build-push-image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./application/server
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: executing remote ssh commands using key
+        uses: appleboy/ssh-action@master
+        with:
+          host: 18.190.25.166
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd csc648
+             docker-compose pull
+             docker-compose down
+             docker-compose up -d

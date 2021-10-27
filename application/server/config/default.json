@@ -8,7 +8,7 @@
   },
   "authentication": {
     "oauth": {
-      "redirect": "/",
+      "redirect": "http://localhost:3030/callback",
       "spotify": {
         "key": "SPOTIFY_CLIENT_ID",
         "secret": "SPOTIFY_CLIENT_SECRET",

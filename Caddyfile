@@ -1,0 +1,8 @@
+:8080 {
+ reverse_proxy feather:3030
+}
+localhost {
+ reverse_proxy nuxt:3000
+}
+
+
