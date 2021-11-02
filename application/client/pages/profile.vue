@@ -1,26 +1,40 @@
 <template>
   <div id="container">
-    <div id="profile-container">
-      <div id="profile-top">
+    <main id="profile-container">
+      <header id="profile-top">
         <div id="profile-info">
           <div id="profile-image-container">
             <p>Sample IMG</p>
           </div>
           <ul>
-            <li>2 Playlists</li>
-            <li>11 Followers</li>
-            <li>22 Following</li>
+            <li>
+              <span>
+                <span id="playlists-count" class="count">2</span> Playlists
+              </span>
+            </li>
+            <li>
+              <span>
+                <span id="followers-count" class="count">11</span> Followers
+              </span>
+            </li>
+            <li>
+              <span>
+                <span id="following-count" class="count">22</span> Following
+              </span>
+            </li>
           </ul>
         </div>
-        <div id="profile-header">
-          <p id="profile-name">Sample User</p>
+        <section id="profile-header">
+          <h2 id="profile-name">
+            Sample User
+          </h2>
           <p id="profile-description">
             Hello there! Here is some description about me!
           </p>
-        </div>
-      </div>
+        </section>
+      </header>
       <div id="playlist-container">
-        <ul>
+        <ul id="playlist-list">
           <li>
             <div class="playlist">
               <div class="playlist-image-container">
@@ -34,12 +48,52 @@
               <div class="playlist-image-container">
                 <p>Sample IMG</p>
               </div>
-              <h2>sample playlist with a long name</h2>
+              <h2>sample playlist w/ a long name</h2>
+            </div>
+          </li>
+          <li>
+            <div class="playlist">
+              <div class="playlist-image-container">
+                <p>Sample IMG</p>
+              </div>
+              <h2>sample playlist 3</h2>
+            </div>
+          </li>
+          <li>
+            <div class="playlist">
+              <div class="playlist-image-container">
+                <p>Sample IMG</p>
+              </div>
+              <h2>sample playlist 4</h2>
+            </div>
+          </li>
+          <li>
+            <div class="playlist">
+              <div class="playlist-image-container">
+                <p>Sample IMG</p>
+              </div>
+              <h2>sample playlist 5</h2>
+            </div>
+          </li>
+          <li>
+            <div class="playlist">
+              <div class="playlist-image-container">
+                <p>Sample IMG</p>
+              </div>
+              <h2>sample playlist 6</h2>
+            </div>
+          </li>
+          <li>
+            <div class="playlist">
+              <div class="playlist-image-container">
+                <p>Sample IMG</p>
+              </div>
+              <h2>sample playlist 7</h2>
             </div>
           </li>
         </ul>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -47,6 +101,10 @@
 * {
   padding: 0px;
   margin: 0px;
+}
+
+.count {
+  font-weight: bold;
 }
 
 .playlist{
@@ -85,6 +143,7 @@
   width: 100vw;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
+  overflow-x: hidden;
 }
 
 #playlist-container{
@@ -93,11 +152,11 @@
   width: 100%;
 }
 
-#playlist-container ul {
+#playlist-list {
   list-style: none;
 }
 
-#playlist-container ul li {
+#playlist-list li {
   margin: 32px 52px;
 }
 
@@ -105,9 +164,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  height: 90%;
   width: 1000px;
   margin: 32px 0;
+  box-sizing: border-box;
 }
 
 #profile-top{
@@ -121,6 +181,7 @@
 
 #profile-info{
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 16px 160px;
   height: 150px;
@@ -129,28 +190,28 @@
 }
 
 #profile-info ul {
-  display: flex;
-  justify-content: space-evenly;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: 384px;
+  margin-left: 32px;
   list-style: none;
 }
 
 #profile-info ul li {
-  display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: center;
-  width: 96px;
+  display: inline;
+  margin-right: 16px;
 }
 
 #profile-image-container{
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   height: 128px;
   width: 128px;
-  background-color: #b8b8b8;
+  background-color: #76f1f5;
   border-radius: 100%;
 }
 
