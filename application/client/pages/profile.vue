@@ -1,101 +1,111 @@
 <template>
-  <div id="container">
-    <main id="profile-container">
-      <header id="profile-top">
-        <div id="profile-info">
-          <div id="profile-image-container">
-            <p>Sample IMG</p>
+  <div>
+    <Navbar />
+    <div id="container">
+      <main id="profile-container">
+        <header id="profile-top">
+          <div id="profile-info">
+            <div id="profile-image-container">
+              <p>Sample IMG</p>
+            </div>
+            <ul>
+              <li>
+                <span>
+                  <span id="playlists-count" class="count">2</span> Playlists
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span id="followers-count" class="count">11</span> Followers
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span id="following-count" class="count">22</span> Following
+                </span>
+              </li>
+            </ul>
           </div>
-          <ul>
+          <section id="profile-header">
+            <h2 id="profile-name">
+              Sample User
+            </h2>
+            <p id="profile-description">
+              Hello there! Here is some description about me!
+            </p>
+          </section>
+        </header>
+        <div id="playlist-container">
+          <ul id="playlist-list">
             <li>
-              <span>
-                <span id="playlists-count" class="count">2</span> Playlists
-              </span>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist 1</h2>
+              </div>
             </li>
             <li>
-              <span>
-                <span id="followers-count" class="count">11</span> Followers
-              </span>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist w/ a long name</h2>
+              </div>
             </li>
             <li>
-              <span>
-                <span id="following-count" class="count">22</span> Following
-              </span>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist 3</h2>
+              </div>
+            </li>
+            <li>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist 4</h2>
+              </div>
+            </li>
+            <li>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist 5</h2>
+              </div>
+            </li>
+            <li>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist 6</h2>
+              </div>
+            </li>
+            <li>
+              <div class="playlist">
+                <div class="playlist-image-container">
+                  <p>Sample IMG</p>
+                </div>
+                <h2>sample playlist 7</h2>
+              </div>
             </li>
           </ul>
         </div>
-        <section id="profile-header">
-          <h2 id="profile-name">
-            Sample User
-          </h2>
-          <p id="profile-description">
-            Hello there! Here is some description about me!
-          </p>
-        </section>
-      </header>
-      <div id="playlist-container">
-        <ul id="playlist-list">
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist 1</h2>
-            </div>
-          </li>
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist w/ a long name</h2>
-            </div>
-          </li>
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist 3</h2>
-            </div>
-          </li>
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist 4</h2>
-            </div>
-          </li>
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist 5</h2>
-            </div>
-          </li>
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist 6</h2>
-            </div>
-          </li>
-          <li>
-            <div class="playlist">
-              <div class="playlist-image-container">
-                <p>Sample IMG</p>
-              </div>
-              <h2>sample playlist 7</h2>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 </template>
+
+<script>
+import Navbar from '../components/Navbar'
+export default {
+  Navbar
+}
+</script>
 
 <style>
 * {
@@ -114,11 +124,7 @@
   width: 512px;
   border-radius: 8px;
   overflow: hidden;
-  background: rgb(80,18,124);
-  background: -moz-linear-gradient(47deg, rgba(80,18,124,1) 25%, rgba(221,0,94,1) 100%);
-  background: -webkit-linear-gradient(47deg, rgba(80,18,124,1) 25%, rgba(221,0,94,1) 100%);
-  background: linear-gradient(47deg, rgba(80,18,124,1) 25%, rgba(221,0,94,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#50127c",endColorstr="#dd005e",GradientType=1);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
 .playlist h2 {
@@ -127,7 +133,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: white;
+  color: black;
   padding: 0 32px;
 }
 
@@ -138,7 +144,6 @@
   width: 128px;
   justify-content: center;
   align-items: center;
-  background-color: #b8b8b8;
 }
 
 #container{
@@ -148,6 +153,11 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
+  background: rgb(255,255,255);
+  background: -moz-radial-gradient(circle, rgba(255,255,255,1) 53%, rgba(235,235,235,1) 100%);
+  background: -webkit-radial-gradient(circle, rgba(255,255,255,1) 53%, rgba(235,235,235,1) 100%);
+  background: radial-gradient(circle, rgba(255,255,255,1) 53%, rgba(235,235,235,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ebebeb",GradientType=1);
 }
 
 #playlist-container{
@@ -169,7 +179,8 @@
   flex-direction: column;
   align-items: center;
   width: 1000px;
-  margin: 16px 0;
+  margin: 96px 0;
+  background-color: white;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
@@ -179,7 +190,7 @@
   height: 300px;
   width: 90%;
   flex-direction: column;
-  border-bottom: 2px solid #575757;
+  border-bottom: 1px solid #adadad;
 }
 
 #profile-info{
@@ -215,7 +226,6 @@
   align-items: center;
   height: 128px;
   width: 128px;
-  background-color: #76f1f5;
   border-radius: 100%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
