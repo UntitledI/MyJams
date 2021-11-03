@@ -17,7 +17,7 @@ jobs:
       - name: Install modules
         working-directory: ./application/client
         run: npm install
-      - name: Install modules
+      - name: Run Linter
         working-directory: ./application/client
         run: npm run lint
   run-feathers-lint:
@@ -28,6 +28,6 @@ jobs:
       - name: Install modules
         working-directory: ./application/server
         run: npm install
-      - name: Install modules
+      - name: Run Linter
         working-directory: ./application/server
         run: npm run lint
