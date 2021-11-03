@@ -9,10 +9,25 @@ on:
   pull_request:
 
 jobs:
-  build:
+  run-nuxt-lint:
     runs-on: ubuntu-latest
     steps:
+      - name: Nuxt Linter
       - uses: actions/checkout@v2
       - name: Install modules
         working-directory: ./application/client
         run: npm install
+      - name: Install modules
+        working-directory: ./application/client
+        run: npm run lint
+  run-feathers-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Feathers Linter
+      - uses: actions/checkout@v2
+      - name: Install modules
+        working-directory: ./application/server
+        run: npm install
+      - name: Install modules
+        working-directory: ./application/server
+        run: npm run lint
