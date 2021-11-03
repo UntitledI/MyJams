@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tinder for Music</h1>
+    <h1>Tinder for Music Change</h1>
     <NuxtLink to="/profile">
       Login
     </NuxtLink>
@@ -11,6 +11,7 @@
 <script>
 import axios from 'axios'
 export default {
+
   computed: {
     getLoginUrl () {
       return this.$config.apiURL + '/oauth/spotify'
