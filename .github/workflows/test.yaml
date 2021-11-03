@@ -5,22 +5,31 @@ on:
     branches:
       - master
       - develop
+      - test-check
   pull_request:
 
 jobs:
-  lint-nuxt:
-    name: 'lint (node: ${{ matrix.node }})'
+  run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [12, 14]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
-      - uses: ./.github/actions/install-modules
-      - name: cd
+          node-version: 12
+
+      # ESLint and Prettier must be in `package.json`
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: cd into nuxt
         run: cd ./application/client
-      - name: Run lint
-        run: npm run -s lint
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          eslint: true
