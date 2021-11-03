@@ -1,7 +1,10 @@
 <template>
   <div>
     <h1>Tinder for Music</h1>
-    <a :href="getLoginUrl"> Login </a>
+    <NuxtLink to="/profile">
+      Login
+    </NuxtLink>
+    <!-- <a :href="getLoginUrl"> Login </a> -->
   </div>
 </template>
 
