@@ -15,4 +15,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install modules
         working-directory: ./application/client
-        run: npm ci
+        run: npm install
