@@ -1,0 +1,28 @@
+name: 'Tests'
+
+on:
+  pull_request:
+
+jobs:
+  run-nuxt-lint:
+    name: Run Nuxt Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        working-directory: ./application/client
+        run: npm install
+      - name: Run Linter
+        working-directory: ./application/client
+        run: npm run lint
+  run-feathers-lint:
+    name: Run Feathers Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        working-directory: ./application/server
+        run: npm install
+      - name: Run Linter
+        working-directory: ./application/server
+        run: npm run lint
