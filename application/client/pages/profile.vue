@@ -112,9 +112,13 @@
   align-items: center;
   height: 128px;
   width: 512px;
-  background-color: #575757;
   border-radius: 8px;
   overflow: hidden;
+  background: rgb(80,18,124);
+  background: -moz-linear-gradient(47deg, rgba(80,18,124,1) 25%, rgba(221,0,94,1) 100%);
+  background: -webkit-linear-gradient(47deg, rgba(80,18,124,1) 25%, rgba(221,0,94,1) 100%);
+  background: linear-gradient(47deg, rgba(80,18,124,1) 25%, rgba(221,0,94,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#50127c",endColorstr="#dd005e",GradientType=1);
 }
 
 .playlist h2 {
@@ -129,6 +133,7 @@
 
 .playlist-image-container{
   display: flex;
+  flex-shrink: 0;
   height: 128px;
   width: 128px;
   justify-content: center;
@@ -139,8 +144,7 @@
 #container{
   display: flex;
   justify-content: center;
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
@@ -164,10 +168,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 90%;
   width: 1000px;
-  margin: 32px 0;
-  box-sizing: border-box;
+  margin: 16px 0;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 #profile-top{
@@ -184,6 +187,7 @@
   justify-content: center;
   align-items: center;
   padding: 16px 160px;
+  margin-top: 16px;
   height: 150px;
   width: 100%;
   box-sizing: border-box;
@@ -213,6 +217,7 @@
   width: 128px;
   background-color: #76f1f5;
   border-radius: 100%;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 #profile-header{
@@ -231,6 +236,7 @@
 
 #profile-name{
   font-size: 1.5em;
+  margin-top: 16px;
 }
 
 #profile-description{
