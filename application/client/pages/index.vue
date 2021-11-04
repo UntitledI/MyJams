@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tinder for Music Change</h1>
+    <h1>Tinder for Music Class Demo</h1>
     <NuxtLink to="/profile">
       Login
     </NuxtLink>
@@ -18,6 +18,7 @@ export default {
     }
   },
   mounted () {
+    let x = "hi"
     axios.get(this.$config.apiURL + '/me').then((response) => {
       console.log(response)
     })
