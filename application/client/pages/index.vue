@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tinder for Music Change</h1>
+    <h1>Tinder for Music Class Demo</h1>
     <NuxtLink to="/profile">
       Login
     </NuxtLink>
