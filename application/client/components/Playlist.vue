@@ -18,83 +18,184 @@
       <table id="playlist-modal-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Album</th>
-            <th>Date Added</th>
-            <th>Duration</th>
+            <th id="track-number">
+              #
+            </th>
+            <th id="title">
+              Title
+            </th>
+            <th id="album">
+              Album
+            </th>
+            <th id="date-added">
+              Date Added
+            </th>
+            <th id="duration">
+              Duration
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>1</td>
-            <td>My favorite song 1</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>3:09</td>
+            <td class="track-number">
+              1
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite songs</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/3/2021
+            </td>
+            <td class="duration">
+              3:09
+            </td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
+            <td class="track-number">
+              2
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite song 2</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/4/2021
+            </td>
+            <td class="duration">
+              5:00
+            </td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
+            <td class="track-number">
+              2
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite song 2</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/4/2021
+            </td>
+            <td class="duration">
+              5:00
+            </td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
+            <td class="track-number">
+              2
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite song 2</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/4/2021
+            </td>
+            <td class="duration">
+              5:00
+            </td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
+            <td class="track-number">
+              2
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite song 2</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/4/2021
+            </td>
+            <td class="duration">
+              5:00
+            </td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
+            <td class="track-number">
+              2
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite song 2</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/4/2021
+            </td>
+            <td class="duration">
+              5:00
+            </td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>My favorite song 2</td>
-            <td>My favorite Album</td>
-            <td>11/3/2021</td>
-            <td>2:09</td>
+            <td class="track-number">
+              2
+            </td>
+            <td class="title-container">
+              <div class="track-image-container">
+                IMG
+              </div>
+              <div class="track-info">
+                <span class="title">My favorite song 2</span>
+                <span class="artist">artist name</span>
+              </div>
+            </td>
+            <td class="album">
+              My favorite Album
+            </td>
+            <td class="date-added">
+              11/4/2021
+            </td>
+            <td class="duration">
+              5:00
+            </td>
           </tr>
         </tbody>
       </table>
@@ -104,7 +205,17 @@
 
 <script>
 export default {
-  props: ['title', 'desc']
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    desc: {
+      type: String,
+      default: '',
+      required: false
+    }
+  }
 }
 </script>
 
@@ -192,8 +303,101 @@ export default {
   border-bottom: 1px solid black;
 }
 
+#playlist-modal-table thead th{
+  font-size: 1.1em;
+}
+
+#playlist-modal-table tbody td{
+  height: 5em;
+}
+
 #playlist-modal-table th,
 #playlist-modal-table td {
-  padding: 16px 32px;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#track-number{
+  width: 5%;
+  padding-bottom: 16px;
+  padding-left: 32px;
+}
+
+#title{
+  width: 38%;
+  padding-right: 40px;
+  padding-bottom: 16px;
+}
+
+#album{
+  width: 30%;
+  padding-left: 32px;
+  padding-right: 40px;
+  padding-bottom: 16px;
+}
+
+#date-added{
+  width: 16%;
+  padding-right: 40px;
+  padding-bottom: 16px;
+}
+
+#duration{
+  width: 13%;
+  padding-right: 32px;
+  padding-bottom: 16px;
+}
+
+.track-number{
+  width: 5%;
+  padding-left: 32px;
+  padding-right: 16px;
+  padding-top: 16px;
+}
+
+.title-container{
+  display: flex;
+  align-items: center;
+  width: 38%;
+  padding-right: 100%;
+  padding-top: 16px;
+}
+
+.track-image-container {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+  color: white;
+  background-color: black;
+  margin-right: 16px;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.album{
+  width: 30%;
+  padding-left: 32px;
+  padding-right: 40px;
+  padding-top: 16px;
+}
+
+.date-added{
+  width: 16%;
+  padding-right: 40px;
+  padding-top: 16px;
+}
+
+.duration{
+  width: 13%;
+  padding-right: 32px;
+  padding-top: 16px;
 }
 </style>

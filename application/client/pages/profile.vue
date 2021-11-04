@@ -71,7 +71,7 @@ export default {
       this.$modal.show(
         Playlist,
         { title: _title, desc: _desc },
-        { width: '1000px', height: '750px', draggable: true })
+        { width: '1500px', height: '800px', draggable: true })
     }
   }
 }

@@ -20,11 +20,6 @@
 </template>
 
 <style>
-* {
-    padding: 0px;
-    margin: 0px;
-}
-
 #elements-container {
     display: flex;
     flex-direction: row;
