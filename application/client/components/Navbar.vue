@@ -5,7 +5,9 @@
         <a>AppName</a>
       </div>
       <div id="find-music" class="element">
-        <a>Find Music</a>
+        <NuxtLink to="/profile">
+          Find Music
+        </NuxtLink>
       </div>
       <div id="functions-container" class="element">
         <div id="profile">
@@ -92,12 +94,35 @@
     position: absolute;
     left: 50%;
     -webkit-transform: translateX(-50%);
-    transform: translateX(-50%)
+    transform: translateX(-50%);
+    font-weight: bold;
+}
+
+#find-music a {
+    color: inherit;
+    text-decoration: none;
 }
 
 .element {
     white-space: nowrap;
     padding: 0 1em;
     margin: 0;
+}
+
+@media only screen and (max-width: 650px) {
+    #elements-container {
+      justify-content: space-evenly;
+    }
+
+    #logo {
+        display: none;
+    }
+
+    #find-music{
+      position: relative;
+      left: 0;
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
 }
 </style>

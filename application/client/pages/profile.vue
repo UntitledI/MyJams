@@ -38,7 +38,7 @@
         <div id="playlist-container">
           <ul id="playlist-list">
             <li>
-              <div class="playlist">
+              <div class="playlist" @click="showPlaylist('sample playlist 1', 'my description')">
                 <div class="playlist-image-container">
                   <p>Sample IMG</p>
                 </div>
@@ -46,51 +46,11 @@
               </div>
             </li>
             <li>
-              <div class="playlist">
+              <div class="playlist" @click="showPlaylist('sample playlist w/ a long name', 'my description')">
                 <div class="playlist-image-container">
                   <p>Sample IMG</p>
                 </div>
                 <h2>sample playlist w/ a long name</h2>
-              </div>
-            </li>
-            <li>
-              <div class="playlist">
-                <div class="playlist-image-container">
-                  <p>Sample IMG</p>
-                </div>
-                <h2>sample playlist 3</h2>
-              </div>
-            </li>
-            <li>
-              <div class="playlist">
-                <div class="playlist-image-container">
-                  <p>Sample IMG</p>
-                </div>
-                <h2>sample playlist 4</h2>
-              </div>
-            </li>
-            <li>
-              <div class="playlist">
-                <div class="playlist-image-container">
-                  <p>Sample IMG</p>
-                </div>
-                <h2>sample playlist 5</h2>
-              </div>
-            </li>
-            <li>
-              <div class="playlist">
-                <div class="playlist-image-container">
-                  <p>Sample IMG</p>
-                </div>
-                <h2>sample playlist 6</h2>
-              </div>
-            </li>
-            <li>
-              <div class="playlist">
-                <div class="playlist-image-container">
-                  <p>Sample IMG</p>
-                </div>
-                <h2>sample playlist 7</h2>
               </div>
             </li>
           </ul>
@@ -102,12 +62,24 @@
 
 <script>
 import Navbar from '../components/Navbar'
+import Playlist from '../components/Playlist'
 export default {
-  Navbar
+  Navbar,
+  Playlist,
+  methods: {
+    showPlaylist (_title, _desc) {
+      this.$modal.show(
+        Playlist,
+        { title: _title, desc: _desc },
+        { width: '1000px', height: '750px', draggable: true })
+    }
+  }
 }
 </script>
 
 <style>
+@import '../assets/css/scrollbar.css';
+
 * {
   padding: 0px;
   margin: 0px;
@@ -149,8 +121,11 @@ export default {
 #container{
   display: flex;
   justify-content: center;
+  min-height: 100vh;
   width: 100%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
   font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
   background: rgb(255,255,255);
@@ -201,7 +176,9 @@ export default {
   margin-top: 16px;
   height: 150px;
   width: 100%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
 }
 
 #profile-info ul {
@@ -236,7 +213,9 @@ export default {
   max-height: 150px;
   width: 100%;
   padding: 0 160px;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
   overflow: hidden;
 }
 
