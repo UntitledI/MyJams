@@ -18,7 +18,6 @@ export default {
     }
   },
   mounted () {
-    let x = "hi"
     axios.get(this.$config.apiURL + '/me').then((response) => {
       console.log(response)
     })
