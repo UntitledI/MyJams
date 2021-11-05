@@ -19,20 +19,29 @@
         {{ questions[currentQuestion].questionText }}
       </h1>
       <div id="answers">
+        <input
+          v-if="questions[currentQuestion].questionType === 'slider'"
+          v-model="questions[currentQuestion].sliderValue"
+          type="range"
+          min="-50"
+          max="50"
+          class="answer"
+        >
         <button
           v-for="(option, index) in questions[currentQuestion].answer"
+          v-else
           :key="index"
           class="answer"
-          @click="handleAnswerClick(option.answerMeaning)"
+          @click="handleAnswerClick(option.answerText)"
         >
           {{ option.answerText }}
         </button>
       </div>
-      <div id="question-buttons">
-        <button @click="handleBackClick()">
+      <div>
+        <button class="question-buttons" @click="handleBackClick()">
           Back
         </button>
-        <button @click="handleNextClick()">
+        <button class="question-buttons" @click="handleNextClick()">
           Next
         </button>
       </div>
@@ -51,29 +60,32 @@ export default {
       questions: [
         {
           questionText: 'Hello',
-          answer: [
-            { answerText: 'yes', answerMeaning: '' },
-            { answerText: 'no', answerMeaning: '' },
-            { answerText: 'yes2', answerMeaning: '' },
-            { answerText: 'no2', answerMeaning: '' }
-          ]
+          questionType: 'slider',
+          sliderValue: 0
+        },
+        {
+          questionText: 'Hello-1',
+          questionType: 'slider',
+          sliderValue: 0
         },
         {
           questionText: 'Hello2',
+          questionType: 'mc',
           answer: [
-            { answerText: 'yes', answerMeaning: '' },
-            { answerText: 'no', answerMeaning: '' },
-            { answerText: 'yes2', answerMeaning: '' },
-            { answerText: 'no2', answerMeaning: '' }
+            { answerText: 'yes' },
+            { answerText: 'no' },
+            { answerText: 'yes2' },
+            { answerText: 'no2' }
           ]
         },
         {
           questionText: 'Hello3',
+          questionType: 'mc',
           answer: [
-            { answerText: 'yes', answerMeaning: '' },
-            { answerText: 'no', answerMeaning: '' },
-            { answerText: 'yes2', answerMeaning: '' },
-            { answerText: 'no2', answerMeaning: '' }
+            { answerText: 'yes' },
+            { answerText: 'no' },
+            { answerText: 'yes2' },
+            { answerText: 'no2' }
           ]
         }
       ],
@@ -84,13 +96,16 @@ export default {
     startQuestionnaireFunc () {
       this.startQuestionnaire = true
     },
-    handleAnswerClick (answer) {
-      const objIndex = this.responses.findIndex(obj => obj.question === this.currentQuestion)
+    handleAnswer (value) {
+      const objIndex = this.responses.findIndex(obj => obj.question === this.currentQuestion + 1)
       if (objIndex === -1) {
-        this.responses.push({ question: this.currentQuestion, response: answer })
+        this.responses.push({ question: this.currentQuestion + 1, response: value })
       } else {
-        this.responses[objIndex].response = answer
+        this.responses[objIndex].response = value
       }
+    },
+    handleAnswerClick (answer) {
+      this.handleAnswer(answer)
       this.handleNextClick()
     },
     handleBackClick () {
@@ -103,6 +118,10 @@ export default {
     },
     handleNextClick () {
       const nextQuestion = this.currentQuestion + 1
+      if (this.questions[this.currentQuestion].questionType === 'slider') {
+        this.handleAnswer(this.questions[this.currentQuestion].sliderValue)
+        this.sliderValue = 0
+      }
       if (nextQuestion < this.questions.length) {
         this.currentQuestion = nextQuestion
       } else if (this.responses.length < this.questions.length) {
@@ -163,7 +182,7 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow: 0 6px 12px -2px rgba(50,50,93,.25),0 3px 7px -3px rgba(0,0,0,.3);
-  width: 35%;
+  width: 40%;
   margin: 6rem 6rem;
 }
 
@@ -179,9 +198,9 @@ export default {
   padding: 1rem;
 }
 
-#question-buttons{
-  padding: 1rem;
-  margin-bottom: 1rem;
+.question-buttons{
+  padding: .5rem;
+  margin: 1rem;
 }
 
 .answer{
