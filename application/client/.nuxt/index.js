@@ -12,7 +12,8 @@ import { setContext, getLocation, getRouteData, normalizeError } from './utils'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_62332c06 from 'nuxt_plugin_plugin_62332c06' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_plugin_119a88c0 from 'nuxt_plugin_plugin_119a88c0' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_vueawesomeswiper_4af85e3f from 'nuxt_plugin_vueawesomeswiper_4af85e3f' // Source: ..\\plugins\\vue-awesome-swiper (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -176,8 +177,12 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_62332c06 === 'function') {
-    await nuxt_plugin_plugin_62332c06(app.context, inject)
+  if (typeof nuxt_plugin_plugin_119a88c0 === 'function') {
+    await nuxt_plugin_plugin_119a88c0(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vueawesomeswiper_4af85e3f === 'function') {
+    await nuxt_plugin_vueawesomeswiper_4af85e3f(app.context, inject)
   }
 
   // Lock enablePreview in context

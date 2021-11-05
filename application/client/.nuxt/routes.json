@@ -1,9 +1,26 @@
 [
   {
+    "name": "songRecommendations",
+    "path": "/songRecommendations",
+    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\songRecommendations.vue",
+    "chunkName": "pages/songRecommendations"
+  },
+  {
+    "name": "songRecommendations2",
+    "path": "/songRecommendations2",
+    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\songRecommendations2.vue",
+    "chunkName": "pages/songRecommendations2"
+  },
+  {
+    "name": "test",
+    "path": "/test",
+    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\test.vue",
+    "chunkName": "pages/test"
+  },
+  {
     "name": "index",
     "path": "/",
-    "component": "C:\\\\Users\\\\Cameron Paczek\\\\professor-team-3-1\\\\application\\\\client\\\\pages\\\\index.vue",
-    "chunkName": "pages/index",
-    "_name": "_33296fae"
+    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\index.vue",
+    "chunkName": "pages/index"
   }
 ]
