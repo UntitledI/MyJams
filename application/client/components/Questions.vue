@@ -18,20 +18,28 @@
       <h1 id="question">
         {{ questions[currentQuestion].questionText }}
       </h1>
+      <label
+        v-if="questions[currentQuestion].questionType === 'slider'"
+        class="slider-label"
+      >
+        {{ questions[currentQuestion].sliderMessage }}
+      </label>
       <div id="answers">
         <input
           v-if="questions[currentQuestion].questionType === 'slider'"
           v-model="questions[currentQuestion].sliderValue"
           type="range"
-          min="-50"
-          max="50"
-          class="answer"
+          min="-1"
+          max="1"
+          step=".001"
+          class="answer-slider"
+          @change="handleSliderChange(questions[currentQuestion].sliderValue)"
         >
         <button
           v-for="(option, index) in questions[currentQuestion].answer"
           v-else
           :key="index"
-          class="answer"
+          class="answer-button"
           @click="handleAnswerClick(option.answerText)"
         >
           {{ option.answerText }}
@@ -61,12 +69,14 @@ export default {
         {
           questionText: 'Hello',
           questionType: 'slider',
-          sliderValue: 0
+          sliderValue: 0,
+          sliderMessage: 'neutral'
         },
         {
           questionText: 'Hello-1',
           questionType: 'slider',
-          sliderValue: 0
+          sliderValue: 0,
+          sliderMessage: 'neutral'
         },
         {
           questionText: 'Hello2',
@@ -102,6 +112,15 @@ export default {
         this.responses.push({ question: this.currentQuestion + 1, response: value })
       } else {
         this.responses[objIndex].response = value
+      }
+    },
+    handleSliderChange (value) {
+      if (value === 0) {
+        this.questions[this.currentQuestion].sliderMessage = value
+      } else if (value < 0) {
+        this.questions[this.currentQuestion].sliderMessage = value
+      } else if (value > 0) {
+        this.questions[this.currentQuestion].sliderMessage = value
       }
     },
     handleAnswerClick (answer) {
@@ -188,13 +207,14 @@ export default {
 
 #question{
   padding: 1rem;
-  margin-top: 1rem;
+  margin: 1rem;
 }
 
 #answers{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
+  align-content: center;
   padding: 1rem;
 }
 
@@ -203,7 +223,17 @@ export default {
   margin: 1rem;
 }
 
-.answer{
+.answer-slider{
+  margin: 1rem;
+  padding: .5rem;
+  width: 35vh;
+}
+
+.slider-label{
+
+}
+
+.answer-button{
   margin: .5rem;
   padding: .5rem;
   height: 10vh;
