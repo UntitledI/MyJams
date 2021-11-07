@@ -6,51 +6,43 @@
         <header id="profile-top">
           <div id="profile-info">
             <div id="profile-image-container">
-              <p>Sample IMG</p>
+              <img :src="local_user.image">
             </div>
             <ul>
               <li>
                 <span>
-                  <span id="playlists-count" class="count">2</span> Playlists
+                  <span id="playlists-count" class="count">{{ local_user.numPlaylists }}</span> Playlists
                 </span>
               </li>
               <li>
                 <span>
-                  <span id="followers-count" class="count">11</span> Followers
+                  <span id="followers-count" class="count">{{ local_user.numFollowers }}</span> Followers
                 </span>
               </li>
               <li>
                 <span>
-                  <span id="following-count" class="count">22</span> Following
+                  <span id="following-count" class="count">{{ local_user.numFollowing }}</span> Following
                 </span>
               </li>
             </ul>
           </div>
           <section id="profile-header">
             <h2 id="profile-name">
-              Sample User
+              {{ local_user.name }}
             </h2>
             <p id="profile-description">
-              Hello there! Here is some description about me!
+              {{ local_user.description }}
             </p>
           </section>
         </header>
         <div id="playlist-container">
           <ul id="playlist-list">
-            <li>
-              <div class="playlist" @click="showPlaylist('sample playlist 1', 'my description')">
+            <li v-for="playlist in local_playlists" :key="playlist.id">
+              <div class="playlist" @click="showPlaylist(playlist.name, playlist.description, playlist.image)">
                 <div class="playlist-image-container">
-                  <p>Sample IMG</p>
+                  <img :src="playlist.image">
                 </div>
-                <h2>sample playlist 1</h2>
-              </div>
-            </li>
-            <li>
-              <div class="playlist" @click="showPlaylist('sample playlist w/ a long name', 'my description')">
-                <div class="playlist-image-container">
-                  <p>Sample IMG</p>
-                </div>
-                <h2>sample playlist w/ a long name</h2>
+                <h2>{{ playlist.name }}</h2>
               </div>
             </li>
           </ul>
@@ -63,14 +55,90 @@
 <script>
 import Navbar from '../components/Navbar'
 import Playlist from '../components/Playlist'
+
 export default {
   Navbar,
   Playlist,
+  props: {
+    playlists: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    user: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
+  data () {
+    return {
+      local_playlists: this.playlists,
+      local_user: this.user
+    }
+  },
+  created () {
+    // make a call to backend api to populate playlists
+    this.local_playlists = [
+      {
+        name: 'Sample Playlist 1',
+        description: 'Sample description 1',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '1'
+      },
+      {
+        name: 'Sample Playlist 2',
+        description: 'Sample description 2',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '2'
+      },
+      {
+        name: 'Sample Playlist 3',
+        description: 'Sample description 3',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '3'
+      },
+      {
+        name: 'Sample Playlist 4',
+        description: 'Sample description 4',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '4'
+      },
+      {
+        name: 'Sample Playlist 5 w/ a long name',
+        description: 'Sample description 5',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '5'
+      },
+      {
+        name: 'Sample Playlist 6',
+        description: 'Sample description 6',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '6'
+      },
+      {
+        name: 'Sample Playlist 7',
+        description: 'Sample description 7',
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        id: '7'
+      }
+    ]
+    this.local_user = {
+      name: 'Sample User',
+      image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+      description: 'Hello there! Here is some description about me!',
+      numPlaylists: this.local_playlists.length,
+      numFollowers: 11,
+      numFollowing: 22
+    }
+  },
   methods: {
-    showPlaylist (_title, _desc) {
+    showPlaylist (_title, _desc, _image) {
       this.$modal.show(
         Playlist,
-        { title: _title, desc: _desc },
+        { title: _title, desc: _desc, image: _image },
         { width: '1500px', height: '800px', draggable: true })
     }
   }
@@ -96,7 +164,9 @@ export default {
   width: 512px;
   border-radius: 8px;
   overflow: hidden;
+  background: white;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  cursor: pointer;
 }
 
 .playlist h2 {
@@ -118,6 +188,11 @@ export default {
   align-items: center;
 }
 
+.playlist-image-container img {
+  width: 100%;
+  height: auto;
+}
+
 #container{
   display: flex;
   justify-content: center;
@@ -129,10 +204,10 @@ export default {
   font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
   background: rgb(255,255,255);
-  background: -moz-radial-gradient(circle, rgba(255,255,255,1) 53%, rgba(235,235,235,1) 100%);
-  background: -webkit-radial-gradient(circle, rgba(255,255,255,1) 53%, rgba(235,235,235,1) 100%);
-  background: radial-gradient(circle, rgba(255,255,255,1) 53%, rgba(235,235,235,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ebebeb",GradientType=1);
+  background: -moz-radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 100%);
+  background: -webkit-radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 100%);
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#f6f6f6",GradientType=1);
 }
 
 #playlist-container{
@@ -154,9 +229,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 1000px;
-  margin: 96px 0;
-  background-color: white;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  margin-top: 64px;
 }
 
 #profile-top{
@@ -205,6 +278,12 @@ export default {
   width: 128px;
   border-radius: 100%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  overflow: hidden;
+}
+
+#profile-image-container img {
+  width: 100%;
+  height: auto;
 }
 
 #profile-header{

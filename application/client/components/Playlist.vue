@@ -2,7 +2,7 @@
   <div id="playlist-modal">
     <header id="playlist-modal-header">
       <div id="playlist-modal-image-container">
-        Sample IMG
+        <img :src="image">
       </div>
       <div id="playlist-modal-info">
         <section />
@@ -36,165 +36,31 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(track, index) in local_tracks" :key="index">
             <td class="track-number">
-              1
+              {{ index + 1 }}
             </td>
             <td class="title-container">
               <div class="track-image-container">
-                IMG
+                <img :src="track.image">
               </div>
               <div class="track-info">
-                <span class="title">My favorite songs</span>
-                <span class="artist">artist name</span>
+                <span class="title">{{ track.name }}</span>
+                <div class="artist-names">
+                  <span v-for="(artist, _index) in track.artists" :key="_index" class="artist">
+                    {{ artist }}<span v-if="_index != track.artists.length - 1">, </span>
+                  </span>
+                </div>
               </div>
             </td>
             <td class="album">
-              My favorite Album
+              {{ track.album }}
             </td>
             <td class="date-added">
-              11/3/2021
+              {{ track.date }}
             </td>
             <td class="duration">
-              3:09
-            </td>
-          </tr>
-          <tr>
-            <td class="track-number">
-              2
-            </td>
-            <td class="title-container">
-              <div class="track-image-container">
-                IMG
-              </div>
-              <div class="track-info">
-                <span class="title">My favorite song 2</span>
-                <span class="artist">artist name</span>
-              </div>
-            </td>
-            <td class="album">
-              My favorite Album
-            </td>
-            <td class="date-added">
-              11/4/2021
-            </td>
-            <td class="duration">
-              5:00
-            </td>
-          </tr>
-          <tr>
-            <td class="track-number">
-              2
-            </td>
-            <td class="title-container">
-              <div class="track-image-container">
-                IMG
-              </div>
-              <div class="track-info">
-                <span class="title">My favorite song 2</span>
-                <span class="artist">artist name</span>
-              </div>
-            </td>
-            <td class="album">
-              My favorite Album
-            </td>
-            <td class="date-added">
-              11/4/2021
-            </td>
-            <td class="duration">
-              5:00
-            </td>
-          </tr>
-          <tr>
-            <td class="track-number">
-              2
-            </td>
-            <td class="title-container">
-              <div class="track-image-container">
-                IMG
-              </div>
-              <div class="track-info">
-                <span class="title">My favorite song 2</span>
-                <span class="artist">artist name</span>
-              </div>
-            </td>
-            <td class="album">
-              My favorite Album
-            </td>
-            <td class="date-added">
-              11/4/2021
-            </td>
-            <td class="duration">
-              5:00
-            </td>
-          </tr>
-          <tr>
-            <td class="track-number">
-              2
-            </td>
-            <td class="title-container">
-              <div class="track-image-container">
-                IMG
-              </div>
-              <div class="track-info">
-                <span class="title">My favorite song 2</span>
-                <span class="artist">artist name</span>
-              </div>
-            </td>
-            <td class="album">
-              My favorite Album
-            </td>
-            <td class="date-added">
-              11/4/2021
-            </td>
-            <td class="duration">
-              5:00
-            </td>
-          </tr>
-          <tr>
-            <td class="track-number">
-              2
-            </td>
-            <td class="title-container">
-              <div class="track-image-container">
-                IMG
-              </div>
-              <div class="track-info">
-                <span class="title">My favorite song 2</span>
-                <span class="artist">artist name</span>
-              </div>
-            </td>
-            <td class="album">
-              My favorite Album
-            </td>
-            <td class="date-added">
-              11/4/2021
-            </td>
-            <td class="duration">
-              5:00
-            </td>
-          </tr>
-          <tr>
-            <td class="track-number">
-              2
-            </td>
-            <td class="title-container">
-              <div class="track-image-container">
-                IMG
-              </div>
-              <div class="track-info">
-                <span class="title">My favorite song 2</span>
-                <span class="artist">artist name</span>
-              </div>
-            </td>
-            <td class="album">
-              My favorite Album
-            </td>
-            <td class="date-added">
-              11/4/2021
-            </td>
-            <td class="duration">
-              5:00
+              {{ track.duration }}
             </td>
           </tr>
         </tbody>
@@ -208,19 +74,112 @@ export default {
   props: {
     title: {
       type: String,
-      required: true
+      default: ''
     },
     desc: {
       type: String,
-      default: '',
-      required: false
+      default: ''
+    },
+    image: {
+      type: String,
+      default: ''
+    },
+    playlistId: {
+      type: String,
+      default: ''
+    },
+    tracks: {
+      type: Array,
+      default () {
+        return []
+      }
     }
+  },
+  data () {
+    return {
+      local_tracks: this.tracks
+    }
+  },
+  created () {
+    // Make a call to backend api to get actual songs from the playlist
+    this.local_tracks = [
+      {
+        name: 'My favorite song 1',
+        artists: [
+          'artist 1',
+          'artist 2'
+        ],
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        album: 'My favorite album',
+        date: '11/3/2021',
+        duration: '3:09',
+        id: '1'
+      },
+      {
+        name: 'My favorite song 2',
+        artists: [
+          'artist 1'
+        ],
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        album: 'My favorite album',
+        date: '11/3/2021',
+        duration: '6:09',
+        id: '2'
+      },
+      {
+        name: 'My favorite song 3',
+        artists: [
+          'artist 1',
+          'artist 2',
+          'artist 3'
+        ],
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        album: 'My favorite album',
+        date: '11/3/2021',
+        duration: '5:09',
+        id: '3'
+      },
+      {
+        name: 'My favorite song 4',
+        artists: [
+          'artist 1',
+          'artist 2'
+        ],
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        album: 'My favorite album',
+        date: '11/3/2021',
+        duration: '4:09',
+        id: '4'
+      },
+      {
+        name: 'My favorite song 5',
+        artists: [
+          'artist 1'
+        ],
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        album: 'My favorite album',
+        date: '11/3/2021',
+        duration: '2:09',
+        id: '5'
+      },
+      {
+        name: 'My favorite song 6',
+        artists: [
+          'artist 1'
+        ],
+        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+        album: 'My favorite album',
+        date: '11/3/2021',
+        duration: '1:09',
+        id: '6'
+      }
+    ]
   }
 }
 </script>
 
 <style>
-#playlist-modal{
+#playlist-modal {
   display: flex;
   width: 100%;
   height: 100%;
@@ -231,7 +190,7 @@ export default {
   overflow-y: auto;
 }
 
-#playlist-modal-header{
+#playlist-modal-header {
   display: flex;
   height: 40%;
   width: 100%;
@@ -243,17 +202,20 @@ export default {
   padding: 16px 32px;
 }
 
-#playlist-modal-image-container{
+#playlist-modal-image-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 250px;
   width: 250px;
-  border: 1px solid;
-  background-color: white;
 }
 
-#playlist-modal-info{
+#playlist-modal-image-container img {
+  width: 100%;
+  height: auto;
+}
+
+#playlist-modal-info {
   display: flex;
   height: 100%;
   flex-direction: column;
@@ -268,7 +230,7 @@ export default {
   padding: 16px 32px;
 }
 
-#playlist-modal-title{
+#playlist-modal-title {
   display: flex;
   align-items: center;
 }
@@ -282,11 +244,11 @@ export default {
   align-items: flex-end;
 }
 
-#playlist-modal-content{
+#playlist-modal-content {
   width: 100%;
 }
 
-#playlist-modal-table{
+#playlist-modal-table {
   min-height: 20%;
   max-height: 60%;
   width: 100%;
@@ -297,17 +259,17 @@ export default {
   box-sizing: border-box; /* Opera/IE 8+ */
 }
 
-#playlist-modal-table thead tr{
+#playlist-modal-table thead tr {
   text-align: left;
   font-weight: bold;
   border-bottom: 1px solid black;
 }
 
-#playlist-modal-table thead th{
+#playlist-modal-table thead th {
   font-size: 1.1em;
 }
 
-#playlist-modal-table tbody td{
+#playlist-modal-table tbody td {
   height: 5em;
 }
 
@@ -319,45 +281,45 @@ export default {
   text-overflow: ellipsis;
 }
 
-#track-number{
+#track-number {
   width: 5%;
   padding-bottom: 16px;
   padding-left: 32px;
 }
 
-#title{
+#title {
   width: 38%;
   padding-right: 40px;
   padding-bottom: 16px;
 }
 
-#album{
+#album {
   width: 30%;
   padding-left: 32px;
   padding-right: 40px;
   padding-bottom: 16px;
 }
 
-#date-added{
+#date-added {
   width: 16%;
   padding-right: 40px;
   padding-bottom: 16px;
 }
 
-#duration{
+#duration {
   width: 13%;
   padding-right: 32px;
   padding-bottom: 16px;
 }
 
-.track-number{
+.track-number {
   width: 5%;
   padding-left: 32px;
   padding-right: 16px;
   padding-top: 16px;
 }
 
-.title-container{
+.title-container {
   display: flex;
   align-items: center;
   width: 38%;
@@ -372,9 +334,12 @@ export default {
   align-items: center;
   height: 50px;
   width: 50px;
-  color: white;
-  background-color: black;
   margin-right: 16px;
+}
+
+.track-image-container img {
+  width: 100%;
+  height: auto;
 }
 
 .track-info {
@@ -382,22 +347,26 @@ export default {
   flex-direction: column;
 }
 
-.album{
+.album {
   width: 30%;
   padding-left: 32px;
   padding-right: 40px;
   padding-top: 16px;
 }
 
-.date-added{
+.date-added {
   width: 16%;
   padding-right: 40px;
   padding-top: 16px;
 }
 
-.duration{
+.duration {
   width: 13%;
   padding-right: 32px;
   padding-top: 16px;
+}
+
+.artist-names {
+  white-space: nowrap;
 }
 </style>
