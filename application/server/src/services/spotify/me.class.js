@@ -1,12 +1,12 @@
 const { Service } = require('feathers-mongodb');
-const { Spotify } = require('./spotify.class');
+//const { Spotify } = require('./spotify.class');
 
 exports.Me = class Me extends Service {
-  constructor(options, app) {
+  constructor(options) {
     super(options);
   }
 
   async find() {
-    return 'hi'
+    return 'hi';
   }
 };
