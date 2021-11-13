@@ -1,14 +1,26 @@
+const axios = require('axios');
 const { AuthenticationService, JWTStrategy } = require('@feathersjs/authentication');
 const { LocalStrategy } = require('@feathersjs/authentication-local');
 const { expressOauth, OAuthStrategy } = require('@feathersjs/authentication-oauth');
 
 class SpotifyStrategy extends OAuthStrategy {
+  async getProfile(authResult){
+    const accessToken = authResult.access_token;
+    const{data} = await axios.get('http://api.spotify.com/v1/me',{
+      headers:{
+        "Authorization": `Bearer ${accessToken}`
+      }
+    });
+    return data;
+  }
   async getEntityData(profile) {
     const baseData = await super.getEntityData(profile);
 
     return {
       ...baseData,
-      email: profile.email
+      email: profile.email,
+      name: profile.name,
+      profilePicutre: profile.images
     };
   }
 }
