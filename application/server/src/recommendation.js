@@ -1,3 +1,4 @@
+const axios = require('axios');
 class Recommendation{
     async getRecommendations(token){
         const url = 'https://api.spotify.com/v1/recommendations';
