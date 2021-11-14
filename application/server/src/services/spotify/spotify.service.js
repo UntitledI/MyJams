@@ -20,4 +20,5 @@ app.use('/Me', new Me(options, app));
 
 
   service.hooks(hooks);
+app.use('/Recommend',new Recoomendation(options,app));
 };
