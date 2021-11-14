@@ -27,28 +27,36 @@ exports.Recommendation = class recommendationService extends Service{
     //3 is the track
     //4 is id, name
     for(x=0; x < data.tracks.length;x++){
-      const trackURL = data.tracks[x][3].external_urls.spotify;
-      const songName = data.tracks[x][4].name;
-      const id = data.tracks[x][4].id;
-      const albumCover = data.tracks[x].album[4].images[0];
-      const artistName = data.tracks[x].album[0].artists[1].name;
-
-      songArray.push({"id": id,
+      const trackURL = data.tracks[x].external_urls.spotify;
+      const songName = data.tracks[x].name;
+      const id = data.tracks[x].id;
+      const albumCover = data.tracks[x].album.images[0].url;
+      const artistName = data.tracks[x].album.artists[0].name;
+      const trackCover = axios.get(`https://api.spotify.com/v1/tracks/${id}`,{
+        headers:{
+          "Authorization": `Bearer ${token}`
+        }
+      }).album.images[0].url;
+      if(trackCover == albumCover){
+        songArray.push({"id": id,
                       "name" : songName,
                     "artist": artistName,
-                    "image" : albumCover
-                       });
-
-      
+                    "image" : albumCover});
+      }else{
+        songArray.push({"id": id,
+                      "name" : songName,
+                    "artist": artistName,
+                    "image" : trackCover});
+      }
     }
     return songArray;
   }
 }
-song = {
+/*song = {
   id: someID
   name: song name
   artist: artist name 
   image: song cover image
   album: name of album its from
   genres: probably gonna be an array of genre names
-} (edited)
+} (edited) */
