@@ -67,36 +67,41 @@ export default {
       finished: false,
       questions: [
         {
-          questionText: 'Hello',
+          questionText: 'Genre',
+          questionType: 'mc',
+          answer: [
+            { answerText: 'Pop' },
+            { answerText: 'Hip Hop' },
+            { answerText: 'R&B' },
+            { answerText: 'Country' },
+            { answerText: 'Electronic' },
+            { answerText: 'Lofi' },
+            { answerText: 'Rock' },
+            { answerText: 'Latin' },
+            { answerText: 'K-Pop' },
+            { answerText: 'Folk' },
+            { answerText: 'Indie' },
+            { answerText: 'Jazz' },
+            { answerText: 'Classical' }
+          ]
+        },
+        {
+          questionText: 'How energetic do you like your music to be?',
           questionType: 'slider',
           sliderValue: 0,
           sliderMessage: 'neutral'
         },
         {
-          questionText: 'Hello-1',
+          questionText: 'Dance',
           questionType: 'slider',
           sliderValue: 0,
           sliderMessage: 'neutral'
         },
         {
-          questionText: 'Hello2',
-          questionType: 'mc',
-          answer: [
-            { answerText: 'yes' },
-            { answerText: 'no' },
-            { answerText: 'yes2' },
-            { answerText: 'no2' }
-          ]
-        },
-        {
-          questionText: 'Hello3',
-          questionType: 'mc',
-          answer: [
-            { answerText: 'yes' },
-            { answerText: 'no' },
-            { answerText: 'yes2' },
-            { answerText: 'no2' }
-          ]
+          questionText: 'How much do you like acoustic music?',
+          questionType: 'slider',
+          sliderValue: 0,
+          sliderMessage: 'neutral'
         }
       ],
       responses: []
