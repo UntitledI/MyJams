@@ -16,7 +16,7 @@ module.exports = function (app) {
   const service = app.service('spotify');
 
   // Initialize me   
-app.use('/Me', new Me(options, app));
+  app.use('/Me', new Me(options, app));
 
 
   service.hooks(hooks);
