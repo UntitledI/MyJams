@@ -27,6 +27,18 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+const mongoose = require('mongoose');
+const uri = process.env.MONGODB_URL;
+
+module.exports = async function run() {
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  });
+}
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
