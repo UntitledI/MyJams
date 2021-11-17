@@ -31,7 +31,7 @@
           type="range"
           min="-1"
           max="1"
-          step=".001"
+          step=".01"
           class="answer-slider"
           @change="handleSliderChange(questions[currentQuestion].sliderValue)"
         >
@@ -89,19 +89,25 @@ export default {
           questionText: 'How energetic do you like your music to be?',
           questionType: 'slider',
           sliderValue: 0,
-          sliderMessage: 'neutral'
+          sliderMessage: 'No preference',
+          sliderMsgPos: 'I like my music energetic',
+          sliderMsgNeg: 'I like my music more calm'
         },
         {
-          questionText: 'Dance',
+          questionText: 'How popular are the songs you listen to?',
           questionType: 'slider',
           sliderValue: 0,
-          sliderMessage: 'neutral'
+          sliderMessage: 'No Preference',
+          sliderMsgPos: 'I like listening to more mainstream music',
+          sliderMsgNeg: 'I like finding unconventional music'
         },
         {
           questionText: 'How much do you like acoustic music?',
           questionType: 'slider',
           sliderValue: 0,
-          sliderMessage: 'neutral'
+          sliderMessage: 'No Preference',
+          sliderMsgPos: 'I like the use of acoustic type instruments',
+          sliderMsgNeg: 'I like music that is more electronic'
         }
       ],
       responses: []
@@ -120,12 +126,13 @@ export default {
       }
     },
     handleSliderChange (value) {
-      if (value === 0) {
-        this.questions[this.currentQuestion].sliderMessage = value
+      if (value < 0.1 && value > -0.1) {
+        this.questions[this.currentQuestion].sliderValue = 0
+        this.questions[this.currentQuestion].sliderMessage = 'No Preference'
       } else if (value < 0) {
-        this.questions[this.currentQuestion].sliderMessage = value
+        this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
       } else if (value > 0) {
-        this.questions[this.currentQuestion].sliderMessage = value
+        this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
       }
     },
     handleAnswerClick (answer) {
@@ -156,6 +163,7 @@ export default {
     },
     handleSubmit () {
       this.finished = true
+      this.startQuestionnaire = false
     }
   }
 }
@@ -206,13 +214,14 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow: 0 6px 12px -2px rgba(50,50,93,.25),0 3px 7px -3px rgba(0,0,0,.3);
-  width: 40%;
-  margin: 6rem 6rem;
+  width: 50%;
+  margin: 3rem;
 }
 
 #question{
   padding: 1rem;
   margin: 1rem;
+  text-align: center;
 }
 
 #answers{
@@ -226,6 +235,8 @@ export default {
 .question-buttons{
   padding: .5rem;
   margin: 1rem;
+  height: 7vh;
+  width: 15vh;
 }
 
 .answer-slider{
@@ -234,14 +245,10 @@ export default {
   width: 35vh;
 }
 
-.slider-label{
-
-}
-
 .answer-button{
   margin: .5rem;
   padding: .5rem;
-  height: 10vh;
+  height: 9vh;
   width: 25vh;
 }
 </style>
