@@ -3,6 +3,7 @@ const { Spotify } = require('./spotify.class');
 const hooks = require('./spotify.hooks');
 
 const { Me } = require('./me.class');
+const {Recommendation} = require('./recommendation.class');
 
 module.exports = function (app) {
   const options = {
@@ -20,5 +21,6 @@ app.use('/Me', new Me(options, app));
 
 
   service.hooks(hooks);
-app.use('/Recommend',new Recoomendation(options,app));
+app.use('/Recommendation',new Recommendation(options,app));
+
 };
