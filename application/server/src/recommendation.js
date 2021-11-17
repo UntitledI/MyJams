@@ -1,5 +1,12 @@
 const axios = require('axios');
+const MongoClient = require('mongodb').MongoClient;
+
 class Recommendation{
+    setUserPreference(answers){
+      const array = array.apply(null,answers);
+      app.get('MongoClient');
+      
+    }
     async getRecommendations(token){
         const url = 'https://api.spotify.com/v1/recommendations';
         let artistStringRecommendation;
