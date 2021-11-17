@@ -7,12 +7,12 @@ const {
 module.exports = {
   before: {
     all: [],
-    find: [ authenticate('jwt') ],
-    get: [ authenticate('jwt') ],
+    find: [ authenticate('spotify') ],
+    get: [ authenticate('spotify') ],
     create: [ hashPassword('password') ],
-    update: [ hashPassword('password'),  authenticate('jwt') ],
-    patch: [ hashPassword('password'),  authenticate('jwt') ],
-    remove: [ authenticate('jwt') ]
+    update: [ hashPassword('password'),  authenticate('spotify') ],
+    patch: [ hashPassword('password'),  authenticate('spotify') ],
+    remove: [ authenticate('spotify') ]
   },
 
   after: {

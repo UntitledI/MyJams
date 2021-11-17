@@ -12,7 +12,9 @@
       "spotify": {
         "key": "SPOTIFY_CLIENT_ID",
         "secret": "SPOTIFY_CLIENT_SECRET",
-         "scope": ["user-read-email","user-read-private"]
+         "scope": ["user-read-email","user-read-private", "playlist-read-private"],
+         "token_endpoint_auth_method": "https://accounts.spotify.com/api/token",
+         "profile_url": "https://api.spotify.com/v1/me"
       }
 
     },
@@ -20,18 +22,8 @@
     "service": "spotify",
     "secret": "GdxTTPdL8TBJ54x/UTd/O8n8LZ0=",
     "authStrategies": [
-      "jwt",
-      "local"
+      "spotify"
     ],
-    "jwtOptions": {
-      "header": {
-        "typ": "access"
-      },
-      "audience": "https://yourdomain.com",
-      "issuer": "feathers",
-      "algorithm": "HS256",
-      "expiresIn": "1d"
-    },
     "local": {
       "usernameField": "email",
       "passwordField": "password"
