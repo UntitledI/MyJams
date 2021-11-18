@@ -44,3 +44,17 @@ const UserSchema = new Schema({
 
 const User = mongoose.model('User', UserSchema)
 module.exports = User;
+module.exports = async function setRecommendations(id,preferences){
+    const documentQuery = await User.findById(id);
+    documentQuery.preferences = preferences;
+    await documentQuery.save();
+    return documentQuery;
+}
+module.exports = async function getAccessToken(id){
+    const document = await User.findById(id);
+    return document.get('spotifyAccessToken');
+}
+module.exports = async function getRecommendations(id){
+    const documentQuery = await User.findById(id);
+    return documentQuery.get('preferences');
+}
