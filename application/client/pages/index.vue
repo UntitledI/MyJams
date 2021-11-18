@@ -14,7 +14,7 @@ export default {
       return this.$config.apiURL + '/oauth/spotify'
     },
     getSongRecommendationURL () {
-      return '/test'
+      return '/songRecommendations'
     }
   },
   mounted () {

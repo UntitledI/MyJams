@@ -4,9 +4,7 @@ import { normalizeURL, decode } from 'ufo'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _a758cbc4 = () => interopDefault(import('..\\pages\\songRecommendations.vue' /* webpackChunkName: "pages/songRecommendations" */))
-const _439159f8 = () => interopDefault(import('..\\pages\\songRecommendations2.vue' /* webpackChunkName: "pages/songRecommendations2" */))
-const _2d389849 = () => interopDefault(import('..\\pages\\test.vue' /* webpackChunkName: "pages/test" */))
+const _0143d1e8 = () => interopDefault(import('..\\pages\\find-Music.vue' /* webpackChunkName: "pages/find-Music" */))
 const _da9fa7aa = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
 const emptyFn = () => {}
@@ -21,17 +19,9 @@ export const routerOptions = {
   scrollBehavior,
 
   routes: [{
-    path: "/songRecommendations",
-    component: _a758cbc4,
-    name: "songRecommendations"
-  }, {
-    path: "/songRecommendations2",
-    component: _439159f8,
-    name: "songRecommendations2"
-  }, {
-    path: "/test",
-    component: _2d389849,
-    name: "test"
+    path: "/find-Music",
+    component: _0143d1e8,
+    name: "find-Music"
   }, {
     path: "/",
     component: _da9fa7aa,

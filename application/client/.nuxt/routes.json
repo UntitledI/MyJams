@@ -1,26 +1,16 @@
 [
   {
-    "name": "songRecommendations",
-    "path": "/songRecommendations",
-    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\songRecommendations.vue",
-    "chunkName": "pages/songRecommendations"
-  },
-  {
-    "name": "songRecommendations2",
-    "path": "/songRecommendations2",
-    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\songRecommendations2.vue",
-    "chunkName": "pages/songRecommendations2"
-  },
-  {
-    "name": "test",
-    "path": "/test",
-    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\test.vue",
-    "chunkName": "pages/test"
+    "name": "find-Music",
+    "path": "/find-Music",
+    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\find-Music.vue",
+    "chunkName": "pages/find-Music",
+    "_name": "_0143d1e8"
   },
   {
     "name": "index",
     "path": "/",
     "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\index.vue",
-    "chunkName": "pages/index"
+    "chunkName": "pages/index",
+    "_name": "_da9fa7aa"
   }
 ]
