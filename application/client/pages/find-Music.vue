@@ -4,7 +4,7 @@
         <div>
             <div id="container" class = "container">
                 <div class = "recommendationContainer" >
-                    <swiper id = "swiper" @slideChange ="onSlideChange" @reachEnd="reachEnd" @sliderMove="sliderMove" @touchEnd="touchEnd">
+                    <swiper id = "swiper" @touchEnd="touchEnd">
                     <swiper-slide>
                         <div id = "songContainer" class = "songContainer">
                             <div class = "songCover">
@@ -89,17 +89,6 @@ export default {
   mounted () {
   },
   methods: {
-    test () {
-      const element = document.getElementsByClassName('swiper-wrapper')
-      console.log(element[0].style.transform)
-    },
-    onSlideChange () {
-      console.log('slide changed')
-    },
-    reachEnd () {
-      const element = document.getElementsByClassName('swiper-wrapper')
-      console.log(element[0].style.transform)
-    },
     touchEnd () {
       const element = document.getElementsByClassName('swiper-wrapper')
       const x = element[0].style.transform.substring(11).replace(/[^\-0-9.]/g, '')
