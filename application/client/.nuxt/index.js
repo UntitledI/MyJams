@@ -12,8 +12,9 @@ import { setContext, getLocation, getRouteData, normalizeError } from './utils'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_119a88c0 from 'nuxt_plugin_plugin_119a88c0' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_plugin_51f58e1d from 'nuxt_plugin_plugin_51f58e1d' // Source: .\\components\\plugin.js (mode: 'all')
 import nuxt_plugin_vueawesomeswiper_4af85e3f from 'nuxt_plugin_vueawesomeswiper_4af85e3f' // Source: ..\\plugins\\vue-awesome-swiper (mode: 'all')
+import nuxt_plugin_vuejsmodal_0719e4a0 from 'nuxt_plugin_vuejsmodal_0719e4a0' // Source: ..\\plugins\\vue-js-modal.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -177,12 +178,16 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_119a88c0 === 'function') {
-    await nuxt_plugin_plugin_119a88c0(app.context, inject)
+  if (typeof nuxt_plugin_plugin_51f58e1d === 'function') {
+    await nuxt_plugin_plugin_51f58e1d(app.context, inject)
   }
 
   if (typeof nuxt_plugin_vueawesomeswiper_4af85e3f === 'function') {
     await nuxt_plugin_vueawesomeswiper_4af85e3f(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vuejsmodal_0719e4a0 === 'function') {
+    await nuxt_plugin_vuejsmodal_0719e4a0(app.context, inject)
   }
 
   // Lock enablePreview in context

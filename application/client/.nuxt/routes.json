@@ -2,15 +2,22 @@
   {
     "name": "find-music",
     "path": "/find-music",
-    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\find-music.vue",
+    "component": "C:\\\\Users\\\\Kelvin\\\\Desktop\\\\My projects\\\\CSC 648 Project\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\find-music.vue",
     "chunkName": "pages/find-music",
-    "_name": "_ec5c9bf0"
+    "_name": "_5cdb78a1"
+  },
+  {
+    "name": "profile",
+    "path": "/profile",
+    "component": "C:\\\\Users\\\\Kelvin\\\\Desktop\\\\My projects\\\\CSC 648 Project\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\profile.vue",
+    "chunkName": "pages/profile",
+    "_name": "_d5e3756e"
   },
   {
     "name": "index",
     "path": "/",
-    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\index.vue",
+    "component": "C:\\\\Users\\\\Kelvin\\\\Desktop\\\\My projects\\\\CSC 648 Project\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\index.vue",
     "chunkName": "pages/index",
-    "_name": "_da9fa7aa"
+    "_name": "_fbae2c1c"
   }
 ]
