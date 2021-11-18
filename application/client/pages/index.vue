@@ -2,7 +2,6 @@
   <div>
     <h1>Tinder for Music</h1>
     <a :href="getLoginUrl"> Login </a>
-    <a :href="getSongRecommendationURL"> Song Recommendations </a>
   </div>
 </template>
 
@@ -12,9 +11,6 @@ export default {
   computed: {
     getLoginUrl () {
       return this.$config.apiURL + '/oauth/spotify'
-    },
-    getSongRecommendationURL () {
-      return '/songRecommendations'
     }
   },
   mounted () {

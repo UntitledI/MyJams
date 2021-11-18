@@ -87,8 +87,6 @@ export default {
     ]
   },
   mounted () {
-    // // document.querySelector('#swiper').addEventListener('mousedown', () => { this.mousemove(() => { this.test() }) })
-    // document.querySelector('.swiper-container').addEventListener('slideChange', () => { this.test() })
   },
   methods: {
     test () {
@@ -101,10 +99,6 @@ export default {
     reachEnd () {
       const element = document.getElementsByClassName('swiper-wrapper')
       console.log(element[0].style.transform)
-    },
-    sliderMove () {
-    //   const element = document.getElementsByClassName('swiper-wrapper')
-    //   console.log(element[0].style.transform)
     },
     touchEnd () {
       const element = document.getElementsByClassName('swiper-wrapper')
@@ -119,13 +113,11 @@ export default {
     },
     like () {
       if (this.local_index < this.local_tracks.length - 1) {
-        // this.local_likedSongs.push(this.local_tracks[this.local_index])
         this.local_index++
       }
     },
     dislike () {
       if (this.local_index < this.local_tracks.length - 1) {
-        // this.local_dislikedSongs.push(this.local_tracks[this.local_index])
         this.local_index++
       }
     }

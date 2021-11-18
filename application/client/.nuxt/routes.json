@@ -1,10 +1,10 @@
 [
   {
-    "name": "find-Music",
-    "path": "/find-Music",
-    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\find-Music.vue",
-    "chunkName": "pages/find-Music",
-    "_name": "_0143d1e8"
+    "name": "find-music",
+    "path": "/find-music",
+    "component": "C:\\\\Users\\\\antho\\\\Desktop\\\\csc648-fa21-01-team03\\\\application\\\\client\\\\pages\\\\find-music.vue",
+    "chunkName": "pages/find-music",
+    "_name": "_ec5c9bf0"
   },
   {
     "name": "index",
