@@ -8,7 +8,7 @@
                     <swiper-slide>
                         <div id = "songContainer" class = "songContainer">
                             <div class = "songCover">
-                                <img class = "songImage" :src="local_tracks[local_index].image"></img>
+                                <img class = "songImage" src="../static/songCovers/StuckOnYou.png"></img>
                             </div>
                             <div class = "songInformation">
                                 <span class = "songName"> {{ local_tracks[local_index].name }}</span>
@@ -70,7 +70,7 @@ export default {
       },
       {
         id: '2',
-        image: 'http://localhost:3000/_nuxt/static/songCovers/StuckOnYou.png',
+        image: 'http://localhost:3000/_nuxt/static/songCovers/LunasHowl.png',
         name: 'Stuck On You',
         artist: 'Coco Love ft. Switch24/7',
         album: 'Heart Broken',
