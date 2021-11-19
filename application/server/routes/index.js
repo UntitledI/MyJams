@@ -21,8 +21,13 @@ const strategy = new SpotifyStrategy(spotifyConfig, (accessToken, refreshToken, 
   const spotifyId = profile.id
   const email = profile.emails[0].value
   
-  const createdUser = addNewUser({email, spotifyId, accessToken, refreshToken, expires_in})
-  return done(null,createdUser)
+  addNewUser(email, spotifyId, accessToken, refreshToken, expires_in).then((user) => {
+    return done(null,user)
+  }).catch((e)=>{
+    console.log('test')
+    console.log(e)
+    return done(e,null)
+  })
 
 })
 
@@ -30,7 +35,7 @@ passport.use(strategy)
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  return res.send(addNewUser('email', 'spotifyId', 'accessToken', 'refreshToken', 'expires_in'))
 });
 
 app.get('/login', passport.authenticate('spotify', {scope: scopes, showDialog: showDialog}))

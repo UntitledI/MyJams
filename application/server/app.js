@@ -1,31 +1,37 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const passport = require('passport');
+require('dotenv').config();
+const uri = process.env.MONGODB_URL;
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
+app.use(passport.initialize());
 
-
-const run = require("./utils/mongo")
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+console.log('hi '+uri)
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  //useFindAndModify: false,
+  //useCreateIndex: true
+}).then( ()=> {
+  console.log('mongodb connection')
+}).catch(e => console.log(e));
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-await run()
+console.log()
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
