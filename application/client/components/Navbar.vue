@@ -21,7 +21,7 @@
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/settings" class="menu-item">
+                  <NuxtLink to="/preferences" class="menu-item">
                     Settings
                   </NuxtLink>
                 </li>
