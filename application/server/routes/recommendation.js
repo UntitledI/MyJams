@@ -5,7 +5,9 @@ var router = express.Router();
 const mongoose = require('mongoose');
 const UserDb = require('../models/user');
 
-router.post('/',function(req,res,next){
+//app.post()
+//make make this a separate file for setting preferences.
+router.post('/recommendation',function(req,res,next){
   res.send("Got post request.");
   res.send("You sent "+ req.query);
   const Arr = req.query.parse();
@@ -15,12 +17,13 @@ router.post('/',function(req,res,next){
   //push req.body to db if that's where the array is.
 
 });
-router.get('/',function(req,res){
+//app.get()
+router.get('/recommendation',function(req,res){
   //call db for user prefernces and token
   const url = 'https://api.spotify.com/v1/recommendations';
   let token = UserDb.getAccessToken(req.query.id);
   let preferenceArr = UserDb.getRecommendations(req.query.id);
-  var keys = Object.keys(preferenceArr)
+  var keys = Object.keys(preferenceArr);
   /*let artistStringRecommendation;
   if(artistString.length < 0){
     return;
