@@ -11,7 +11,11 @@ router.post('/recommendation',function(req,res,next){
   res.send("Got post request.");
   res.send("You sent "+ req.query);
   const Arr = req.query.parse();
-  UserDb.setRecommendations(req.query.id,req.query.recommendations);
+  UserDb.setRecommendations(req.query.id,req.query.recommendations).then((preferences)=>{
+    console.log(preferences);
+  }).catch((e)=>{
+    console.log(e);
+  });
   //req.parmas.answer???
   res.redirect("/");
   //push req.body to db if that's where the array is.
@@ -22,7 +26,11 @@ router.get('/recommendation',function(req,res){
   //call db for user prefernces and token
   const url = 'https://api.spotify.com/v1/recommendations';
   let token = UserDb.getAccessToken(req.query.id);
-  let preferenceArr = UserDb.getRecommendations(req.query.id);
+  let preferenceArr = UserDb.getRecommendations(req.query.id).then(()=>{
+
+  }).catch((e)=>{
+    
+  });
   var keys = Object.keys(preferenceArr);
   /*let artistStringRecommendation;
   if(artistString.length < 0){
