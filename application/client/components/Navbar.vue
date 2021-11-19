@@ -53,18 +53,15 @@ export default {
   methods: {
     showDropdown (selector) {
       const element = document.querySelector(selector)
-
       const outsideClickListener = (event) => {
         if (!element.contains(event.target) && element.classList.contains('dropdown-menu-visible')) {
           element.setAttribute('class', 'dropdown-menu')
           removeClickListener()
         }
       }
-
       const removeClickListener = () => {
         document.removeEventListener('click', outsideClickListener)
       }
-
       document.addEventListener('click', outsideClickListener)
       element.setAttribute('class', 'dropdown-menu-visible')
     }
@@ -76,35 +73,28 @@ export default {
 nav {
   width: 66%;
 }
-
 .menu-items {
   display: flex;
   align-items: center;
 }
-
 .menu-items li {
   padding: 0.5rem 1rem;
 }
-
 .dropdown {
   position: relative;
   overflow: visible;
 }
-
 .dropdown li {
   transition: background 0.15s ease-in-out;
 }
-
 .dropdown li:hover {
   cursor: pointer;
   background: #ffa012;
 }
-
 .dropdown-menu {
   position: absolute;
   visibility: hidden;
 }
-
 .dropdown-menu-visible {
   position: absolute;
   width: 10rem;
@@ -114,14 +104,12 @@ nav {
   background: rgb(20,131,170);
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
 }
-
 .menu-item {
   display: flex;
   justify-content: space-between;
   padding-left: 1rem;
   font-size: 1.1rem;
 }
-
 #header{
   display: flex;
   align-items: center;
@@ -138,12 +126,10 @@ nav {
   font-family: "Montserrat", sans-serif;
   font-size: 1.5rem;
 }
-
 #header a {
   text-decoration: none;
   color: white;
 }
-
 #nav-container{
   display: flex;
   align-items: center;
@@ -151,22 +137,18 @@ nav {
   width: 1000px;
   padding: 1rem 0;
 }
-
 #nav-container ul {
   list-style: none;
 }
-
 #logo {
   font-weight: bold;
   color: white;
 }
-
 #functions-container {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-
 #nav-profile-pic{
     height: 32px;
     width: 32px;
@@ -179,12 +161,10 @@ nav {
     cursor: pointer;
     overflow: hidden;
 }
-
 #nav-profile-pic img {
     width: 100%;
     height: auto;
 }
-
 #search {
     width: 12rem;
     height: 1.5rem;
@@ -192,11 +172,9 @@ nav {
     padding-left: 0.5rem;
     align-self: center;
 }
-
 #profile-search-container {
   display: flex;
 }
-
 #find-music-container {
   display: flex;
   justify-content: center;
@@ -204,20 +182,16 @@ nav {
   width: 33%;
   white-space: nowrap;
 }
-
 @media only screen and (max-width: 650px) {
     nav {
       width: 100%;
     }
-
     #elements-container {
       justify-content: space-evenly;
     }
-
     #logo {
         display: none;
     }
-
     #find-music{
       position: relative;
       left: 0;
