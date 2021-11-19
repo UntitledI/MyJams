@@ -12,15 +12,14 @@ const uri = process.env.MONGODB_URL;
 var indexRouter = require('./routes/index');
 
 var app = express();
-app.use(passport.initialize());
 
-console.log('hi '+uri)
+console.log('hi ' + uri)
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   //useFindAndModify: false,
   //useCreateIndex: true
-}).then( ()=> {
+}).then(() => {
   console.log('mongodb connection')
 }).catch(e => console.log(e));
 
@@ -34,14 +33,14 @@ console.log()
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
