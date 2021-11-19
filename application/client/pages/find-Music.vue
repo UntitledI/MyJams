@@ -1,36 +1,36 @@
 <template>
+  <div>
+    <Navbar />
     <div>
-        <Navbar/>
-        <div>
-            <div id="container" class = "container">
-                <div class = "recommendationContainer" >
-                    <swiper id = "swiper" @touchEnd="touchEnd">
-                    <swiper-slide>
-                        <div id = "songContainer" class = "songContainer">
-                            <div class = "songCover">
-                                <img class = "songImage" src="../static/songCovers/StuckOnYou.png"></img>
-                            </div>
-                            <div class = "songInformation">
-                                <span class = "songName"> {{ local_tracks[local_index].name }}</span>
-                                <span class = "artistName"> {{ local_tracks[local_index].artist }} </span>
-                                <span class = "albumName"> {{ local_tracks[local_index].album }} </span>
-                                <span class = "genre"> {{ local_tracks[local_index].genre }} </span>
-                            </div>
-                        </div>
-                    </swiper-slide>
-                    </swiper>
+      <div id="container" class="container">
+        <div class="recommendationContainer">
+          <swiper id="swiper" @touchEnd="touchEnd">
+            <swiper-slide>
+              <div id="songContainer" class="songContainer">
+                <div class="songCover">
+                  <img class="songImage" src="../static/songCovers/StuckOnYou.PNG">
                 </div>
-                <div class = "buttonContainer">
-                    <div class = "dislikeButton">
-                        <img class = "dislikeButtonImage" @click = "dislike" src = "../static/buttons/dislike.png" />
-                    </div>
-                    <div class = "likeButton">
-                    <img class = "likeButtonImage" @click ="like" src = "../static/buttons/like.png"/>
-                    </div>
+                <div class="songInformation">
+                  <span class="songName"> {{ local_tracks[local_index].name }}</span>
+                  <span class="artistName"> {{ local_tracks[local_index].artist }} </span>
+                  <span class="albumName"> {{ local_tracks[local_index].album }} </span>
+                  <span class="genre"> {{ local_tracks[local_index].genre }} </span>
                 </div>
-            </div>
+              </div>
+            </swiper-slide>
+          </swiper>
         </div>
+        <div class="buttonContainer">
+          <div class="dislikeButton">
+            <img class="dislikeButtonImage" src="../static/buttons/dislike.png" @click="dislike">
+          </div>
+          <div class="likeButton">
+            <img class="likeButtonImage" src="../static/buttons/like.png" @click="like">
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
