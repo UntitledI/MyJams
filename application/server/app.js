@@ -10,6 +10,8 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+
+const run = require("./utils/mongo")
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -20,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+await run()
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -28,17 +32,7 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-const mongoose = require('mongoose');
-const uri = process.env.MONGODB_URL;
 
-module.exports = async function run() {
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-  });
-}
 
 // error handler
 app.use(function(err, req, res, next) {
