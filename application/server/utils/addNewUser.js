@@ -8,6 +8,21 @@ module.exports = async function addNewUser(email, spotifyId, spotifyAccessToken,
         spotifyRefreshToken,
         spotifyExpiresIn
     });
+
+    let exists = await User.findOne({email: user.email});
+    if(!exists){
+        user.save().then((res) => {
+            // console.log(res)
+        }).catch((e) => {
+            console.log(e);
+        })
+    }else{
+        exists.updateOne(user).then((res) => {
+            // console.log(res)
+        }).catch((e) => {
+            console.log(e);
+        })
+    }
     await user.save();
     return user;
 }
