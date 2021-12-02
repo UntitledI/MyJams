@@ -3,29 +3,29 @@
         <Navbar/>
         <div>
             <div id="container" class = "container">
-                <div class = "recommendationContainer" >
+                <div class = "recommendation-container" >
                     <swiper id = "swiper" @touchEnd="touchEnd">
                     <swiper-slide>
-                        <div id = "songContainer" class = "songContainer">
-                            <div class = "songCover">
-                                <img class = "songImage" src="../static/songCovers/StuckOnYou.png"></img>
+                        <div id = "song-container" class = "song-container">
+                            <div class = "song-cover">
+                                <img class = "song-image" src="../static/songCovers/StuckOnYou.png"></img>
                             </div>
-                            <div class = "songInformation">
-                                <span class = "songName"> {{ local_tracks[local_index].name }}</span>
-                                <span class = "artistName"> {{ local_tracks[local_index].artist }} </span>
-                                <span class = "albumName"> {{ local_tracks[local_index].album }} </span>
+                            <div class = "song-information">
+                                <span class = "song-name"> {{ local_tracks[local_index].name }}</span>
+                                <span class = "artist-name"> {{ local_tracks[local_index].artist }} </span>
+                                <span class = "album-name"> {{ local_tracks[local_index].album }} </span>
                                 <span class = "genre"> {{ local_tracks[local_index].genre }} </span>
                             </div>
                         </div>
                     </swiper-slide>
                     </swiper>
                 </div>
-                <div class = "buttonContainer">
-                    <div class = "dislikeButton">
-                        <img class = "dislikeButtonImage" @click = "dislike" src = "../static/buttons/dislike.png" />
+                <div class = "button-container">
+                    <div class = "dislike-button">
+                        <img class = "dislike-button-image" @click = "dislike" src = "../static/buttons/dislike.png" />
                     </div>
-                    <div class = "likeButton">
-                    <img class = "likeButtonImage" @click ="like" src = "../static/buttons/like.png"/>
+                    <div class = "like-button">
+                    <img class = "like-button-image" @click ="like" src = "../static/buttons/like.png"/>
                     </div>
                 </div>
             </div>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+
 import Navbar from '../components/Navbar'
 
 export default {
@@ -98,7 +99,6 @@ export default {
       if (x < -120) {
         this.dislike()
       }
-      console.log(x)
     },
     like () {
       if (this.local_index < this.local_tracks.length - 1) {
@@ -131,15 +131,17 @@ export default {
     justify-content: center;
     flex-direction: column;
 }
-.recommendationContainer {
+.recommendation-container {
     display: flex;
     padding-top:150px;
     width: 100%;
     align-items: center;
 }
-.songContainer {
+.song-container {
     display: flex;
     border: .3rem solid rgb(75,173,181);
+    padding: 20px;
+    min-width: 60%;
     height: 500px;
     width: 90%;
     margin-left: auto;
@@ -150,20 +152,16 @@ export default {
     rgba(0, 0, 0, 0.17) 0px 12px 13px,
     rgba(0, 0, 0, 0.09) 0px -3px 5px
 }
-.songContainer {
-    padding: 20px;
-    min-width: 60%;
-}
-.songImage {
+.song-image {
     width: 540px;
     height: 500px;
 }
-.buttonContainer {
+.button-container {
     padding: 50px;
     display: flex;
     gap: 100px;
 }
-.likeButton, .dislikeButton {
+.like-button, .dislike-button {
     border: .3rem solid rgb(13,173,181);
     width: 128px;
     align-self: center;
@@ -171,41 +169,38 @@ export default {
     box-sizing: border-box;
     transform: scale(1.1);
 }
-.likeButton:hover,.dislikeButton:hover {
+.like-button:hover,.dislike-button:hover {
     transform: scale(1.2);
 }
-.likeButtonImage, .dislikeButtonImage {
+.like-button-image, .dislike-button-image {
     height: 100%;
     width: 100%;
 }
-.retryButtonContainer {
-    align-self:top;
-}
-.buttonText {
+.button-text {
     font-size: 70px;
 }
-.songCover {
+.song-cover {
     border: .1rem solid black;
     width: 60%;
     align-content: center;
 }
 
-.songInformation {
+.song-information {
     display: flex;
     flex-direction: column;
     padding-left: 30px;
     overflow-x: hidden;
     font-size: 30px;
 }
-.songName {
+.song-name {
     font-size: 50px;
     text-decoration: underline;
 }
-.artistName {
+.artist-name {
     padding-top: 20px;
     padding-left: 30px;
 }
-.albumName {
+.album-name {
     padding-top: 20px;
 }
 .genre {
