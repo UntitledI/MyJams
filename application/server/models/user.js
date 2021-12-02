@@ -43,28 +43,6 @@ const UserSchema = new Schema({
 })
 
 const User = mongoose.model('User', UserSchema)
+const Preference = mongoose.model('Preferences',preferenceSchema);
+module.exports = Preference;
 module.exports = User;
-module.exports = async function setRecommendations(id,preferences){
-    
-    mongoose.connection().on('connected',function(ref){
-        console.log("Connected to the mongo database: "+ ref);
-    });
-    mongoose.connection().on('disconnected',function(ref){
-        console.log("Connected from the mongo database: "+ ref);
-    })
-    mongoose.connect('mongodb://localhost');
-    mongoose.findOneAndUpdate(id,{preferences:preferences},{preferences:[preferenceSchema]});
-    //pick top of bottom.
-    const documentQuery = await mongoose.findById(id);
-    documentQuery.preferences = preferences;
-    await documentQuery.save();
-    return documentQuery;
-}
-module.exports = async function getAccessToken(id){
-    const document = await mongoose.findById(id);
-    return document.get('spotifyAccessToken');
-}
-module.exports = async function getRecommendations(id){
-    const documentQuery = await User.findById(id);
-    return documentQuery.get('preferences');
-}

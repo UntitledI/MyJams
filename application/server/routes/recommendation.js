@@ -1,35 +1,30 @@
 const axios = require('axios');
-const app = require('../../app');
 var express = require('express');
-var router = express.Router();
-const mongoose = require('mongoose');
-const UserDb = require('../models/user');
+const app = express();
+const router = express.Router();
+const getRecommendations = require('../utils/getRecommendation');
+const getAccessToken = require('../utils/getAccessToken');
 
-//app.post()
-//make make this a separate file for setting preferences.
-router.post('/recommendation',function(req,res,next){
-  res.send("Got post request.");
-  res.send("You sent "+ req.query);
-  const Arr = req.query.parse();
-  UserDb.setRecommendations(req.query.id,req.query.recommendations).then((preferences)=>{
-    console.log(preferences);
-  }).catch((e)=>{
-    console.log(e);
-  });
-  //req.parmas.answer???
-  res.redirect("/");
-  //push req.body to db if that's where the array is.
-
-});
 //app.get()
-router.get('/recommendation',function(req,res){
+router.get('/',function(req,res){
+  res.send("Recommendation home")
+});
+
+router.get('/get',function(req,res){
   //call db for user prefernces and token
   const url = 'https://api.spotify.com/v1/recommendations';
-  let token = UserDb.getAccessToken(req.query.id);
-  let preferenceArr = UserDb.getRecommendations(req.query.id).then(()=>{
-
+  let token; 
+  getAccessToken(req.query.id).then((tok)=>{
+	console.log("token: " + tok);
+	token = tok;
   }).catch((e)=>{
-    
+	 console.log(e);
+  });
+  let preferenceArr;
+  getRecommendations(req.query.id).then((arr)=>{
+	preferenceArr = arr;
+  }).catch((e)=>{
+    console.log(e);
   });
   var keys = Object.keys(preferenceArr);
   /*let artistStringRecommendation;
@@ -43,17 +38,18 @@ router.get('/recommendation',function(req,res){
   const minString = minValues.join('&');
   const maxString = maxValues.join('&');*/
   var spotifyRequest = new String(url);
-  for(x = 0; x < preferenceArr.length; x ++){
+  //length-1 because the last item in the array seems to be objectId. 
+  for(x = 0; x < preferenceArr.length-1; x ++){
     if(x == 0 ){
       spotifyRequest.concat(`?${key[x]}=${preferencesArr[x]}&`);
     }else{
       spotifyRequest.concat(`${key[x]}=${preferenceArr[x]}`);
     }
-    if(x +1 <= preferenceArr.length){
+    if(x + 1 <= preferenceArr.length){
       spotifyRequest.concat('&');
     }
   }
-  const {data} = await axios.get(spotifyRequest,{
+  const {data} = axios.get(spotifyRequest,{
     headers:{
       "Authorization" : `Bearer ${token}`
     }

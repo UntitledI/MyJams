@@ -5,6 +5,9 @@ const SpotifyWebApi = require('spotify-web-api-node');
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const addNewUser = require('../utils/addNewUser');
+var preferenceRouter = require('./preferences');
+var recommendationRouter = require('./recommendation');
+
 require('dotenv').config();
 const port = 3030;
 
@@ -41,12 +44,14 @@ passport.deserializeUser(function (user, done) {
 
 app.use(passport.initialize());
 //app.use(passport.session());
+app.use('/recommendation',recommendationRouter);
+app.use('/preference',preferenceRouter);
 
 passport.use(strategy)
 
 /* GET home page. */
 app.get('/', function (req, res, next) {
-  return res.send(addNewUser('email', 'spotifyId', 'accessToken', 'refreshToken', 'expires_in'))
+  return res.send(addNewUser('email', 'spotifyId', 'accessToken', 'refreshToken', 3600))
 });
 
 app.get('/login', passport.authenticate('spotify', { scope: scopes, showDialog: showDialog }))
@@ -59,7 +64,7 @@ app.get('/oauth/spotify/callback', passport.authenticate('spotify', { failureRed
 
 
 app.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`)
+  console.log(`home page listening at http://localhost:${port}`)
 })
 
 module.exports = router;
