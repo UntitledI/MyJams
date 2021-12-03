@@ -23,7 +23,7 @@ module.exports = async function updateAccessToken(id){
         json:true
     }).then(async function(res){
         console.log("I got something. ");
-        console.log(res);
+        //console.log(res);
         document.spotifyAccessToken = res.data.access_token;
         await document.save();
 

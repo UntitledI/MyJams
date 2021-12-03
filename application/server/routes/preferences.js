@@ -1,6 +1,5 @@
 const axios = require('axios');
 var express = require('express');
-const app = express();
 const router = express.Router();
 const bodyParser = require('body-parser');
 const setPreferences = require('../utils/setPreferences');

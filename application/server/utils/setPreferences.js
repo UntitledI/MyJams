@@ -6,7 +6,7 @@ module.exports = async function setPreferences(id,preference){
     //pick top of bottom.
     //const documentQuery = await User.findById(id);
     const documentQuery = await User.findOne({spotifyId: id}).exec();
-    console.log(documentQuery);
+    //console.log(documentQuery);
     /*const query = User.findOneAndUpdate({spotifyId: id},{preferences: preference},overwrite = false,function(err,docs){
         if(err){
             console.log(err);
@@ -22,4 +22,5 @@ module.exports = async function setPreferences(id,preference){
     console.log(documentQuery.preferences);
     //console.log(query.get('preferences'));
     await documentQuery.save();
+    return documentQuery.preferences;
 }

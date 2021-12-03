@@ -4,10 +4,10 @@ const ObjectId = Schema.ObjectId;
 
 // nested preferences schema
 const preferenceSchema = new Schema({
-    genre: {type: String, required: true},
-    energetic: {type: String, required: true},
-    popularity: {type: String, required: true},
-    acousticness: {type: String, required: true},
+    seed_genres: {type: String, required: true},
+    target_energy: {type: String, required: true},
+    target_popularity: {type: String, required: true},
+    target_acousticness: {type: String, required: true},
 });
 
 const UserSchema = new Schema({

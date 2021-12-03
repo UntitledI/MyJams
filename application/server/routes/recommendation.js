@@ -23,24 +23,47 @@ router.get('/get', async function (req, res) {
     console.log("Im in reccomendations endpoint")
     const url = 'https://api.spotify.com/v1/recommendations';
     let preferenceArr = [];
-    //let keys;
-    let spotifyRequest = url;
+    let keys;
+    let spotifyRequest = url+`?market=US&`;
 
     let token = await getAccessToken(req.query.spotifyId);
     let preferences = await getPreferences(req.query.spotifyId);
     preferenceArr = preferences[0];
     console.log("found preferences");
+    delete preferenceArr._id;
+    keys = Object.keys(preferenceArr);
+    
+    
+    console.log(preferenceArr);
+    for(var key in preferenceArr){
+     
+        spotifyRequest+=`${key}=${preferenceArr[key]}&`;
+    }
+    spotifyRequest += ('limit=10');
     // Make request url
+    /*
+    for(x = 0; x < keys.length-1; x ++){
+    if(x == 0 ){
+      spotifyRequest.concat(`?${keys[x]}=${preferencesArr[x]}&`);
+    }else{
+      spotifyRequest.concat(`${keys[x]}=${preferenceArr[x]}`);
+    }
+    if(x + 1 <= preferenceArr.length){
+      spotifyRequest.concat('&');
+    }
+  }
     spotifyRequest = spotifyRequest.concat(`?market=ES&seed_genres=${preferenceArr.genre}&`);
     spotifyRequest = spotifyRequest.concat(`target_energy=${preferenceArr.energetic}&`);
-    spotifyRequest = spotifyRequest.concat(`target_popularity=${preferenceArr.popularity}&`);
+    spotifyRequest = spotifyRequest.concat(`target_popularity=${preferenceArr.popularity*100}&`);
     spotifyRequest = spotifyRequest.concat(`target_acousticness=${preferenceArr.acousticness}`);
-    //console.log("keys: "+ keys);
+    */
+    console.log("keys: "+ keys);
+    console.log(keys.length);
     //length-1 because the last item in the array seems to be objectId.
-    spotifyRequest = spotifyRequest.concat('&limit=10');
+    
 
 
-    // console.log(spotifyRequest);
+    console.log(spotifyRequest);
     // console.log(token);
 
     // Make request
@@ -80,7 +103,7 @@ router.get('/get', async function (req, res) {
 
 async function convertToArray(data) {
     let songArr = [];
-    for (x = 0; x < res.tracks.length; x++) {
+    for (x = 0; x < data.tracks.length; x++) {
         const trackURL = data.tracks[x].external_urls.spotify;
         const songName = data.tracks[x].name;
         const id = data.tracks[x].id;
@@ -107,13 +130,14 @@ async function getRecommendations(token, spotifyRequest, req) {
         })
     }catch (e){
         console.log("failed to get request")
-        console.log(e)
+        //console.log(e)
         res = await axios.get(spotifyRequest, {
             headers: {Authorization: `Bearer ${await updateAccessToken(req.query.spotifyId)}`}
         })
     }
     console.log(spotifyRequest)
-    console.log("found songs. " + res);
+    console.log("found songs. ")
+    console.log(res.data);
     songArray = convertToArray(res);
     return songArray
 }
