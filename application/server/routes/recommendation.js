@@ -97,20 +97,34 @@ router.get('/get', async function (req, res) {
     res.send(songArray);*/
 })
 
-async function convertToArray(data) {
+async function convertToArray(data,req) {
     let songArr = [];
     for (x = 0; x < data.tracks.length; x++) {
         const trackURL = data.tracks[x].external_urls.spotify;
         const songName = data.tracks[x].name;
-        const id = data.tracks[x].id;
+        const trackId = data.tracks[x].id;
         const albumCover = data.tracks[x].album.images[0].url;
         const artistName = data.tracks[x].album.artists[0].name;
-
-        songArray.push({
-            "id": id,
-            "name": songName,
+        const artistId = data.tracks[x].album.artists[0].id;
+        const artist = await axios.get(`https://api.spotify.com/v1/artists/${artistId}`,{
+          headers: {Authorization: `Bearer ${await getAccessToken(req.query.spotifyId)}`}
+        })
+        const albumName = data.tracks[x].album.name;
+        /*let albumName = 'n/a';
+        console.log(data.tracks[x].album.album_type);
+        if(data.tracks[x].album.album_type == "ALBUM" || data.tracks[x].album.album_type == 'album')
+        {
+          console.log("I am a match");
+          albnumName = data.tracks[x].album.name;
+        }*/
+        songArr.push({
+            "track_id": trackId,
+            "track_name": songName,
             "artist": artistName,
-            "image": albumCover
+            "album_name": albumName,
+            "album_image": albumCover,
+            "track_url": trackURL,
+            "artist_genres": artist.data.genres
         });
     }
     return songArr;
@@ -133,8 +147,8 @@ async function getRecommendations(token, spotifyRequest, req) {
     }
     console.log(spotifyRequest)
     console.log("found songs. ")
-    console.log(res.data);
-    songArray = convertToArray(res);
+    //console.log(res.data);
+    songArray = convertToArray(res.data,req);
     return songArray
 }
 

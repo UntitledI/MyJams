@@ -7,10 +7,10 @@ module.exports = async function updateAccessToken(id){
     
     const document = await User.findOne({spotifyId: id}).exec();
     //console.log("i am in accesstoken " + document.spotifyAccessToken);
-    console.log(document.spotifyRefreshToken);
+    //console.log(document.spotifyRefreshToken);
     const stuff = (`${process.env.SPOTIFY_CLIENT_ID}`+ ':' +`${process.env.SPOTIFY_CLIENT_SECRET}`);
     const aaa = Buffer.from(stuff).toString('base64');
-    console.log(aaa);
+    //console.log(aaa);
     axios.post('https://accounts.spotify.com/api/token',queryString.stringify({
         grant_type: "refresh_token",
         refresh_token: document.spotifyRefreshToken
