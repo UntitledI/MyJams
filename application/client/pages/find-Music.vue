@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 export default {
@@ -87,6 +88,14 @@ export default {
     ]
   },
   mounted () {
+    axios.get('http://localhost:3030/recommendation/get', {
+      params: { spotifyId: 'acedbm' }
+    }).then((res) => {
+      console.log('Res from backend' + res)
+      this.local_tracks = res.data
+    }).catch((err) => {
+      console.log('fucked up: ' + err)
+    })
   },
   methods: {
     touchEnd () {
