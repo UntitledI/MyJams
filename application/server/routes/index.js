@@ -1,12 +1,13 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const SpotifyWebApi = require('spotify-web-api-node');
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const addNewUser = require('../utils/addNewUser');
+const findUser = require('../utils/findUser');
+const session = require('express-session');
 require('dotenv').config();
-const port = 3030;
+const port = process.env.PORT;
 
 const scopes = ('user-read-private user-read-email');
 const showDialog = true;
@@ -32,17 +33,36 @@ const strategy = new SpotifyStrategy(spotifyConfig, (accessToken, refreshToken, 
 })
 
 passport.serializeUser(function (user, done) {
-  done(null, user);
+  console.log('serialized user: ' + user.spotifyId)
+  done(null, user.spotifyId);
 });
 
-passport.deserializeUser(function (user, done) {
-  done(null, user);
+passport.deserializeUser(function (id, done) {
+  findUser(id).then((user) => {  
+    console.log('deserialized')
+    console.log(user)
+    done(null, user)
+  }).catch((e) => {
+    done(e, null)
+  })
 });
 
+app.use(session({secret: process.env.ACCESS_TOKEN_SECRET, resave: true, saveUninitialized: true}));
 app.use(passport.initialize());
-//app.use(passport.session());
+app.use(passport.session());
 
 passport.use(strategy)
+
+const isAuthenticated = (req,res,next) => {
+	console.log(req.user);
+	if(req.user) {
+		return next();
+	} else {
+		return res.status(401).json({
+			error: 'User not authenticated'
+		});
+	}
+};
 
 /* GET home page. */
 app.get('/', function (req, res, next) {
@@ -57,9 +77,15 @@ app.get('/oauth/spotify/callback', passport.authenticate('spotify', { failureRed
   }
 )
 
+app.get('/checkauth', isAuthenticated, function (req, res) {
+
+	res.status(200).json({
+		status: 'Login successful!'
+	});
+});
+
 
 app.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`)
 })
 
 module.exports = router;
