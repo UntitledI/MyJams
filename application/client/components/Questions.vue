@@ -175,10 +175,10 @@ export default {
     },
     handleResponses () {
       const json = {
-        genre: this.responses[0].response,
-        energetic: this.responses[1].response,
-        popularity: this.responses[2].response,
-        acousticness: this.responses[3].response
+        seed_genres: this.responses[0].response.toLowerCase(),
+        target_energy: this.responses[1].response,
+        target_popularity: this.responses[2].response,
+        target_acousticness: this.responses[3].response
       }
       return json
     }

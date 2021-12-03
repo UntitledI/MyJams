@@ -33,7 +33,8 @@ router.get('/get', async function (req, res) {
     delete preferenceArr._id;
     keys = Object.keys(preferenceArr);
     
-    
+    console.log("keys: "+ keys);
+    console.log(keys.length);
     console.log(preferenceArr);
     for(var key in preferenceArr){
      
@@ -57,11 +58,6 @@ router.get('/get', async function (req, res) {
     spotifyRequest = spotifyRequest.concat(`target_popularity=${preferenceArr.popularity*100}&`);
     spotifyRequest = spotifyRequest.concat(`target_acousticness=${preferenceArr.acousticness}`);
     */
-    console.log("keys: "+ keys);
-    console.log(keys.length);
-    //length-1 because the last item in the array seems to be objectId.
-    
-
 
     console.log(spotifyRequest);
     // console.log(token);
