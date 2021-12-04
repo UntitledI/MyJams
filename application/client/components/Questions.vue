@@ -8,7 +8,7 @@
     </div>
     <div v-if="!startQuestionnaire" id="quiz-start">
       <h1 id="quiz-title">
-        Welcome to our App!
+        Welcome to our myJams!
       </h1>
       <button id="quiz-start-button" @click="startQuestionnaireFunc()">
         Start
@@ -29,18 +29,18 @@
           v-if="questions[currentQuestion].questionType === 'slider'"
           v-model="questions[currentQuestion].sliderValue"
           type="range"
-          :min="questions[currentQuestion].sliderMin"
-          :max="questions[currentQuestion].sliderMax"
+          :min="questions[currentQuestion].sliderStep === 0.01 ? -1: 0"
+          :max="questions[currentQuestion].sliderStep === 0.01 ? 1: 100"
           :step="questions[currentQuestion].sliderStep"
           class="answer-slider"
-          @change="handleSliderChange(questions[currentQuestion].sliderValue, questions[currentQuestion].sliderStep)"
+          @change="handleSliderChange(questions[currentQuestion].sliderValue)"
         >
         <button
           v-for="(option, index) in questions[currentQuestion].answer"
           v-else
           :key="index"
           class="answer-button"
-          @click="handleAnswerClick(option.answerText)"
+          @click="handleAnswerClick(option.response)"
         >
           {{ option.answerText }}
         </button>
@@ -70,49 +70,42 @@ export default {
           questionText: 'Genre',
           questionType: 'mc',
           answer: [
-            { answerText: 'Pop' },
-            { answerText: 'Hip Hop' },
-            { answerText: 'R&B' },
-            { answerText: 'Country' },
-            { answerText: 'Electronic' },
-            { answerText: 'Lofi' },
-            { answerText: 'Rock' },
-            { answerText: 'Latin' },
-            { answerText: 'K-Pop' },
-            { answerText: 'Folk' },
-            { answerText: 'Indie' },
-            { answerText: 'Jazz' },
-            { answerText: 'Classical' }
+            { answerText: 'Pop', response: 'pop' },
+            { answerText: 'Hip Hop', response: 'hip-hop' },
+            { answerText: 'R&B', response: 'r-n-b' },
+            { answerText: 'Country', response: 'country' },
+            { answerText: 'Electronic', response: 'electronic' },
+            { answerText: 'Rock', response: 'rock' },
+            { answerText: 'Latin', response: 'latin' },
+            { answerText: 'K-Pop', response: 'k-pop' },
+            { answerText: 'Folk', response: 'folk' },
+            { answerText: 'Indie', response: 'indie' },
+            { answerText: 'Jazz', response: 'jazz' },
+            { answerText: 'Classical', response: 'classical' }
           ]
-        },
-        {
-          questionText: 'How energetic do you like your music to be?',
-          questionType: 'slider',
-          sliderValue: 0,
-          sliderMin: -1,
-          sliderMax: 1,
-          sliderStep: 0.01,
-          sliderMessage: 'No preference',
-          sliderMsgPos: 'I like my music energetic',
-          sliderMsgNeg: 'I like my music more calm'
         },
         {
           questionText: 'How popular are the songs you listen to?',
           questionType: 'slider',
           sliderValue: 0,
-          sliderMin: 0,
-          sliderMax: 100,
           sliderStep: 1,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like listening to more mainstream music',
           sliderMsgNeg: 'I like finding unconventional music'
         },
         {
+          questionText: 'How energetic do you like your music to be?',
+          questionType: 'slider',
+          sliderValue: 0,
+          sliderStep: 0.01,
+          sliderMessage: 'No preference',
+          sliderMsgPos: 'I like my music energetic',
+          sliderMsgNeg: 'I like my music more calm'
+        },
+        {
           questionText: 'How much do you like acoustic music?',
           questionType: 'slider',
           sliderValue: 0,
-          sliderMin: -1,
-          sliderMax: 1,
           sliderStep: 0.01,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like the use of acoustic type instruments',
@@ -134,8 +127,17 @@ export default {
         this.responses[objIndex].response = value
       }
     },
-    handleSliderChange (value, step) {
-      if (step === 0.01) {
+    handleSliderChange (value) {
+      const step = this.questions[this.currentQuestion].sliderStep
+      if (step % 1 === 0) {
+        if (value === 0) {
+          this.questions[this.currentQuestion].sliderMessage = 'No Preference'
+        } else if (value < 50) {
+          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
+        } else if (value > 50) {
+          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
+        }
+      } else if (step % 1 !== 0) {
         if (value < -0.1 && value > 0.1) {
           this.questions[this.currentQuestion].sliderValue = 0
           this.questions[this.currentQuestion].sliderMessage = 'No Preference'
@@ -144,20 +146,10 @@ export default {
         } else if (value > 0) {
           this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
         }
-      } else if (step === 1) {
-        if (value === 0) {
-          this.questions[this.currentQuestion].sliderValue = 0
-          this.questions[this.currentQuestion].sliderMessage = 'No Preference'
-        } else if (value < 50) {
-          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
-        } else if (value > 50) {
-          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
-        }
       }
     },
     handleAnswerClick (answer) {
-      const lowerAnswer = answer.toLowerCase()
-      this.handleAnswer(lowerAnswer)
+      this.handleAnswer(answer)
       this.handleNextClick()
     },
     handleBackClick () {
