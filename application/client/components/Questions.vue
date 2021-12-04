@@ -114,6 +114,34 @@ export default {
       responses: []
     }
   },
+  async fetch () {
+    await axios.post('http://localhost:3030/preference/set', {
+      spotifyId: 'jik4aa408nl6lk85mvjysfqk1',
+      seed_genres: 'k-pop',
+      target_energy: '75',
+      target_popularity: '90',
+      target_acousticness: '25'
+    }).then((res) => {
+      console.log('fetch succeeded')
+      console.log(res.data)
+    }).catch((error) => {
+      console.log('Error\n', error)
+    })
+    /*
+    await fetch('http://localhost:3030/preference/set', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        genre: 'K-Pop',
+        energetic: 0,
+        popularity: 0,
+        acousticness: 0
+      })
+    }).then((res) => { console.log(res) })
+    */
+  },
   methods: {
     startQuestionnaireFunc () {
       this.startQuestionnaire = true

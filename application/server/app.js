@@ -5,15 +5,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const passport = require('passport');
+const cors = require('cors');
 require('dotenv').config();
 const uri = process.env.MONGODB_URL;
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 
-var app = express();
-
-console.log('hi ' + uri)
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -23,6 +20,9 @@ mongoose.connect(uri, {
   console.log('mongodb connection')
 }).catch(e => console.log(e));
 
+const app = express();
+
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

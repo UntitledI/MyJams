@@ -1,36 +1,32 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
-    name: {
-        type: String,
-        required: false
-    },
-    email: {
-        type: String,
-        required: true
-    },
+const PreferenceSchema = new Schema({
     spotifyId: {
         type: String,
         required: true
     },
-    spotifyAccessToken: {
+    seed_genres: {
         type: String,
         required: true
     },
-    spotifyRefreshToken: {
+    target_energy: {
         type: String,
         required: true
     },
-    spotifyExpiresIn: {
-        type: Number,
+    target_popularity: {
+        type: String,
+        required: true
+    },
+    target_acousticness: {
+        type: String,
         required: true
     },
     createdAt: {
         type: Date,
         default: Date.now
     }
-})
+});
 
-const User = mongoose.model('User', UserSchema)
-module.exports = User;
+const Preference = mongoose.model('Preference', PreferenceSchema);
+module.exports = Preference;

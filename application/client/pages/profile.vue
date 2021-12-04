@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <div id="container">
+    <div id="profile-page-container">
       <main id="profile-container">
         <header id="profile-top">
           <div id="profile-info">
@@ -193,7 +193,7 @@ export default {
   height: auto;
 }
 
-#container{
+#profile-page-container{
   display: flex;
   justify-content: center;
   min-height: 100vh;

@@ -1,11 +1,11 @@
 <template>
   <header id="header">
     <div id="nav-container">
-      <span id="logo">AppName</span>
+      <span id="logo">myJams</span>
       <nav>
         <ul id="functions-container" class="menu-items">
           <li id="find-music-container">
-            <NuxtLink to="/find-music">
+            <NuxtLink to="/recommendations">
               Find Music
             </NuxtLink>
           </li>
@@ -22,11 +22,11 @@
                 </li>
                 <li>
                   <NuxtLink to="/preferences" class="menu-item">
-                    Settings
+                    Preferences
                   </NuxtLink>
                 </li>
               </ul>
-              <input id="search" type="text" placeholder="Search">
+              <!-- <input id="search" type="text" placeholder="Search"> -->
             </div>
           </li>
         </ul>
