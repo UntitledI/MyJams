@@ -6,27 +6,29 @@
         <div class="recommendation-container">
           <swiper id="swiper" @touchEnd="touchEnd">
             <swiper-slide>
-              <div id="song-container" class="song-container">
-                <div class='song-cover'>
-                  <img :src="local_tracks[local_index].image">
-                </div>
-                <div class="song-information">
-                  <!--
-                  <span class="song-name"> {{ local_tracks[local_index].name }}</span>
-                  <span class="artist-name"> {{ local_tracks[local_index].artist }} </span>
-                  <span class="album-name"> {{ local_tracks[local_index].album }} </span>
-                  -->
-                  <span class="genre"> {{ local_tracks[local_index].genre }} </span>
-                </div>
-                <div class="player">
-                  <iframe
-                    :src="'https://open.spotify.com/embed/track/'+local_tracks[local_index].id"
-                    width="400"
-                    height="80"
-                    frameborder="0"
-                    allowtransparency="true"
-                    allow="encrypted-media"
-                  />
+              <div v-if="local_tracks[local_index]">
+                <div id="song-container" class="song-container">
+                  <div class='song-cover'>
+                    <img :src="local_tracks[local_index].image">
+                  </div>
+                  <div class="song-information">
+                    <!--
+                    <span class="song-name"> {{ local_tracks[local_index].name }}</span>
+                    <span class="artist-name"> {{ local_tracks[local_index].artist }} </span>
+                    <span class="album-name"> {{ local_tracks[local_index].album }} </span>
+                    -->
+                    <span class="genre"> {{ local_tracks[local_index].genre }} </span>
+                  </div>
+                  <div class="player">
+                    <iframe
+                      :src="'https://open.spotify.com/embed/track/'+local_tracks[local_index].id"
+                      width="400"
+                      height="80"
+                      frameborder="0"
+                      allowtransparency="true"
+                      allow="encrypted-media"
+                    />
+                  </div>
                 </div>
               </div>
             </swiper-slide>
@@ -76,26 +78,13 @@ export default {
       console.log(err)
     })
 
-    return { local_tracks: data }
+    return { local_tracks: data, local_index: 0 }
   },
   data () {
     return {
       local_tracks: this.tracks,
       local_index: this.index
     }
-  },
-  async fetch () {
-    // hard coded spotifyId. needs to be changed!
-    const data = await axios.get('http://localhost:3030/recommendation/get', {
-      params: { spotifyId: 'jik4aa408nl6lk85mvjysfqk1' }
-    }).then((res) => {
-      return res.data
-    }).catch((err) => {
-      console.log('error occured')
-      console.log(err)
-    })
-
-    return { local_tracks: data }
   },
   methods: {
     touchEnd () {

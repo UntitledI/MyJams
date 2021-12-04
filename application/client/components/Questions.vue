@@ -1,11 +1,5 @@
 <template>
   <div id="quiz-container">
-    <div v-if="finished">
-      <span>
-        responses:
-        {{ responses }}
-      </span>
-    </div>
     <div v-if="!startQuestionnaire" id="quiz-start">
       <h1 id="quiz-title">
         Welcome to our App!
@@ -29,9 +23,9 @@
           v-if="questions[currentQuestion].questionType === 'slider'"
           v-model="questions[currentQuestion].sliderValue"
           type="range"
-          min="-1"
-          max="1"
-          step=".01"
+          min="0"
+          max="100"
+          step="1"
           class="answer-slider"
           @change="handleSliderChange(questions[currentQuestion].sliderValue)"
         >
@@ -76,7 +70,6 @@ export default {
             { answerText: 'R&B' },
             { answerText: 'Country' },
             { answerText: 'Electronic' },
-            { answerText: 'Lofi' },
             { answerText: 'Rock' },
             { answerText: 'Latin' },
             { answerText: 'K-Pop' },
@@ -89,7 +82,10 @@ export default {
         {
           questionText: 'How energetic do you like your music to be?',
           questionType: 'slider',
-          sliderValue: 0,
+          sliderValue: 50,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
           sliderMessage: 'No preference',
           sliderMsgPos: 'I like my music energetic',
           sliderMsgNeg: 'I like my music more calm'
@@ -97,7 +93,10 @@ export default {
         {
           questionText: 'How popular are the songs you listen to?',
           questionType: 'slider',
-          sliderValue: 0,
+          sliderValue: 50,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like listening to more mainstream music',
           sliderMsgNeg: 'I like finding unconventional music'
@@ -105,7 +104,10 @@ export default {
         {
           questionText: 'How much do you like acoustic music?',
           questionType: 'slider',
-          sliderValue: 0,
+          sliderValue: 50,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like the use of acoustic type instruments',
           sliderMsgNeg: 'I like music that is more electronic'
@@ -113,34 +115,6 @@ export default {
       ],
       responses: []
     }
-  },
-  async fetch () {
-    await axios.post('http://localhost:3030/preference/set', {
-      spotifyId: 'jik4aa408nl6lk85mvjysfqk1',
-      seed_genres: 'k-pop',
-      target_energy: '75',
-      target_popularity: '90',
-      target_acousticness: '25'
-    }).then((res) => {
-      console.log('fetch succeeded')
-      console.log(res.data)
-    }).catch((error) => {
-      console.log('Error\n', error)
-    })
-    /*
-    await fetch('http://localhost:3030/preference/set', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        genre: 'K-Pop',
-        energetic: 0,
-        popularity: 0,
-        acousticness: 0
-      })
-    }).then((res) => { console.log(res) })
-    */
   },
   methods: {
     startQuestionnaireFunc () {
@@ -203,6 +177,7 @@ export default {
     },
     handleResponses () {
       const json = {
+        spotifyId: 'jik4aa408nl6lk85mvjysfqk1',
         seed_genres: this.responses[0].response.toLowerCase(),
         target_energy: this.responses[1].response,
         target_popularity: this.responses[2].response,
