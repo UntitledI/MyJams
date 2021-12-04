@@ -26,6 +26,10 @@ const UserSchema = new Schema({
         type: Number,
         required: true
     },
+    preferenceId: {
+        type: String,
+        required: false
+    },
     createdAt: {
         type: Date,
         default: Date.now

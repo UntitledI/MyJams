@@ -14,8 +14,6 @@ const indexRouter = require('./routes/index');
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  //useFindAndModify: false,
-  //useCreateIndex: true
 }).then(() => {
   console.log('mongodb connection')
 }).catch(e => console.log(e));
@@ -24,8 +22,8 @@ const app = express();
 
 app.use(cors());
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
 
 console.log()

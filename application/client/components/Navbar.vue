@@ -1,7 +1,7 @@
 <template>
   <header id="header">
     <div id="nav-container">
-      <span id="logo">myJams</span>
+      <span id="logo">MyJams</span>
       <nav>
         <ul id="functions-container" class="menu-items">
           <li id="find-music-container">

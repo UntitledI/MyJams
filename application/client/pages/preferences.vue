@@ -5,7 +5,11 @@
       <div id="preferences-container">
         <ul id="preferences-list">
           <li v-for="preference in local_preferences" :key="preference.id">
-            <div class="preference">
+            <div v-if="!preference.current" class="preference">
+              <h2>{{ preference.name }}</h2>
+              <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
+            </div>
+            <div v-if="preference.current" class="preference-current">
               <h2>{{ preference.name }}</h2>
               <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
             </div>
@@ -32,6 +36,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 export default {
@@ -44,34 +49,50 @@ export default {
       }
     }
   },
+  async asyncData () {
+    // hard coded spotifyId. needs to be changed!
+    const data = await axios.get(process.env.API_URL + '/preference/get', {
+      params: {
+        spotifyId: 'jik4aa408nl6lk85mvjysfqk1'
+      }
+    }).then((res) => {
+      return res.data
+    }).catch((err) => {
+      console.log('error occured')
+      console.log(err.response.status)
+    })
+
+    return { local_preferences: data.preferences }
+  },
   data () {
     return {
       deletePreference: false,
       local_preferences: this.preferences
     }
   },
-  created () {
-    this.local_preferences = [
-      {
-        id: '1',
-        name: 'hello'
-      },
-      {
-        id: '2',
-        name: 'rock'
-      },
-      {
-        id: '3',
-        name: 'hiphop'
-      }
-    ]
-  },
   methods: {
-    handleDelete (id) {
+    async handleDelete (id) {
       const index = this.local_preferences.findIndex(pref => pref.id === id)
+      const preferenceId = this.local_preferences[index].id
       if (index > -1) {
         this.local_preferences.splice(index, 1)
       }
+      await axios.post(process.env.API_URL + '/preference/delete', {
+        spotifyId: 'jik4aa408nl6lk85mvjysfqk1',
+        preferenceId
+      }).catch((err) => {
+        console.log('error occured')
+        console.log(err.response.status)
+      })
+    },
+    async setPreference () {
+      await axios.post(process.env.API_URL + '/preference/set', {
+        spotifyId: 'jik4aa408nl6lk85mvjysfqk1',
+        preferenceId: ''
+      }).catch((err) => {
+        console.log('error occured')
+        console.log(err.response.status)
+      })
     }
   }
 }
@@ -81,6 +102,18 @@ export default {
 * {
   padding: 0px;
   margin: 0px;
+}
+
+.preference-current {
+  display: flex;
+  align-items: center;
+  height: 128px;
+  width: 512px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: 2px solid black;
 }
 
 .preference {

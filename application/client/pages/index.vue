@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tinder for Music Class Demo</h1>
+    <h1>MyJams</h1>
     <NuxtLink to="/profile">
       Login
     </NuxtLink>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
 
   computed: {
@@ -18,9 +18,11 @@ export default {
     }
   },
   mounted () {
+    /*
     axios.get(this.$config.apiURL + '/me').then((response) => {
       console.log(response)
     })
+    */
   }
 }
 </script>

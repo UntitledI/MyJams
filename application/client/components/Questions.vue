@@ -167,23 +167,17 @@ export default {
     handleSubmit () {
       this.finished = true
       this.startQuestionnaire = false
-      console.log(this.handleResponses())
-      axios.post('http://localhost:3030/preference/set', this.handleResponses()).then((res) => {
-        console.log(res)
-      })
-        .catch((error) => {
-          console.log('error axios post: ' + error)
-        })
-    },
-    handleResponses () {
-      const json = {
-        spotifyId: 'jik4aa408nl6lk85mvjysfqk1',
+      axios.post(process.env.API_URL + '/preference/add', {
+        spotifyId: 'jik4aa408nl6lk85mvjysfqk1', // hard coded spotify id needs to be changed!
         seed_genres: this.responses[0].response.toLowerCase(),
         target_energy: this.responses[1].response,
         target_popularity: this.responses[2].response,
         target_acousticness: this.responses[3].response
-      }
-      return json
+      }).then((res) => {
+        console.log(res)
+      }).catch((error) => {
+        console.log('error axios post: ' + error)
+      })
     }
   }
 }

@@ -69,7 +69,7 @@ export default {
   },
   async asyncData () {
     // hard coded spotifyId. needs to be changed!
-    const data = await axios.get('http://localhost:3030/recommendation/get', {
+    const data = await axios.get(process.env.API_URL + '/recommendation/get', {
       params: { spotifyId: 'jik4aa408nl6lk85mvjysfqk1' }
     }).then((res) => {
       return res.data

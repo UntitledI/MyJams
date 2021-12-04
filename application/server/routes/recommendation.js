@@ -1,11 +1,11 @@
 const axios = require('axios');
 var express = require('express');
-const app = express();
 const router = express.Router();
-const getPreferences = require('../utils/getPreferences');
 const getAccessToken = require('../utils/getAccessToken');
 const updateAccessToken = require('../utils/updateAccessToken');
-
+const getPreference = require('../utils/getPreferences');
+const getPreferences = require('../utils/getPreferences');
+const getCurrentPreference = require('../utils/getCurrentPreference');
 
 router.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
@@ -18,7 +18,7 @@ router.get('/get', async function (req, res) {
   //call db for user preferences and token
   const url = 'https://api.spotify.com/v1/recommendations';
   const token = await getAccessToken(req.query.spotifyId);
-  const preferencesArr = await getPreferences(req.query.spotifyId);
+  const currentPreference = await getCurrentPreference(req.query.spotifyId);
   let spotifyRequest = url + `?market=US&`;
   let preferenceObj;
 
@@ -29,16 +29,29 @@ router.get('/get', async function (req, res) {
       success: false,
       message: 'Could not find user token'
     });
-  } else if (!preferencesArr || preferencesArr.length == 0) {
-    console.log("Unable to find user preferences!");
-    return res.status(401).json({
-      success: false,
-      message: 'Could not find user preferences'
+  }
+  if (!currentPreference) {
+    // Take the first preference object if there is no preference set
+    const preferencesArr = await getPreferences(req.query.spotifyId);
+
+    if (!preferencesArr || preferencesArr.length == 0) {
+      console.log("Unable to find user preferences!");
+      return res.status(401).json({
+        success: false,
+        message: 'Could not find user preferences'
+      });
+    } else {
+      preferenceObj = preferencesArr[0];
+    }
+  } else {
+    preferenceObj = await getPreference(currentPreference).then((preference) => {
+      return preference
+    }).catch((error) => {
+      console.log(error);
+      return res.status(500);
     });
   }
 
-  // Take the first preference object for now. Will need to change this!
-  preferenceObj = preferencesArr[0];
   const seedGenres = `seed_genres=${preferenceObj.seed_genres}&`;
   const targetEnergy = `target_energy=${preferenceObj.target_energy}&`;
   const targetPopularity = `target_popularity=${preferenceObj.target_popularity}&`;
