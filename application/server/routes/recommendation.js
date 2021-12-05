@@ -2,7 +2,6 @@ const axios = require('axios');
 var express = require('express');
 const router = express.Router();
 const authenticateUser = require('../middlewares/authenticateUser');
-const authenticateToken = require('../middlewares/authenticateToken');
 const getAccessToken = require('../utils/getAccessToken');
 const updateAccessToken = require('../utils/updateAccessToken');
 const getPreference = require('../utils/getPreferences');
@@ -21,10 +20,7 @@ router.get('/get', authenticateUser, async function (req, res) {
   // Make sure token and preferences actually exist before proceeding
   if (!token || token === undefined) {
     console.log("Unable to find user's token!");
-    return res.status(401).json({
-      success: false,
-      message: 'Could not find user token'
-    });
+    return next(ApiError.badRequest('Could not find info'));
   }
   if (!currentPreference) {
     // Take the first preference object if there is no preference set
@@ -32,10 +28,7 @@ router.get('/get', authenticateUser, async function (req, res) {
 
     if (!preferencesArr || preferencesArr.length == 0) {
       console.log("Unable to find user preferences!");
-      return res.status(401).json({
-        success: false,
-        message: 'Could not find user preferences'
-      });
+      return next(ApiError.badRequest('Could not find info'));
     } else {
       preferenceObj = preferencesArr[0];
     }
@@ -43,8 +36,8 @@ router.get('/get', authenticateUser, async function (req, res) {
     preferenceObj = await getPreference(currentPreference).then((preference) => {
       return preference
     }).catch((error) => {
-      console.log(error);
-      return res.status(500);
+      console.error(error);
+      return next(ApiError.internal('Something went wrong'));
     });
   }
 
@@ -93,9 +86,8 @@ async function getRecommendations(token, spotifyRequest, req) {
         return res.data;
       })
     } else {
-      console.log(error.response.status);
-      console.log(error.response.headers);
-      console.log(error.response.data);
+      console.error(error)
+      return next(ApiError.internal('Something went wrong'))
     }
   })
 

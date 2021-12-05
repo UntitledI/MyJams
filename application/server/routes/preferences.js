@@ -16,15 +16,15 @@ router.get('/get', authenticateUser, async function (req, res, next) {
   const _preferences = await getPreferences(spotifyId).then((preferences) => {
     return preferences;
   }).catch((error) => {
-    console.log(error);
-    res.status(500);
+    console.error(error);
+    return next(ApiError.internal('Something went wrong'));
   })
   // use spotify id to get user's current preference profile
   const currentPreference = await getCurrentPreference(spotifyId).then((preference) => {
     return preference;
   }).catch((error) => {
-    console.log(error);
-    res.status(500);
+    console.error(error);
+    return next(ApiError.internal('Something went wrong'));
   })
 
   // prepare data to be sent back
@@ -47,35 +47,23 @@ router.get('/get', authenticateUser, async function (req, res, next) {
 });
 
 router.post('/set', authenticateUser, function (req, res, next) {
-  const spotifyId = req.body.spotifyId;
+  const spotifyId = req.user.spotifyId
   const preferenceId = req.body.preferenceId;
 
-  if (!spotifyId) { // check that request is good
-    console.log('No spotify id found!');
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid parameters: spotify id is requred'
-    });
-  } else if (!preferenceId) {
+  if (!preferenceId) { // check that request is good
     console.log('No preference id found!');
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid parameters: preference id is requred'
-    });
+    return next(ApiError.badRequest('preference id is required'));
   }
 
   setCurrentPreference(spotifyId, preferenceId).then((res) => {
     if (res) {
-      res.status(200);
+      return res.status(200);
     } else {
-      res.status(400).json({
-        success: false,
-        message: 'Preference was not found'
-      });
+      return next(ApiError.badRequest('preference id did not yield results'));
     }
   }).catch((error) => {
-    console.log(error);
-    res.status(500);
+    console.error(error);
+    return next(ApiError.internal('Something went wrong'));
   });
 });
 
@@ -84,10 +72,10 @@ router.post('/add', authenticateUser, function (req, res, next) {
 
   // add new preference
   addPreferences(spotifyId, req.body).then(() => {
-    res.status(200);
+    return res.status(200);
   }).catch((error) => {
-    console.log(error);
-    res.status(500);
+    console.error(error);
+    return next(ApiError.internal('Something went wrong'));
   })
 });
 
@@ -97,18 +85,16 @@ router.post('/delete', authenticateUser, function (req, res, next) {
 
   if (!preferenceId) {
     console.log('No preference id found!');
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid parameters: preference id is requred'
-    });
+    return next(ApiError.badRequest('preference id is required'));
   }
 
   // remove user's preference
   removePreferences(spotifyId, preferenceId).then(() => {
     console.log('success');
-    res.status(200);
+    return res.status(200);
   }).catch((error) => {
-    res.status(500);
+    console.error(error);
+    return next(ApiError.internal('Something went wrong'));
   })
 });
 
