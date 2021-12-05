@@ -113,6 +113,15 @@ export default {
 <style>
 @import '../assets/css/scrollbar.css';
 
+::-moz-selection {
+    background-color: transparent;
+    color: #000;
+}
+
+::selection {
+    background-color: transparent;
+    color: #000;
+}
 * {
   padding: 0px;
   margin: 0px;
