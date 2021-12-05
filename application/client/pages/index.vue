@@ -1,26 +1,38 @@
 <template>
   <div>
-    <h1>Tinder for Music Class Demo</h1>
+    <h1>MyJams</h1>
+    <!--
     <NuxtLink to="/profile">
       Login
     </NuxtLink>
-    <!-- <a :href="getLoginUrl"> Login </a> -->
+    -->
+    <button @click="handleLogin">
+      Login
+    </button>
+    <!-- <a :href="getLoginUrl">Login</a> -->
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
-
   computed: {
     getLoginUrl () {
       return this.$config.apiURL + '/oauth/spotify'
     }
   },
-  mounted () {
-    axios.get(this.$config.apiURL + '/me').then((response) => {
-      console.log(response)
-    })
+  async mounted () {
+    const res = await this.$store.dispatch('fetchUser')
+    if (res) {
+      localStorage.setItem('user', JSON.stringify(res))
+      this.$router.push('/profile')
+    } else {
+      localStorage.removeItem('user')
+    }
+  },
+  methods: {
+    handleLogin () {
+      window.open(this.$config.apiURL + '/oauth/spotify', '_self')
+    }
   }
 }
 </script>

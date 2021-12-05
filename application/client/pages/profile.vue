@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <div id="container">
+    <div id="profile-page-container">
       <main id="profile-container">
         <header id="profile-top">
           <div id="profile-info">
@@ -19,24 +19,28 @@
                   <span id="followers-count" class="count">{{ local_user.numFollowers }}</span> Followers
                 </span>
               </li>
+              <!--
               <li>
                 <span>
                   <span id="following-count" class="count">{{ local_user.numFollowing }}</span> Following
                 </span>
               </li>
+              -->
             </ul>
           </div>
           <section id="profile-header">
             <h2 id="profile-name">
               {{ local_user.name }}
             </h2>
+            <!--
             <p id="profile-description">
               {{ local_user.description }}
             </p>
+            -->
           </section>
         </header>
         <div id="playlist-container">
-          <ul id="playlist-list">
+          <ul v-if="local_playlists.length > 0" id="playlist-list">
             <li v-for="playlist in local_playlists" :key="playlist.id">
               <div class="playlist" @click="showPlaylist(playlist.name, playlist.description, playlist.image)">
                 <div class="playlist-image-container">
@@ -79,59 +83,29 @@ export default {
       local_user: this.user
     }
   },
-  created () {
+  mounted () {
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (!user) {
+      this.$router.push('/')
+    }
+
     // make a call to backend api to populate playlists
     this.local_playlists = [
+      /*
       {
         name: 'Sample Playlist 1',
         description: 'Sample description 1',
         image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
         id: '1'
-      },
-      {
-        name: 'Sample Playlist 2',
-        description: 'Sample description 2',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '2'
-      },
-      {
-        name: 'Sample Playlist 3',
-        description: 'Sample description 3',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '3'
-      },
-      {
-        name: 'Sample Playlist 4',
-        description: 'Sample description 4',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '4'
-      },
-      {
-        name: 'Sample Playlist 5 w/ a long name',
-        description: 'Sample description 5',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '5'
-      },
-      {
-        name: 'Sample Playlist 6',
-        description: 'Sample description 6',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '6'
-      },
-      {
-        name: 'Sample Playlist 7',
-        description: 'Sample description 7',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '7'
       }
+      */
     ]
     this.local_user = {
-      name: 'Sample User',
-      image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+      name: user.name,
+      image: user.image,
       description: 'Hello there! Here is some description about me!',
       numPlaylists: this.local_playlists.length,
-      numFollowers: 11,
-      numFollowing: 22
+      numFollowers: user.followers ? user.followers : 0
     }
   },
   methods: {
@@ -193,7 +167,7 @@ export default {
   height: auto;
 }
 
-#container{
+#profile-page-container{
   display: flex;
   justify-content: center;
   min-height: 100vh;
