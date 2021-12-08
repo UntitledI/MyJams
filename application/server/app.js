@@ -35,17 +35,7 @@ app.use(cors({
   origin: process.env.CLIENT_URL,
   credentials: true
 }));
-app.use(session({
-  secret: process.env.ACCESS_TOKEN_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URL,
-    collection: 'sessions'
-  })
-}))
 app.use(passport.initialize());
-app.use(passport.session());
 
 /* GET home page. */
 app.get('/', function (req, res) {

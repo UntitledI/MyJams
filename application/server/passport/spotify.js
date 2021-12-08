@@ -7,7 +7,8 @@ const addOrFindUser = require('../utils/addOrFindUser');
 const spotifyConfig = {
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    callbackURL: process.env.REDIRECT_URI
+    // callbackURL: process.env.REDIRECT_URI
+    callbackURL: process.env.CLIENT_URL
 };
 
 const strategy = new SpotifyStrategy(spotifyConfig, (accessToken, refreshToken, expires_in, profile, done) => {

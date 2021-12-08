@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authenticateUser = require('../middlewares/authenticateUser');
+const authenticateToken = require('../middlewares/authenticateToken');
 const addPreferences = require('../utils/addPreferences');
 const getPreferences = require('../utils/getPreferences');
 const removePreferences = require('../utils/removePreferences');
@@ -8,7 +8,7 @@ const getCurrentPreference = require('../utils/getCurrentPreference');
 const setCurrentPreference = require('../utils/setCurrentPreference');
 const ApiError = require('../error/ApiError');
 
-router.get('/get', authenticateUser, async function (req, res, next) {
+router.get('/get', authenticateToken, async function (req, res, next) {
   const spotifyId = req.user.spotifyId
   let preferences = [];
 
@@ -46,7 +46,7 @@ router.get('/get', authenticateUser, async function (req, res, next) {
   })
 });
 
-router.post('/set', authenticateUser, function (req, res, next) {
+router.post('/set', authenticateToken, function (req, res, next) {
   const spotifyId = req.user.spotifyId
   const preferenceId = req.body.preferenceId;
 
@@ -67,7 +67,7 @@ router.post('/set', authenticateUser, function (req, res, next) {
   });
 });
 
-router.post('/add', authenticateUser, function (req, res, next) {
+router.post('/add', authenticateToken, function (req, res, next) {
   const spotifyId = req.user.spotifyId;
 
   // add new preference
@@ -79,7 +79,7 @@ router.post('/add', authenticateUser, function (req, res, next) {
   })
 });
 
-router.post('/delete', authenticateUser, function (req, res, next) {
+router.post('/delete', authenticateToken, function (req, res, next) {
   const spotifyId = req.user.spotifyId;
   const preferenceId = req.body.preferenceId;
 

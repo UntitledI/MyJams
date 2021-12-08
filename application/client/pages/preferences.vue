@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$auth.loggedIn">
     <Navbar />
     <div id="preferences-page-container">
       <div id="preferences-container">
@@ -49,16 +49,23 @@ export default {
       }
     }
   },
-  async asyncData ({ redirect }) {
-    const data = await axios.get(process.env.API_URL + '/preference/get', {
-      withCredentials: true
-    }).then((res) => {
-      return res.data.preferences
-    }).catch(() => {
-      redirect('/')
-    })
+  async asyncData ({ $auth, redirect }) {
+    const token = $auth.getToken('local')
+    if (token) {
+      const data = await axios.get(process.env.API_URL + '/preference/get', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data.preferences
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
 
-    return { local_preferences: data }
+      return { local_preferences: data }
+    }
   },
   data () {
     return {
@@ -66,31 +73,42 @@ export default {
       local_preferences: this.preferences
     }
   },
-  mounted () {
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (!user) {
-      this.$router.push('/')
+  created () {
+    if (process.client) {
+      if (!this.$auth.loggedIn && this.$route.path !== '/') {
+        this.$router.push('/')
+      } else {
+        this.$router.replace({ query: null })
+      }
     }
   },
   methods: {
     async handleDelete (id) {
+      const token = this.$auth.getToken('local')
       const index = this.local_preferences.findIndex(pref => pref.id === id)
       const preferenceId = this.local_preferences[index].id
       if (index > -1) {
         this.local_preferences.splice(index, 1)
       }
-      axios.defaults.withCredentials = true
       await axios.post(process.env.API_URL + '/preference/delete', {
         preferenceId
+      }, {
+        headers: {
+          authorization: token
+        }
       }).catch((err) => {
         console.log('error occured')
         console.log(err.response.status)
       })
     },
     async setPreference () {
-      axios.defaults.withCredentials = true
+      const token = this.$auth.getToken('local')
       await axios.post(process.env.API_URL + '/preference/set', {
         preferenceId: ''
+      }, {
+        headers: {
+          authorization: token
+        }
       }).catch((err) => {
         console.log('error occured')
         console.log(err.response.status)

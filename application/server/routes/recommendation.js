@@ -1,7 +1,7 @@
 const axios = require('axios');
 var express = require('express');
 const router = express.Router();
-const authenticateUser = require('../middlewares/authenticateUser');
+const authenticateToken = require('../middlewares/authenticateToken');
 const getAccessToken = require('../utils/getAccessToken');
 const updateAccessToken = require('../utils/updateAccessToken');
 const getPreference = require('../utils/getPreferences');
@@ -9,7 +9,7 @@ const getPreferences = require('../utils/getPreferences');
 const getCurrentPreference = require('../utils/getCurrentPreference');
 const ApiError = require('../error/ApiError');
 
-router.get('/get', authenticateUser, async function (req, res) {
+router.get('/get', authenticateToken, async function (req, res, next) {
   //call db for user preferences and token
   const url = 'https://api.spotify.com/v1/recommendations';
   const token = await getAccessToken(req.user.spotifyId);
@@ -23,6 +23,7 @@ router.get('/get', authenticateUser, async function (req, res) {
     return next(ApiError.badRequest('Could not find info'));
   }
   if (!currentPreference) {
+    console.log('spotifyId', req.user.spotifyId)
     // Take the first preference object if there is no preference set
     const preferencesArr = await getPreferences(req.user.spotifyId);
 

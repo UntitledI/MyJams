@@ -116,12 +116,6 @@ export default {
       responses: []
     }
   },
-  mounted () {
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (!user) {
-      this.$router.push('/')
-    }
-  },
   methods: {
     startQuestionnaireFunc () {
       this.startQuestionnaire = true
@@ -171,14 +165,19 @@ export default {
       }
     },
     handleSubmit () {
+      const token = this.$auth.getToken('local')
       this.finished = true
       this.startQuestionnaire = false
-      axios.defaults.withCredentials = true
+
       axios.post(process.env.API_URL + '/preference/add', {
         seed_genres: this.responses[0].response.toLowerCase(),
         target_energy: this.responses[1].response,
         target_popularity: this.responses[2].response,
         target_acousticness: this.responses[3].response
+      }, {
+        headers: {
+          authorization: token
+        }
       }).then((res) => {
         console.log(res)
       }).catch((error) => {

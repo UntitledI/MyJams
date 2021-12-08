@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$auth.loggedIn">
     <Navbar />
     <div>
       <div id="recommendations-page-container">
@@ -67,21 +67,38 @@ export default {
       default: 0
     }
   },
-  async asyncData ({ redirect }) {
-    const data = await axios.get(process.env.API_URL + '/recommendation/get', {
-      withCredentials: true
-    }).then((res) => {
-      return res.data
-    }).catch(() => {
-      redirect('/')
-    })
+  async asyncData ({ $auth, redirect }) {
+    const token = $auth.getToken('local')
 
-    return { local_tracks: data, local_index: 0 }
+    if (token) {
+      const data = await axios.get(process.env.API_URL + '/recommendation/get', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
+
+      return { local_tracks: data, local_index: 0 }
+    }
   },
   data () {
     return {
       local_tracks: this.tracks,
       local_index: this.index
+    }
+  },
+  created () {
+    if (process.client) {
+      if (!this.$auth.loggedIn && this.$route.path !== '/') {
+        this.$router.push('/')
+      } else {
+        this.$router.replace({ query: null })
+      }
     }
   },
   methods: {

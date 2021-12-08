@@ -41,8 +41,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   props: {
     image: {
@@ -54,12 +52,10 @@ export default {
     return { local_image: this.image }
   },
   mounted () {
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (!user) {
-      this.$router.push('/')
+    const user = this.$auth.user
+    if (user) {
+      this.local_image = user.image
     }
-
-    this.local_image = user.image
   },
   methods: {
     showDropdown (selector) {
@@ -77,12 +73,7 @@ export default {
       element.setAttribute('class', 'dropdown-menu-visible')
     },
     handleLogout () {
-      axios.get(this.$config.apiURL + '/auth/logout', { withCredentials: true }).then((res) => {
-        localStorage.removeItem('user')
-        this.$router.push('/')
-      }).catch((error) => {
-        console.error(error)
-      })
+      this.$auth.logout()
     }
   }
 }

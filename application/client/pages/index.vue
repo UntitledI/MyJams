@@ -1,15 +1,14 @@
 <template>
   <div>
     <h1>MyJams</h1>
-    <!--
-    <NuxtLink to="/profile">
-      Login
-    </NuxtLink>
-    -->
-    <button @click="handleLogin">
-      Login
-    </button>
-    <!-- <a :href="getLoginUrl">Login</a> -->
+    <div v-if="!$auth.loggedIn">
+      <a :href="getLoginUrl">Login</a>
+    </div>
+    <div v-else>
+      <NuxtLink to="/profile">
+        Login
+      </NuxtLink>
+    </div>
   </div>
 </template>
 
@@ -20,18 +19,18 @@ export default {
       return this.$config.apiURL + '/oauth/spotify'
     }
   },
-  async mounted () {
-    const res = await this.$store.dispatch('fetchUser')
-    if (res) {
-      localStorage.setItem('user', JSON.stringify(res))
-      this.$router.push('/profile')
-    } else {
-      localStorage.removeItem('user')
+  mounted () {
+    let code = null
+    const url = window.location.search
+    if (url.length > 0) {
+      code = url.replace('?code=', '')
     }
-  },
-  methods: {
-    handleLogin () {
-      window.open(this.$config.apiURL + '/oauth/spotify', '_self')
+    if (code) {
+      this.$auth.loginWith('local', {
+        data: {
+          refreshToken: code
+        }
+      })
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$auth.loggedIn">
     <Navbar />
     <div id="profile-page-container">
       <main id="profile-container">
@@ -83,11 +83,17 @@ export default {
       local_user: this.user
     }
   },
-  mounted () {
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (!user) {
-      this.$router.push('/')
+  created () {
+    if (process.client) {
+      if (!this.$auth.loggedIn && this.$route.path !== '/') {
+        this.$router.push('/')
+      } else {
+        this.$router.replace({ query: null })
+      }
     }
+  },
+  mounted () {
+    const user = this.$auth.user
 
     // make a call to backend api to populate playlists
     this.local_playlists = [
@@ -100,12 +106,14 @@ export default {
       }
       */
     ]
-    this.local_user = {
-      name: user.name,
-      image: user.image,
-      description: 'Hello there! Here is some description about me!',
-      numPlaylists: this.local_playlists.length,
-      numFollowers: user.followers ? user.followers : 0
+    if (user) {
+      this.local_user = {
+        name: user ? user.name : '',
+        image: user ? user.image : '',
+        description: 'Hello there! Here is some description about me!',
+        numPlaylists: this.local_playlists.length,
+        numFollowers: user ? user.followers : 0
+      }
     }
   },
   methods: {
