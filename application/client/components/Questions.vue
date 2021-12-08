@@ -1,11 +1,5 @@
 <template>
   <div id="quiz-container">
-    <div v-if="finished">
-      <span>
-        responses:
-        {{ responses }}
-      </span>
-    </div>
     <div v-if="!startQuestionnaire" id="quiz-start">
       <h1 id="quiz-title">
         Welcome to our App!
@@ -29,9 +23,9 @@
           v-if="questions[currentQuestion].questionType === 'slider'"
           v-model="questions[currentQuestion].sliderValue"
           type="range"
-          min="-1"
-          max="1"
-          step=".001"
+          min="0"
+          max="100"
+          step="1"
           class="answer-slider"
           @change="handleSliderChange(questions[currentQuestion].sliderValue)"
         >
@@ -58,6 +52,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Questions',
   data () {
@@ -67,36 +62,55 @@ export default {
       finished: false,
       questions: [
         {
-          questionText: 'Hello',
-          questionType: 'slider',
-          sliderValue: 0,
-          sliderMessage: 'neutral'
-        },
-        {
-          questionText: 'Hello-1',
-          questionType: 'slider',
-          sliderValue: 0,
-          sliderMessage: 'neutral'
-        },
-        {
-          questionText: 'Hello2',
+          questionText: 'Genre',
           questionType: 'mc',
           answer: [
-            { answerText: 'yes' },
-            { answerText: 'no' },
-            { answerText: 'yes2' },
-            { answerText: 'no2' }
+            { answerText: 'Pop' },
+            { answerText: 'Hip Hop' },
+            { answerText: 'R&B' },
+            { answerText: 'Country' },
+            { answerText: 'Electronic' },
+            { answerText: 'Rock' },
+            { answerText: 'Latin' },
+            { answerText: 'K-Pop' },
+            { answerText: 'Folk' },
+            { answerText: 'Indie' },
+            { answerText: 'Jazz' },
+            { answerText: 'Classical' }
           ]
         },
         {
-          questionText: 'Hello3',
-          questionType: 'mc',
-          answer: [
-            { answerText: 'yes' },
-            { answerText: 'no' },
-            { answerText: 'yes2' },
-            { answerText: 'no2' }
-          ]
+          questionText: 'How energetic do you like your music to be?',
+          questionType: 'slider',
+          sliderValue: 50,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
+          sliderMessage: 'No preference',
+          sliderMsgPos: 'I like my music energetic',
+          sliderMsgNeg: 'I like my music more calm'
+        },
+        {
+          questionText: 'How popular are the songs you listen to?',
+          questionType: 'slider',
+          sliderValue: 50,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
+          sliderMessage: 'No Preference',
+          sliderMsgPos: 'I like listening to more mainstream music',
+          sliderMsgNeg: 'I like finding unconventional music'
+        },
+        {
+          questionText: 'How much do you like acoustic music?',
+          questionType: 'slider',
+          sliderValue: 50,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
+          sliderMessage: 'No Preference',
+          sliderMsgPos: 'I like the use of acoustic type instruments',
+          sliderMsgNeg: 'I like music that is more electronic'
         }
       ],
       responses: []
@@ -115,12 +129,13 @@ export default {
       }
     },
     handleSliderChange (value) {
-      if (value === 0) {
-        this.questions[this.currentQuestion].sliderMessage = value
+      if (value < 0.1 && value > -0.1) {
+        this.questions[this.currentQuestion].sliderValue = 0
+        this.questions[this.currentQuestion].sliderMessage = 'No Preference'
       } else if (value < 0) {
-        this.questions[this.currentQuestion].sliderMessage = value
+        this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
       } else if (value > 0) {
-        this.questions[this.currentQuestion].sliderMessage = value
+        this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
       }
     },
     handleAnswerClick (answer) {
@@ -150,7 +165,24 @@ export default {
       }
     },
     handleSubmit () {
+      const token = this.$auth.getToken('local')
       this.finished = true
+      this.startQuestionnaire = false
+
+      axios.post(process.env.API_URL + '/preference/add', {
+        seed_genres: this.responses[0].response.toLowerCase(),
+        target_energy: this.responses[1].response,
+        target_popularity: this.responses[2].response,
+        target_acousticness: this.responses[3].response
+      }, {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        console.log(res)
+      }).catch((error) => {
+        console.log('error axios post: ' + error)
+      })
     }
   }
 }
@@ -201,13 +233,14 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow: 0 6px 12px -2px rgba(50,50,93,.25),0 3px 7px -3px rgba(0,0,0,.3);
-  width: 40%;
-  margin: 6rem 6rem;
+  width: 50%;
+  margin: 3rem;
 }
 
 #question{
   padding: 1rem;
   margin: 1rem;
+  text-align: center;
 }
 
 #answers{
@@ -221,6 +254,8 @@ export default {
 .question-buttons{
   padding: .5rem;
   margin: 1rem;
+  height: 7vh;
+  width: 15vh;
 }
 
 .answer-slider{
@@ -229,14 +264,10 @@ export default {
   width: 35vh;
 }
 
-.slider-label{
-
-}
-
 .answer-button{
   margin: .5rem;
   padding: .5rem;
-  height: 10vh;
+  height: 9vh;
   width: 25vh;
 }
 </style>

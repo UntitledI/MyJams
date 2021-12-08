@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -15,7 +17,6 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
@@ -36,12 +37,32 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module'
   ],
-  server: {
-    host: '0.0.0.0'
-  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/dotenv',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
+  axios: {
+    baseURL: process.env.API_URL
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/auth/logout', method: 'delete' },
+          user: { url: '/auth/user', method: 'get', propertyName: 'user' }
+        }
+      }
+    },
+    redirect: {
+      login: '/',
+      logout: '/',
+      callback: '/profile',
+      home: '/profile'
+    }
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
