@@ -53,9 +53,9 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
-          logout: { url: '/auth/logout', method: 'delete' },
-          user: { url: '/auth/user', method: 'get', propertyName: 'user' }
+          login: { url: process.env.API_URL + '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: process.env.API_URL + '/auth/logout', method: 'delete' },
+          user: { url: process.env.API_URL + '/auth/user', method: 'get', propertyName: 'user' }
         }
       }
     },
