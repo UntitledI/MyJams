@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
-
-// nested preferences schema
-const preferenceSchema = new Schema({
-    genre: {type: String, required: true},
-    energetic: {type: String, required: true},
-    popularity: {type: String, required: true},
-    acousticness: {type: String, required: true},
-});
 
 const UserSchema = new Schema({
     name: {
+        type: String,
+        required: false
+    },
+    followers: {
+        type: Number,
+        required: false
+    },
+    image: {
         type: String,
         required: false
     },
@@ -22,6 +21,10 @@ const UserSchema = new Schema({
     spotifyId: {
         type: String,
         required: true
+    },
+    loginCode: {
+        type: String,
+        required: false
     },
     spotifyAccessToken: {
         type: String,
@@ -35,11 +38,14 @@ const UserSchema = new Schema({
         type: Number,
         required: true
     },
+    preferenceId: {
+        type: String,
+        required: false
+    },
     createdAt: {
         type: Date,
         default: Date.now
-    },
-    preferences: [preferenceSchema]
+    }
 })
 
 const User = mongoose.model('User', UserSchema)

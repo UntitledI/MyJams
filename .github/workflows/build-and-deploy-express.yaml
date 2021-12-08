@@ -1,4 +1,4 @@
-name: Build and Deploy Feather 🤩
+name: Build and Deploy Express 🤩
 
 on:
   push:
@@ -15,7 +15,7 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    name: Build & Deploy Feather 🤩
+    name: Build & Deploy Express 🤩
     steps:
       - uses: actions/checkout@v1
       - name: Set up QEMU 🌱
@@ -32,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/feather
+          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/express
       - name: Build and push Docker image ⚒
         id: build-push-image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc

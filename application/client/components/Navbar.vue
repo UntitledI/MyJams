@@ -1,11 +1,11 @@
 <template>
-  <header id="header">
+  <header v-if="$auth.loggedIn" id="header">
     <div id="nav-container">
-      <span id="logo">AppName</span>
+      <span id="logo">MyJams</span>
       <nav>
         <ul id="functions-container" class="menu-items">
           <li id="find-music-container">
-            <NuxtLink to="/find-music">
+            <NuxtLink to="/recommendations">
               Find Music
             </NuxtLink>
           </li>
@@ -21,12 +21,17 @@
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/settings" class="menu-item">
-                    Settings
+                  <NuxtLink to="/preferences" class="menu-item">
+                    Preferences
                   </NuxtLink>
                 </li>
+                <li>
+                  <p class="menu-item" @click="handleLogout">
+                    Logout
+                  </p>
+                </li>
               </ul>
-              <input id="search" type="text" placeholder="Search">
+              <!-- <input id="search" type="text" placeholder="Search"> -->
             </div>
           </li>
         </ul>
@@ -46,9 +51,11 @@ export default {
   data () {
     return { local_image: this.image }
   },
-  created () {
-    // replace this code to get url to user's profile pic from spotify API
-    this.local_image = 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228'
+  mounted () {
+    const user = this.$auth.user
+    if (user) {
+      this.local_image = user.image
+    }
   },
   methods: {
     showDropdown (selector) {
@@ -64,6 +71,9 @@ export default {
       }
       document.addEventListener('click', outsideClickListener)
       element.setAttribute('class', 'dropdown-menu-visible')
+    },
+    handleLogout () {
+      this.$auth.logout()
     }
   }
 }
@@ -109,6 +119,7 @@ nav {
   justify-content: space-between;
   padding-left: 1rem;
   font-size: 1.1rem;
+  color: white;
 }
 #header{
   display: flex;
