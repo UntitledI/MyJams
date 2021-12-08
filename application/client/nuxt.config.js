@@ -30,7 +30,10 @@ export default {
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   publicRuntimeConfig: {
-    apiURL: process.env.API_URL
+    apiURL: process.env.API_URL,
+    axios: {
+      baseURL: process.env.API_URL
+    }
   },
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -46,16 +49,14 @@ export default {
   server: {
     host: '0.0.0.0'
   },
-  axios: {
-    baseURL: process.env.API_URL
-  },
+
   auth: {
     strategies: {
       local: {
         endpoints: {
-          login: { url: process.env.API_URL + '/auth/login', method: 'post', propertyName: 'token' },
-          logout: { url: process.env.API_URL + '/auth/logout', method: 'delete' },
-          user: { url: process.env.API_URL + '/auth/user', method: 'get', propertyName: 'user' }
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/auth/logout', method: 'delete' },
+          user: { url: '/auth/user', method: 'get', propertyName: 'user' }
         }
       }
     },
