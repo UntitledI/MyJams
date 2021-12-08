@@ -169,7 +169,7 @@ export default {
       this.finished = true
       this.startQuestionnaire = false
 
-      axios.post(process.env.API_URL + '/preference/add', {
+      axios.post(this.$config.apiURL + '/preference/add', {
         seed_genres: this.responses[0].response.toLowerCase(),
         target_energy: this.responses[1].response,
         target_popularity: this.responses[2].response,

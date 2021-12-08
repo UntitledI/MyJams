@@ -67,11 +67,11 @@ export default {
       default: 0
     }
   },
-  async asyncData ({ $auth, redirect }) {
+  async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
 
     if (token) {
-      const data = await axios.get(process.env.API_URL + '/recommendation/get', {
+      const data = await axios.get($config.apiURL + '/recommendation/get', {
         headers: {
           authorization: token
         }
