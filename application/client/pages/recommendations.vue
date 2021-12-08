@@ -55,6 +55,7 @@ export default {
   components: {
     Navbar
   },
+  middleware: 'auth',
   props: {
     tracks: {
       type: Array,
@@ -69,7 +70,7 @@ export default {
   },
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
-
+    console.log($config.apiURL + '/recommendation/get')
     if (token) {
       const data = await axios.get($config.apiURL + '/recommendation/get', {
         headers: {
@@ -94,11 +95,7 @@ export default {
   },
   created () {
     if (process.client) {
-      if (!this.$auth.loggedIn && this.$route.path !== '/') {
-        this.$router.push('/')
-      } else {
-        this.$router.replace({ query: null })
-      }
+      this.$router.replace({ query: null })
     }
   },
   methods: {

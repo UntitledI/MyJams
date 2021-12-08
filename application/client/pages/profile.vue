@@ -85,11 +85,7 @@ export default {
   },
   created () {
     if (process.client) {
-      if (!this.$auth.loggedIn && this.$route.path !== '/') {
-        this.$router.push('/')
-      } else {
-        this.$router.replace({ query: null })
-      }
+      this.$router.replace({ query: null })
     }
   },
   mounted () {

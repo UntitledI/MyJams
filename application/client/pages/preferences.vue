@@ -41,6 +41,7 @@ import Navbar from '../components/Navbar'
 
 export default {
   Navbar,
+  middleware: 'auth',
   props: {
     preferences: {
       type: Array,
@@ -51,7 +52,7 @@ export default {
   },
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
-
+    console.log($config.apiURL)
     if (token) {
       const data = await axios.get($config.apiURL + '/preference/get', {
         headers: {
@@ -76,11 +77,7 @@ export default {
   },
   created () {
     if (process.client) {
-      if (!this.$auth.loggedIn && this.$route.path !== '/') {
-        this.$router.push('/')
-      } else {
-        this.$router.replace({ query: null })
-      }
+      this.$router.replace({ query: null })
     }
   },
   methods: {
