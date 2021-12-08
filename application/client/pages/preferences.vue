@@ -51,6 +51,7 @@ export default {
   },
   async asyncData ({ $auth, redirect }) {
     const token = $auth.getToken('local')
+
     if (token) {
       const data = await axios.get(process.env.API_URL + '/preference/get', {
         headers: {

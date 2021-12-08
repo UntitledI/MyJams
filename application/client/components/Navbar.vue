@@ -1,5 +1,5 @@
 <template>
-  <header id="header">
+  <header v-if="$auth.loggedIn" id="header">
     <div id="nav-container">
       <span id="logo">MyJams</span>
       <nav>
