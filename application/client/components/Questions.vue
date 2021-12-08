@@ -29,11 +29,11 @@
           v-if="questions[currentQuestion].questionType === 'slider'"
           v-model="questions[currentQuestion].sliderValue"
           type="range"
-          min="-1"
-          max="1"
-          step=".01"
+          :min="questions[currentQuestion].sliderMin"
+          :max="questions[currentQuestion].sliderMax"
+          :step="questions[currentQuestion].sliderStep"
           class="answer-slider"
-          @change="handleSliderChange(questions[currentQuestion].sliderValue)"
+          @change="handleSliderChange(questions[currentQuestion].sliderValue, questions[currentQuestion].sliderStep)"
         >
         <button
           v-for="(option, index) in questions[currentQuestion].answer"
@@ -90,6 +90,9 @@ export default {
           questionText: 'How energetic do you like your music to be?',
           questionType: 'slider',
           sliderValue: 0,
+          sliderMin: -1,
+          sliderMax: 1,
+          sliderStep: 0.01,
           sliderMessage: 'No preference',
           sliderMsgPos: 'I like my music energetic',
           sliderMsgNeg: 'I like my music more calm'
@@ -98,6 +101,9 @@ export default {
           questionText: 'How popular are the songs you listen to?',
           questionType: 'slider',
           sliderValue: 0,
+          sliderMin: 0,
+          sliderMax: 100,
+          sliderStep: 1,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like listening to more mainstream music',
           sliderMsgNeg: 'I like finding unconventional music'
@@ -106,6 +112,9 @@ export default {
           questionText: 'How much do you like acoustic music?',
           questionType: 'slider',
           sliderValue: 0,
+          sliderMin: -1,
+          sliderMax: 1,
+          sliderStep: 0.01,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like the use of acoustic type instruments',
           sliderMsgNeg: 'I like music that is more electronic'
@@ -126,18 +135,30 @@ export default {
         this.responses[objIndex].response = value
       }
     },
-    handleSliderChange (value) {
-      if (value < 0.1 && value > -0.1) {
-        this.questions[this.currentQuestion].sliderValue = 0
-        this.questions[this.currentQuestion].sliderMessage = 'No Preference'
-      } else if (value < 0) {
-        this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
-      } else if (value > 0) {
-        this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
+    handleSliderChange (value, step) {
+      if (step === 0.01) {
+        if (value < -0.1 && value > 0.1) {
+          this.questions[this.currentQuestion].sliderValue = 0
+          this.questions[this.currentQuestion].sliderMessage = 'No Preference'
+        } else if (value < 0) {
+          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
+        } else if (value > 0) {
+          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
+        }
+      } else if (step === 1) {
+        if (value === 0) {
+          this.questions[this.currentQuestion].sliderValue = 0
+          this.questions[this.currentQuestion].sliderMessage = 'No Preference'
+        } else if (value < 50) {
+          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgNeg
+        } else if (value > 50) {
+          this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
+        }
       }
     },
     handleAnswerClick (answer) {
-      this.handleAnswer(answer)
+      const lowerAnswer = answer.toLowerCase()
+      this.handleAnswer(lowerAnswer)
       this.handleNextClick()
     },
     handleBackClick () {

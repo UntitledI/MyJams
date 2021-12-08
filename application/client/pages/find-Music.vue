@@ -91,7 +91,8 @@ export default {
     axios.get('http://localhost:3030/recommendation/get', {
       params: { spotifyId: 'acedbm' }
     }).then((res) => {
-      console.log('Res from backend' + res)
+      console.log('Res from backend')
+      console.log(res)
       this.local_tracks = res.data
     }).catch((err) => {
       console.log('fucked up: ' + err)
