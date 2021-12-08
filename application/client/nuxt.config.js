@@ -43,6 +43,9 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth'
   ],
+  server: {
+    host: '0.0.0.0'
+  },
   axios: {
     baseURL: process.env.API_URL
   },
