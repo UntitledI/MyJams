@@ -57,13 +57,14 @@
 </template>
 
 <script>
+import url from 'url'
 import Navbar from '../components/Navbar'
 import Playlist from '../components/Playlist'
 
 export default {
   Navbar,
   Playlist,
-  middleware: 'auth',
+  middleware: ['auth-user'],
   props: {
     playlists: {
       type: Array,
@@ -84,14 +85,14 @@ export default {
       local_user: this.user
     }
   },
-  created () {
-    if (process.client && this.$router.query) {
-      this.$router.replace({ query: null })
-    }
-  },
   mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
+    }
     const user = this.$auth.user
-
     // make a call to backend api to populate playlists
     this.local_playlists = [
       /*

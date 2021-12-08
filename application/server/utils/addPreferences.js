@@ -9,8 +9,7 @@ module.exports = async function setPreferences(id, preference) {
         target_acousticness: preference.target_acousticness
     }).then((res) => {
         return res;
-    }).catch((err) => {
-        console.log('Error occured in setPreferences() when creating a new preference');
-        console.log(err);
+    }).catch((error) => {
+        console.error(error);
     });
 }

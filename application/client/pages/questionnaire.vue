@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import url from 'url'
 import Questions from '../components/Questions.vue'
 
 export default {
@@ -12,10 +13,13 @@ export default {
   components: {
     Questions
   },
-  middleware: 'auth',
-  created () {
-    if (process.client && this.$router.query) {
-      this.$router.replace({ query: null })
+  middleware: ['auth-user'],
+  mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
     }
   }
 }

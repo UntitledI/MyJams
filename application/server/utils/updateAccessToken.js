@@ -23,10 +23,8 @@ module.exports = async function updateAccessToken(id) {
         await User.updateOne({ spotifyId: id }, { spotifyAccessToken: res.data.access_token });
         return res.data.access_token;
     }).then((token) => {
-        console.log("User", id, "has new access token");
         return token;
-    }).catch((err) => {
-        console.log("Error inside updateAccessToken()");
-        console.log(err);
+    }).catch((error) => {
+        console.log(error);
     })
 }
