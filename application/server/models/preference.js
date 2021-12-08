@@ -1,0 +1,32 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const PreferenceSchema = new Schema({
+    spotifyId: {
+        type: String,
+        required: true
+    },
+    seed_genres: {
+        type: String,
+        required: true
+    },
+    target_energy: {
+        type: String,
+        required: true
+    },
+    target_popularity: {
+        type: String,
+        required: true
+    },
+    target_acousticness: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+const Preference = mongoose.model('Preference', PreferenceSchema);
+module.exports = Preference;

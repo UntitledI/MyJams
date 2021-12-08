@@ -1,47 +1,78 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require('dotenv').config();
+const express = require('express');
+const session = require('express-session');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const passport = require('./passport/spotify');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
+const cors = require('cors');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const oauthRouter = require('./routes/oauth');
+const authRouter = require('./routes/auth')
+const preferenceRouter = require('./routes/preferences');
+const recommendationRouter = require('./routes/recommendation');
+const apiErrorHandler = require('./error/api-error-handler');
+const ApiError = require('./error/ApiError');
 
-var app = express();
+const port = 3030;
 
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('mongodb connection')
+}).catch(e => console.log(e));
 
-const run = require("./utils/mongo")
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+const app = express();
 
+// middlewares
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true
+}));
+app.use(passport.initialize());
 
-await run()
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+/* GET home page. */
+app.get('/', function (req, res) {
+  console.log(req.user);
+  return res.send('Server is up and running!');
 });
 
+// route middlewares
+app.use('/oauth', oauthRouter);
+app.use('/auth', authRouter);
+app.use('/recommendation', recommendationRouter);
+app.use('/preference', preferenceRouter);
 
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(ApiError.notFound('Page not found'));
+});
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(apiErrorHandler);
+
+/*
+// error handler
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send(err);
 });
+*/
+
+app.listen(process.env.port || port, () => {
+  if (process.env.port) console.log(`home page listening at http://localhost:${process.env.port}`)
+  else console.log(`home page listening at http://localhost:${port}`)
+})
 
 module.exports = app;
