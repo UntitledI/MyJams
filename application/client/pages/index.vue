@@ -23,12 +23,12 @@ export default {
     let code = null
     const url = window.location.search
     if (url.length > 0) {
-      code = url.replace('?code=', '')
+      code = url.replace('?loginCode=', '')
     }
     if (code) {
       this.$auth.loginWith('local', {
         data: {
-          refreshToken: code
+          loginCode: code
         }
       })
     }

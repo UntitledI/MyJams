@@ -1,7 +1,7 @@
 
 const User = require('../models/user');
 
-module.exports = async function addOrFindUser(spotifyId, email, name, followers, image, spotifyAccessToken, spotifyRefreshToken, spotifyExpiresIn) {
+module.exports = async function addOrFindUser(spotifyId, email, name, followers, image, loginCode, spotifyAccessToken, spotifyRefreshToken, spotifyExpiresIn) {
     //  First we want to check whether the user already exists in the database
     return await User.findOne({ spotifyId: spotifyId }).exec().then((user) => {
         if (user) { // The user already exists in the db, so we'll just update the user's info
@@ -11,6 +11,7 @@ module.exports = async function addOrFindUser(spotifyId, email, name, followers,
                 name: name,
                 image: image,
                 followers: followers,
+                loginCode: loginCode,
                 spotifyId: spotifyId,
                 spotifyAccessToken: spotifyAccessToken,
                 spotifyRefreshToken: spotifyRefreshToken,
@@ -25,6 +26,7 @@ module.exports = async function addOrFindUser(spotifyId, email, name, followers,
                 name: name,
                 image: image,
                 followers: followers,
+                loginCode: loginCode,
                 spotifyId: spotifyId,
                 spotifyAccessToken: spotifyAccessToken,
                 spotifyRefreshToken: spotifyRefreshToken,
@@ -37,7 +39,8 @@ module.exports = async function addOrFindUser(spotifyId, email, name, followers,
             email: res.email,
             name: res.name,
             image: res.image,
-            followers: res.followers
+            followers: res.followers,
+            loginCode: res.loginCode
         }
         return user;
     }).catch((error) => {

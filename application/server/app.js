@@ -1,11 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const session = require('express-session');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const passport = require('./passport/spotify');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
 const cors = require('cors');
 
 const oauthRouter = require('./routes/oauth');
