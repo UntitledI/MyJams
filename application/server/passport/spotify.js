@@ -14,9 +14,9 @@ const spotifyConfig = {
 
 const strategy = new SpotifyStrategy(spotifyConfig, (accessToken, refreshToken, expires_in, profile, done) => {
     const spotifyId = profile.id;
-    const email = profile.emails && profile.emails[0].value;
+    const email = profile.emails && (profile.emails[0] && profile.emails[0].value);
     const name = profile.displayName;
-    const image = profile.photos && profile.photos[0].value;
+    const image = profile.photos && (profile.photos[0] && profile.photos[0].value);
     const followers = profile.followers;
     const loginCode = crypto.randomBytes(32).toString('hex');
 

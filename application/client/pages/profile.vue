@@ -63,6 +63,7 @@ import Playlist from '../components/Playlist'
 export default {
   Navbar,
   Playlist,
+  middleware: 'auth',
   props: {
     playlists: {
       type: Array,
@@ -84,7 +85,7 @@ export default {
     }
   },
   created () {
-    if (process.client) {
+    if (process.client && this.$router.query) {
       this.$router.replace({ query: null })
     }
   },
