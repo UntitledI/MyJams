@@ -42,7 +42,7 @@
         <div id="playlist-container">
           <ul v-if="local_playlists.length > 0" id="playlist-list">
             <li v-for="playlist in local_playlists" :key="playlist.id">
-              <div class="playlist" @click="showPlaylist(playlist.name, playlist.description, playlist.image)">
+              <div class="playlist" @click="showPlaylist(playlist.name, playlist.description, playlist.image, playlist.id)">
                 <div class="playlist-image-container">
                   <img :src="playlist.image">
                 </div>
@@ -58,6 +58,7 @@
 
 <script>
 import url from 'url'
+import axios from 'axios'
 import Navbar from '../components/Navbar'
 import Playlist from '../components/Playlist'
 
@@ -79,6 +80,24 @@ export default {
       }
     }
   },
+  async asyncData ({ $config, $auth, redirect }) {
+    const token = $auth.getToken('local')
+    if (token) {
+      const data = await axios.get($config.apiURL + '/playlists/get', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data.playlists
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
+
+      return { local_playlists: data }
+    }
+  },
   data () {
     return {
       local_playlists: this.playlists,
@@ -93,17 +112,6 @@ export default {
       window.history.pushState({}, document.title, url.format(urlObj))
     }
     const user = this.$auth.user
-    // make a call to backend api to populate playlists
-    this.local_playlists = [
-      /*
-      {
-        name: 'Sample Playlist 1',
-        description: 'Sample description 1',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '1'
-      }
-      */
-    ]
     if (user) {
       this.local_user = {
         name: user ? user.name : '',
@@ -115,10 +123,29 @@ export default {
     }
   },
   methods: {
-    showPlaylist (_title, _desc, _image) {
+    async showPlaylist (_title, _desc, _image, id) {
+      const token = this.$auth.getToken('local')
+      let _songs
+      if (token) {
+        axios.default.withCredentials = true
+        await axios.get(this.$config.apiURL + '/playlists/songs', {
+          params: {
+            playlistId: id
+          },
+          headers: {
+            authorization: token
+          }
+        }).then((res) => {
+          _songs = res.data.songs
+        }).catch((err) => {
+          console.log('error occured')
+          console.error(err.response.status)
+        })
+      }
+      console.log(_songs)
       this.$modal.show(
         Playlist,
-        { title: _title, desc: _desc, image: _image },
+        { title: _title, desc: _desc, image: _image, songs: _songs },
         { width: '1500px', height: '800px', draggable: true })
     }
   }

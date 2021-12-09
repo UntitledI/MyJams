@@ -71,7 +71,6 @@ export default {
   },
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
-    console.log($config.apiURL + '/recommendation/get')
     if (token) {
       const data = await axios.get($config.apiURL + '/recommendation/get', {
         headers: {
