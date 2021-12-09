@@ -61,6 +61,7 @@ import url from 'url'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
 import Playlist from '../components/Playlist'
+let fetching = false
 
 export default {
   Navbar,
@@ -124,29 +125,34 @@ export default {
   },
   methods: {
     async showPlaylist (_title, _desc, _image, id) {
-      const token = this.$auth.getToken('local')
-      let _songs
-      if (token) {
-        axios.default.withCredentials = true
-        await axios.get(this.$config.apiURL + '/playlists/songs', {
-          params: {
-            playlistId: id
-          },
-          headers: {
-            authorization: token
-          }
-        }).then((res) => {
-          _songs = res.data.songs
-        }).catch((err) => {
-          console.log('error occured')
-          console.error(err.response.status)
-        })
+      if (!fetching) {
+        const token = this.$auth.getToken('local')
+        fetching = true
+        let _songs
+        if (token) {
+          axios.default.withCredentials = true
+          await axios.get(this.$config.apiURL + '/playlists/songs', {
+            params: {
+              playlistId: id
+            },
+            headers: {
+              authorization: token
+            }
+          }).then((res) => {
+            _songs = res.data.songs
+          }).catch((err) => {
+            console.log('error occured')
+            console.error(err.response.status)
+          })
+        } else {
+          console.log('already fetching!')
+        }
+        fetching = false
+        this.$modal.show(
+          Playlist,
+          { title: _title, desc: _desc, image: _image, songs: _songs },
+          { width: '1500px', height: '800px', draggable: true })
       }
-      console.log(_songs)
-      this.$modal.show(
-        Playlist,
-        { title: _title, desc: _desc, image: _image, songs: _songs },
-        { width: '1500px', height: '800px', draggable: true })
     }
   }
 }
