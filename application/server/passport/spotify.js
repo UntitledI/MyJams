@@ -30,4 +30,25 @@ const strategy = new SpotifyStrategy(spotifyConfig, (accessToken, refreshToken, 
 
 passport.use(strategy);
 
+passport.serializeUser(function (user, done) {
+    // console.log('serializing user', user.spotifyId);
+    done(null, user.spotifyId);
+});
+passport.deserializeUser(async function (id, done) {
+    // console.log('deserializing user', id);
+    const user = await getUserWithSpotifyId(id).then((doc) => {
+        const user = {
+            spotifyId: doc.spotifyId,
+            email: doc.email,
+            name: doc.name,
+            image: doc.image,
+            followers: doc.followers
+        }
+        return user;
+    }).catch((error) => {
+        console.log(error);
+    })
+    done(null, user);
+});
+
 module.exports = passport;
