@@ -4,3 +4,5 @@ mongo
 application/client/.eslintcache
 
 application/client/.nuxt/utils.js
+
+docker-compose.yaml
