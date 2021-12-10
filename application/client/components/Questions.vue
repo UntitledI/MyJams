@@ -1,18 +1,17 @@
 <template>
   <div id="quiz-container">
-    <div v-if="finished">
-      <span>
-        responses:
-        {{ responses }}
-      </span>
-    </div>
     <div v-if="!startQuestionnaire" id="quiz-start">
       <h1 id="quiz-title">
-        Welcome to our myJams!
+        Welcome to myJams!
       </h1>
-      <button id="quiz-start-button" @click="startQuestionnaireFunc()">
-        Start
+      <button class="quiz-start-buttons" @click="startQuestionnaireFunc()">
+        Start Questionnaire
       </button>
+      <NuxtLink to="/preferences">
+        <button class="quiz-start-buttons">
+          Exit
+        </button>
+      </NuxtLink>
     </div>
     <div v-else id="quiz-form">
       <h1 id="question">
@@ -39,7 +38,7 @@
           v-else-if="questions[currentQuestion].questionType === 'text'"
           v-model="questions[currentQuestion].questionInput"
           type="text"
-          @change="handleTextChange(questions[currentQuestion].questionInput)"
+          class="answer-text"
         >
         <button
           v-for="(option, index) in questions[currentQuestion].answer"
@@ -64,6 +63,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Questions',
   data () {
@@ -130,6 +130,9 @@ export default {
     startQuestionnaireFunc () {
       this.startQuestionnaire = true
     },
+    exitQuestionnaireFunc () {
+      this.startQuestionnaire = true
+    },
     handleAnswer (value) {
       const objIndex = this.responses.findIndex(obj => obj.question === this.currentQuestion + 1)
       if (objIndex === -1) {
@@ -149,7 +152,7 @@ export default {
           this.questions[this.currentQuestion].sliderMessage = this.questions[this.currentQuestion].sliderMsgPos
         }
       } else if (step % 1 !== 0) {
-        if (value < -0.1 && value > 0.1) {
+        if (value > -0.05 && value < 0.05) {
           this.questions[this.currentQuestion].sliderValue = 0
           this.questions[this.currentQuestion].sliderMessage = 'No Preference'
         } else if (value < 0) {
@@ -172,13 +175,17 @@ export default {
       }
     },
     handleNextClick () {
-      const nextQuestion = this.currentQuestion + 1
+      let nextQuestion = this.currentQuestion + 1
       if (this.questions[this.currentQuestion].questionType === 'slider') {
         this.handleAnswer(this.questions[this.currentQuestion].sliderValue)
         this.sliderValue = 0
       }
       if (this.questions[this.currentQuestion].questionType === 'text') {
-        this.handleAnswer(this.questions[this.currentQuestion].questionInput)
+        if (this.questions[this.currentQuestion].questionInput === '') {
+          nextQuestion = this.currentQuestion
+        } else {
+          this.handleAnswer(this.questions[this.currentQuestion].questionInput)
+        }
       }
       if (nextQuestion < this.questions.length) {
         this.currentQuestion = nextQuestion
@@ -189,8 +196,25 @@ export default {
       }
     },
     handleSubmit () {
+      const token = this.$auth.getToken('local')
       this.finished = true
-      this.startQuestionnaire = false
+
+      axios.post(this.$config.apiURL + '/preference/add', {
+        seed_genres: this.responses[0].response.toLowerCase(),
+        preference_title: this.responses[1].response,
+        target_energy: this.responses[2].response,
+        target_popularity: this.responses[3].response,
+        target_acousticness: this.responses[4].response
+      }, {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        console.log(res)
+      }).catch((error) => {
+        console.log('error axios post: ' + error)
+      })
+      this.$router.push('/preferences')
     }
   }
 }
@@ -229,12 +253,6 @@ export default {
   padding: 2rem;
 }
 
-#quiz-start-button{
-  margin: 2rem;
-  height: 10vh;
-  width: 25vh;
-}
-
 #quiz-form{
   display: flex;
   flex-direction: column;
@@ -259,6 +277,12 @@ export default {
   padding: 1rem;
 }
 
+.quiz-start-buttons{
+  margin: .75rem;
+  height: 9vh;
+  width: 25vh;
+}
+
 .question-buttons{
   padding: .5rem;
   margin: 1rem;
@@ -270,6 +294,11 @@ export default {
   margin: 1rem;
   padding: .5rem;
   width: 35vh;
+}
+
+.answer-text{
+  padding: .5rem;
+  text-align: center;
 }
 
 .answer-button{
