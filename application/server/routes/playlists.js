@@ -2,8 +2,6 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 const getAccessToken = require('../utils/getAccessToken')
-const getCache = require('../utils/getCache')
-const addCache = require('../utils/addCache')
 const updateAccessToken = require('../utils/updateAccessToken')
 const authenticateToken = require('../middlewares/authenticateToken')
 const ApiError = require('../error/ApiError')
@@ -24,7 +22,7 @@ function millisToMinutesAndSeconds(millis) {
 
 router.get('/get', authenticateToken, async function (req, res, next) {
     const spotifyId = req.user.spotifyId
-    let token = await getAccessToken(spotifyId).catch((err) => {
+    let token = await getAccessToken(spotifyId).catch(() => {
         return next(ApiError.internal('Something went wrong...'))
     })
 
@@ -35,7 +33,7 @@ router.get('/get', authenticateToken, async function (req, res, next) {
             token = await updateAccessToken(spotifyId)
             return await axios.get(`https://api.spotify.com/v1/users/${spotifyId}/playlists`, {
                 headers: { Authorization: `Bearer ${token}` }
-            }).catch((err) => {
+            }).catch(() => {
                 return next(ApiError.internal('Something went wrong!'))
             })
         } else {
@@ -47,17 +45,17 @@ router.get('/get', authenticateToken, async function (req, res, next) {
     const playlists = []
 
     // format data to send to frontend
-    for(let i = 0; i < items.length; i++) {
-        const images = items[i].images ? items[i].images[0] : undefined
+    items.forEach((item) => {
+        const images = item.images ? item.images[0] : undefined
         const image = images ? images.url : undefined
         const playlist = {
-            id: items[i].id,
-            name: items[i].name,
-            description: items[i].description,
+            id: item.id,
+            name: item.name,
+            description: item.description,
             image: image
         }
         playlists.push(playlist)
-    }
+    })
 
     res.json({ playlists })
 })
@@ -94,67 +92,45 @@ router.get('/songs', authenticateToken, async function (req, res ,next) {
         }
     })
 
-    const items = response.data.tracks.items
     const dateOptions = { year: 'numeric', month: 'long', day: 'numeric'}
-    const cachedImages = {} // cache images to optimize speed
-    const songs = []        // array of data to be returned
+    const items = response.data.tracks.items
+    const promises = []     // array of promises to be resolved all at once
     
-    // format data and push into songs array
-    for(let i = 0; i < items.length; i++) {
-        const dateObj = new Date(items[i].added_at)
-        const date = dateObj.toLocaleDateString('en-US', dateOptions)
-        const trackArtists = items[i].track.artists
-        const artists = []
-        const href = items[i].track.album.href
+    // format data
+    items.forEach((item) => {
+        // fetch track album image from spotify api
+        const href = item.track.album.href
+        promises.push(axios.get(href, {
+            headers: { Authorization: `Bearer ${token}` }
+        }).then((response) => {
+            const images = response.data.images
+            const image = images ? images[0].url : undefined
+            const dateObj = new Date(item.added_at)
+            const date = dateObj.toLocaleDateString('en-US', dateOptions)
+            const trackArtists = item.track.artists
+            const artists = []  // array of strings representing artist names
 
-        // cache images
-        if (!cachedImages[href]) {
-            // check database if data already exists
-            cachedImages[href] = await getCache(href).then((doc) => {
-                return doc ? doc.data : null
-            }).catch((err) => {
-                console.error(err)
-                return next(ApiError.internal('Something went wrong..'))
+            trackArtists.forEach((artist) => {
+                artists.push(artist.name)
             })
-            // if data is not in the database, then we must fetch from spotify api
-            if (!cachedImages[href]) {
-                cachedImages[href] = await axios.get(href, {
-                    headers: { Authorization: `Bearer ${token}` }
-                }).then((_res) => {
-                    return _res.data.images
-                }).catch((err) => {
-                    console.error(err.response.status)
-                    return next(ApiError.internal('Something went wrong!!'))
-                })
-                // save data into database so we can skip fetching from the api next time
-                addCache(href, cachedImages[href]).catch((err) => {
-                    console.error(err)
-                })
+
+            // format all info
+            return {
+                date: date,
+                name: item.track.name,
+                album: item.track.album.name,
+                artists: artists,
+                duration: millisToMinutesAndSeconds(item.track.duration_ms),
+                image: image
             }
-        } 
+        }))
+    })
 
-        const images = cachedImages[href]
-        const image = images ? images[0].url : undefined
-
-        // format artists as an array of strings
-        if (trackArtists) {
-            for(let j = 0; j < trackArtists.length; j++) {
-                artists.push(trackArtists[j].name)
-            }
-        }
-
-        // format song
-        const song = {
-            date: date,
-            name: items[i].track.name,
-            album: items[i].track.album.name,
-            artists: artists,
-            duration: millisToMinutesAndSeconds(items[i].track.duration_ms),
-            image: image
-        }
-
-        songs.push(song)
-    }
+    // resolve all promises at once and put result in songs
+    const songs = await Promise.all(promises).catch((err) => {
+        console.error(err)
+        return next(ApiError.internal('Something went wrong !'))
+    })
     
     res.json({ songs })
 })
