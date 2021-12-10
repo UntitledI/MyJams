@@ -35,7 +35,7 @@
 
 <script>
 import url from 'url'
-//import axios from 'axios'
+// import axios from 'axios'
 
 import Navbar from '../components/Navbar'
 
