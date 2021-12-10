@@ -1,5 +1,11 @@
 <template>
   <div id="quiz-container">
+    <div v-if="finished">
+      <span>
+        responses:
+        {{ responses }}
+      </span>
+    </div>
     <div v-if="!startQuestionnaire" id="quiz-start">
       <h1 id="quiz-title">
         Welcome to our myJams!
@@ -23,17 +29,17 @@
           v-if="questions[currentQuestion].questionType === 'slider'"
           v-model="questions[currentQuestion].sliderValue"
           type="range"
-<<<<<<< HEAD
           :min="questions[currentQuestion].sliderStep === 0.01 ? -1: 0"
           :max="questions[currentQuestion].sliderStep === 0.01 ? 1: 100"
           :step="questions[currentQuestion].sliderStep"
-=======
-          min="0"
-          max="100"
-          step="1"
->>>>>>> 25dc8913686b6eaf77abb8988135d1bb1bfd0bee
           class="answer-slider"
           @change="handleSliderChange(questions[currentQuestion].sliderValue)"
+        >
+        <input
+          v-else-if="questions[currentQuestion].questionType === 'text'"
+          v-model="questions[currentQuestion].questionInput"
+          type="text"
+          @change="handleTextChange(questions[currentQuestion].questionInput)"
         >
         <button
           v-for="(option, index) in questions[currentQuestion].answer"
@@ -58,7 +64,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   name: 'Questions',
   data () {
@@ -71,7 +76,6 @@ export default {
           questionText: 'Genre',
           questionType: 'mc',
           answer: [
-<<<<<<< HEAD
             { answerText: 'Pop', response: 'pop' },
             { answerText: 'Hip Hop', response: 'hip-hop' },
             { answerText: 'R&B', response: 'r-n-b' },
@@ -87,42 +91,14 @@ export default {
           ]
         },
         {
+          questionText: 'What would you like to name this music profile?',
+          questionType: 'text',
+          questionInput: ''
+        },
+        {
           questionText: 'How popular are the songs you listen to?',
           questionType: 'slider',
           sliderValue: 0,
-=======
-            { answerText: 'Pop' },
-            { answerText: 'Hip Hop' },
-            { answerText: 'R&B' },
-            { answerText: 'Country' },
-            { answerText: 'Electronic' },
-            { answerText: 'Rock' },
-            { answerText: 'Latin' },
-            { answerText: 'K-Pop' },
-            { answerText: 'Folk' },
-            { answerText: 'Indie' },
-            { answerText: 'Jazz' },
-            { answerText: 'Classical' }
-          ]
-        },
-        {
-          questionText: 'How energetic do you like your music to be?',
-          questionType: 'slider',
-          sliderValue: 50,
-          sliderMin: 0,
-          sliderMax: 100,
-          sliderStep: 1,
-          sliderMessage: 'No preference',
-          sliderMsgPos: 'I like my music energetic',
-          sliderMsgNeg: 'I like my music more calm'
-        },
-        {
-          questionText: 'How popular are the songs you listen to?',
-          questionType: 'slider',
-          sliderValue: 50,
-          sliderMin: 0,
-          sliderMax: 100,
->>>>>>> 25dc8913686b6eaf77abb8988135d1bb1bfd0bee
           sliderStep: 1,
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like listening to more mainstream music',
@@ -140,15 +116,8 @@ export default {
         {
           questionText: 'How much do you like acoustic music?',
           questionType: 'slider',
-<<<<<<< HEAD
           sliderValue: 0,
           sliderStep: 0.01,
-=======
-          sliderValue: 50,
-          sliderMin: 0,
-          sliderMax: 100,
-          sliderStep: 1,
->>>>>>> 25dc8913686b6eaf77abb8988135d1bb1bfd0bee
           sliderMessage: 'No Preference',
           sliderMsgPos: 'I like the use of acoustic type instruments',
           sliderMsgNeg: 'I like music that is more electronic'
@@ -208,6 +177,9 @@ export default {
         this.handleAnswer(this.questions[this.currentQuestion].sliderValue)
         this.sliderValue = 0
       }
+      if (this.questions[this.currentQuestion].questionType === 'text') {
+        this.handleAnswer(this.questions[this.currentQuestion].questionInput)
+      }
       if (nextQuestion < this.questions.length) {
         this.currentQuestion = nextQuestion
       } else if (this.responses.length < this.questions.length) {
@@ -217,24 +189,8 @@ export default {
       }
     },
     handleSubmit () {
-      const token = this.$auth.getToken('local')
       this.finished = true
       this.startQuestionnaire = false
-
-      axios.post(this.$config.apiURL + '/preference/add', {
-        seed_genres: this.responses[0].response.toLowerCase(),
-        target_energy: this.responses[1].response,
-        target_popularity: this.responses[2].response,
-        target_acousticness: this.responses[3].response
-      }, {
-        headers: {
-          authorization: token
-        }
-      }).then((res) => {
-        console.log(res)
-      }).catch((error) => {
-        console.log('error axios post: ' + error)
-      })
     }
   }
 }
