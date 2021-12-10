@@ -5,13 +5,13 @@
       <div id="preferences-container">
         <ul v-if="local_preferences" id="preferences-list">
           <li v-for="preference in local_preferences" :key="preference.id">
-            <div v-if="!preference.current" class="preference">
+            <div v-if="preference.id !== local_current_preference" class="preference" @click="deletePreference ? handleDelete(preference.id) : setPreference(preference.id)">
               <h2>{{ preference.name }}</h2>
-              <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
+              <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
-            <div v-if="preference.current" class="preference-current">
+            <div v-if="preference.id === local_current_preference" class="preference-current">
               <h2>{{ preference.name }}</h2>
-              <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
+              <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
           </li>
         </ul>
@@ -48,6 +48,12 @@ export default {
       default () {
         return []
       }
+    },
+    currentPreference: {
+      type: Number,
+      default () {
+        return 0
+      }
     }
   },
   async asyncData ({ $config, $auth, redirect }) {
@@ -59,20 +65,21 @@ export default {
           authorization: token
         }
       }).then((res) => {
-        return res.data.preferences
+        return res.data
       }).catch((err) => {
         if (err.status === 401) {
           redirect('/')
         }
       })
 
-      return { local_preferences: data }
+      return { local_preferences: data.preferences, local_current_preference: data.currentPreference }
     }
   },
   data () {
     return {
       deletePreference: false,
-      local_preferences: this.preferences
+      local_preferences: this.preferences,
+      local_current_preference: this.currentPreference
     }
   },
   created () {
@@ -81,10 +88,9 @@ export default {
     }
   },
   methods: {
-    async handleDelete (id) {
+    async handleDelete (preferenceId) {
       const token = this.$auth.getToken('local')
-      const index = this.local_preferences.findIndex(pref => pref.id === id)
-      const preferenceId = this.local_preferences[index].id
+      const index = this.local_preferences.findIndex(pref => pref.id === preferenceId)
       if (index > -1) {
         this.local_preferences.splice(index, 1)
       }
@@ -99,10 +105,11 @@ export default {
         console.log(err.response.status)
       })
     },
-    async setPreference () {
+    async setPreference (preferenceId) {
       const token = this.$auth.getToken('local')
+      this.local_current_preference = preferenceId
       await axios.post(this.$config.apiURL + '/preference/set', {
-        preferenceId: ''
+        preferenceId
       }, {
         headers: {
           authorization: token
@@ -129,7 +136,7 @@ export default {
   width: 512px;
   border-radius: 8px;
   overflow: hidden;
-  background: white;
+  background: red;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   border: 2px solid black;
 }
