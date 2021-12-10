@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$auth.loggedIn">
     <Questions />
   </div>
 </template>
@@ -11,6 +11,12 @@ export default {
   name: 'Questionnaire',
   components: {
     Questions
+  },
+  middleware: 'auth',
+  created () {
+    if (process.client && this.$router.query) {
+      this.$router.replace({ query: null })
+    }
   }
 }
 </script>
