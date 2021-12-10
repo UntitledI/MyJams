@@ -2,16 +2,16 @@ const express = require('express');
 const jwt = require('jsonwebtoken')
 const router = express.Router();
 const authenticateToken = require('../middlewares/authenticateToken');
-const { getUserWithRefreshToken } = require('../utils/getUser');
+const { getUserWithLoginCode } = require('../utils/getUser');
 const ApiError = require('../error/ApiError')
 
 router.post('/login', async function (req, res, next) {
-    const refreshToken = req.body.refreshToken;
-    if (!refreshToken) {
-        return next(ApiError.badRequest('refreshToken is missing'));
+    const loginCode = req.body.loginCode;
+    if (!loginCode) {
+        return next(ApiError.badRequest('loginCode is missing'));
     }
 
-    const user = await getUserWithRefreshToken(refreshToken).then((doc) => {
+    const user = await getUserWithLoginCode(loginCode).then((doc) => {
         return {
             spotifyId: doc.spotifyId,
             email: doc.email,

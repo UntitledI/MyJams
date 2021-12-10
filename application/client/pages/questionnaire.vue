@@ -12,13 +12,10 @@ export default {
   components: {
     Questions
   },
+  middleware: 'auth',
   created () {
-    if (process.client) {
-      if (!this.$auth.loggedIn && this.$route.path !== '/') {
-        this.$router.push('/')
-      } else {
-        this.$router.replace({ query: null })
-      }
+    if (process.client && this.$router.query) {
+      this.$router.replace({ query: null })
     }
   }
 }

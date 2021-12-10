@@ -30,7 +30,10 @@ export default {
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   publicRuntimeConfig: {
-    apiURL: process.env.API_URL
+    apiURL: process.env.API_URL,
+    axios: {
+      baseURL: process.env.API_URL
+    }
   },
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -43,9 +46,10 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth'
   ],
-  axios: {
-    baseURL: process.env.API_URL
+  server: {
+    host: '0.0.0.0'
   },
+
   auth: {
     strategies: {
       local: {

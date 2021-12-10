@@ -1,11 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const session = require('express-session');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const passport = require('./passport/spotify');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
 const cors = require('cors');
 
 const oauthRouter = require('./routes/oauth');
@@ -32,7 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: '*',
   credentials: true
 }));
 app.use(passport.initialize());

@@ -8,8 +8,8 @@ module.exports = {
             console.error(error);
         });
     },
-    getUserWithRefreshToken: async function (refreshToken) {
-        return await User.findOne({ refreshToken: refreshToken }).exec().then((user) => {
+    getUserWithLoginCode: async function (loginCode) {
+        return await User.findOne({ loginCode: loginCode }).exec().then((user) => {
             return user;
         }).catch((error) => {
             console.error(error);

@@ -22,6 +22,10 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    loginCode: {
+        type: String,
+        required: false
+    },
     spotifyAccessToken: {
         type: String,
         required: true

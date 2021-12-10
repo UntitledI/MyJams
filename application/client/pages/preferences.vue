@@ -41,6 +41,7 @@ import Navbar from '../components/Navbar'
 
 export default {
   Navbar,
+  middleware: 'auth',
   props: {
     preferences: {
       type: Array,
@@ -49,11 +50,11 @@ export default {
       }
     }
   },
-  async asyncData ({ $auth, redirect }) {
+  async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
-
+    console.log($config.apiURL + '/preference/get')
     if (token) {
-      const data = await axios.get(process.env.API_URL + '/preference/get', {
+      const data = await axios.get($config.apiURL + '/preference/get', {
         headers: {
           authorization: token
         }
@@ -75,12 +76,8 @@ export default {
     }
   },
   created () {
-    if (process.client) {
-      if (!this.$auth.loggedIn && this.$route.path !== '/') {
-        this.$router.push('/')
-      } else {
-        this.$router.replace({ query: null })
-      }
+    if (process.client && this.$router.query) {
+      this.$router.replace({ query: null })
     }
   },
   methods: {
@@ -91,7 +88,7 @@ export default {
       if (index > -1) {
         this.local_preferences.splice(index, 1)
       }
-      await axios.post(process.env.API_URL + '/preference/delete', {
+      await axios.post(this.$config.apiURL + '/preference/delete', {
         preferenceId
       }, {
         headers: {
@@ -104,7 +101,7 @@ export default {
     },
     async setPreference () {
       const token = this.$auth.getToken('local')
-      await axios.post(process.env.API_URL + '/preference/set', {
+      await axios.post(this.$config.apiURL + '/preference/set', {
         preferenceId: ''
       }, {
         headers: {
