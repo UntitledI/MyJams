@@ -36,13 +36,13 @@ router.get('/get', authenticateToken, async function (req, res, next) {
       target_energy: _preferences[i].target_energy,
       target_popularity: _preferences[i].target_popularity,
       target_acousticness: _preferences[i].target_acousticness,
-      current: _preferences[i]._id === currentPreference ? true : false
     });
   }
 
   // send data
   res.status(200).json({
-    preferences: preferences
+    preferences: preferences,
+    currentPreference: currentPreference
   })
 });
 
