@@ -60,34 +60,9 @@ export default {
     }
   },
   created () {
-    this.local_tracks = [
-      {
-        id: '1',
-        image: 'http://localhost:3000/_nuxt/static/songCovers/LunasHowl.png',
-        name: 'Luna\'s Howl',
-        artist: 'Switch 24/7',
-        album: 'SoundCloud',
-        genre: 'Pop'
-      },
-      {
-        id: '2',
-        image: 'http://localhost:3000/_nuxt/static/songCovers/LunasHowl.png',
-        name: 'Stuck On You',
-        artist: 'Coco Love ft. Switch24/7',
-        album: 'Heart Broken',
-        genre: 'R&B'
-      },
-      {
-        id: '3',
-        image: 'http://localhost:3000/_nuxt/static/songCovers/OneLastSauce.png',
-        name: 'One Last Sauce',
-        artist: 'Switch 24/7',
-        album: 'The Finale',
-        genre: 'Hip Hop'
-      }
-    ]
-  },
-  mounted () {
+    if (process.client && this.$router.query) {
+      this.$router.replace({ query: null })
+    }
   },
   methods: {
     touchEnd () {
