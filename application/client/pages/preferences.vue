@@ -9,7 +9,7 @@
               <h2>{{ preference.name }}</h2>
               <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
-            <div v-if="preference.id === local_current_preference" class="preference-current">
+            <div v-if="preference.id === local_current_preference" id="preference-current" class="preference" @click="deletePreference ? handleDelete(preference.id) : setPreference(preference.id)">
               <h2>{{ preference.name }}</h2>
               <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
@@ -129,18 +129,6 @@ export default {
   margin: 0px;
 }
 
-.preference-current {
-  display: flex;
-  align-items: center;
-  height: 128px;
-  width: 512px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: red;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  border: 2px solid black;
-}
-
 .preference {
   display: flex;
   align-items: center;
@@ -200,5 +188,10 @@ export default {
 
 #preferences-list li {
   margin: 32px 52px;
+}
+
+#preference-current {
+  border: solid 5px;
+  border-color: rgb(44,177,164);
 }
 </style>
