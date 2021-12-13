@@ -58,7 +58,6 @@ export default {
   },
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
-    console.log($config.apiURL + '/preference/get')
     if (token) {
       const data = await axios.get($config.apiURL + '/preference/get', {
         headers: {
