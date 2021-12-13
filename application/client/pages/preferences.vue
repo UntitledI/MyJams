@@ -164,7 +164,7 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  height: 50%;
   font-family: "Montserrat", sans-serif;
   background: rgb(255,255,255);
   background: -moz-radial-gradient(circle, rgba(255,255,255,1) 17%, rgba(246,246,246,1) 40%, rgba(235,235,235,1) 100%);
@@ -177,6 +177,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
   width: 1000px;
   margin-top: 82px;
 }
