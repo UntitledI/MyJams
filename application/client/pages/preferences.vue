@@ -36,12 +36,13 @@
 </template>
 
 <script>
+import url from 'url'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 export default {
   Navbar,
-  middleware: 'auth',
+  middleware: ['auth-user'],
   props: {
     preferences: {
       type: Array,
@@ -81,9 +82,12 @@ export default {
       local_current_preference: this.currentPreference
     }
   },
-  created () {
-    if (process.client && this.$router.query) {
-      this.$router.replace({ query: null })
+  mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
     }
   },
   methods: {

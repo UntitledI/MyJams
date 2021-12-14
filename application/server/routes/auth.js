@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken')
 const router = express.Router();
 const authenticateToken = require('../middlewares/authenticateToken');
+const removeUserLoginCode = require('../utils/removeUserLoginCode');
 const { getUserWithLoginCode } = require('../utils/getUser');
 const ApiError = require('../error/ApiError')
 
@@ -20,8 +21,16 @@ router.post('/login', async function (req, res, next) {
             followers: doc.followers
         };
     }).catch((err) => {
+        console.error(err)
         return next(ApiError.internal('Something went wrong'))
     });
+
+    if (user) {
+        await removeUserLoginCode(loginCode).catch((err) => {
+            console.error(err)
+            return next(ApiError.internal('Something went wrong!'))
+        })
+    }
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
     res.json({ token: accessToken });

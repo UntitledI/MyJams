@@ -40,7 +40,7 @@ router.get('/get', authenticateToken, async function (req, res, next) {
   }
 
   // send data
-  res.status(200).json({
+  res.json({
     preferences: preferences,
     currentPreference: currentPreference
   })

@@ -44,7 +44,8 @@ export default {
   modules: [
     '@nuxtjs/dotenv',
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    'cookie-universal-nuxt'
   ],
   server: {
     host: '0.0.0.0'

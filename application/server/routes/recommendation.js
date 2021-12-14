@@ -4,7 +4,7 @@ const router = express.Router();
 const authenticateToken = require('../middlewares/authenticateToken');
 const getAccessToken = require('../utils/getAccessToken');
 const updateAccessToken = require('../utils/updateAccessToken');
-const getPreference = require('../utils/getPreferences');
+const getPreference = require('../utils/getPreference');
 const getPreferences = require('../utils/getPreferences');
 const getCurrentPreference = require('../utils/getCurrentPreference');
 const ApiError = require('../error/ApiError');
@@ -16,7 +16,7 @@ router.get('/get', authenticateToken, async function (req, res, next) {
   const currentPreference = await getCurrentPreference(req.user.spotifyId);
   let spotifyRequest = url + `?market=US&`;
   let preferenceObj;
-
+  
   // Make sure token and preferences actually exist before proceeding
   if (!token || token === undefined) {
     console.log("Unable to find user's token!");
@@ -40,6 +40,7 @@ router.get('/get', authenticateToken, async function (req, res, next) {
       console.error(error);
       return next(ApiError.internal('Something went wrong'));
     });
+    console.log(preferenceObj);
   }
 
   const seedGenres = `seed_genres=${preferenceObj.seed_genres}&`;
@@ -54,11 +55,10 @@ router.get('/get', authenticateToken, async function (req, res, next) {
 
   try {
     songArray = await getRecommendations(token, spotifyRequest, req)
-  } catch (e) {
-    throw (e)
+    return res.json(songArray);
+  } catch {
+    return next(ApiError.internal('Something went wrong....'))
   }
-
-  res.send(songArray);
 })
 
 async function getRecommendations(token, spotifyRequest, req) {
@@ -87,8 +87,8 @@ async function getRecommendations(token, spotifyRequest, req) {
         return res.data;
       })
     } else {
-      console.error(error)
-      return next(ApiError.internal('Something went wrong'))
+      console.error(error.response.data)
+      return error
     }
   })
 
