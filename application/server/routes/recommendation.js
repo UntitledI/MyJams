@@ -20,7 +20,7 @@ router.get('/get', authenticateToken, async function (req, res, next) {
   // Make sure token and preferences actually exist before proceeding
   if (!token || token === undefined) {
     console.log("Unable to find user's token!");
-    return next(ApiError.badRequest('Could not find info'));
+    return next(ApiError.internal('Could not find info'));
   }
   if (!currentPreference) {
     console.log('spotifyId', req.user.spotifyId)
@@ -29,7 +29,7 @@ router.get('/get', authenticateToken, async function (req, res, next) {
 
     if (!preferencesArr || preferencesArr.length == 0) {
       console.log("Unable to find user preferences!");
-      return next(ApiError.badRequest('Could not find info'));
+      return next(ApiError.internal('Could not find info'));
     } else {
       preferenceObj = preferencesArr[0];
     }

@@ -1,42 +1,41 @@
 <template>
+  <div>
+    <Navbar />
     <div>
-        <Navbar/>
-        <div>
-            <div id="container" class = "container">
-                <div class = "recommendation-container" >
-                    <swiper id = "swiper" @touchEnd="touchEnd">
-                    <swiper-slide>
-                        <div id = "song-container" class = "song-container">
-                            <div class = "song-cover">
-                                <img class = "song-image" src="../static/songCovers/StuckOnYou.png"></img>
-                            </div>
-                            <div class = "song-information">
-                                <span class = "song-name"> {{ local_tracks[local_index].name }}</span>
-                                <span class = "artist-name"> {{ local_tracks[local_index].artist }} </span>
-                                <span class = "album-name"> {{ local_tracks[local_index].album }} </span>
-                                <span class = "genre"> {{ local_tracks[local_index].genre }} </span>
-                            </div>
-                        </div>
-                    </swiper-slide>
-                    </swiper>
+      <div id="container" class="container">
+        <div class="recommendation-container">
+          <swiper id="swiper" @touchEnd="touchEnd">
+            <swiper-slide>
+              <div id="song-container" class="song-container">
+                <div class="song-cover">
+                  <img class="song-image" src="../static/songCovers/StuckOnYou.png"></img>
                 </div>
-                <div class = "button-container">
-                    <div class = "dislike-button">
-                        <img class = "dislike-button-image" @click = "dislike" src = "../static/buttons/dislike.png" />
-                    </div>
-                    <div class = "like-button">
-                    <img class = "like-button-image" @click ="like" src = "../static/buttons/like.png"/>
-                    </div>
+                <div class="song-information">
+                  <span class="song-name"> {{ local_tracks[local_index].name }}</span>
+                  <span class="artist-name"> {{ local_tracks[local_index].artist }} </span>
+                  <span class="album-name"> {{ local_tracks[local_index].album }} </span>
+                  <span class="genre"> {{ local_tracks[local_index].genre }} </span>
                 </div>
-            </div>
+              </div>
+            </swiper-slide>
+          </swiper>
         </div>
+        <div class="button-container">
+          <div class="dislike-button">
+            <img class="dislike-button-image" src="../static/buttons/dislike.png" @click="dislike">
+          </div>
+          <div class="like-button">
+            <img class="like-button-image" src="../static/buttons/like.png" @click="like">
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import url from 'url'
-// import axios from 'axios'
-
+import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 export default {
@@ -54,6 +53,24 @@ export default {
     index: {
       type: Number,
       default: 0
+    }
+  },
+  async asyncData ({ $config, $auth, redirect }) {
+    const token = $auth.getToken('local')
+    if (token) {
+      const data = await axios.get($config.apiURL + '/recommendation/get', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
+
+      return { local_tracks: data, local_index: 0 }
     }
   },
   data () {
