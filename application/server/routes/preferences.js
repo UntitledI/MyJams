@@ -28,16 +28,16 @@ router.get('/get', authenticateToken, async function (req, res, next) {
   })
 
   // prepare data to be sent back
-  for (let i = 0; i < _preferences.length; i++) {
+  _preferences.forEach((preference) => {
     preferences.push({
-      id: _preferences[i]._id,
-      name: _preferences[i].seed_genres,
-      seed_genres: _preferences[i].seed_genres,
-      target_energy: _preferences[i].target_energy,
-      target_popularity: _preferences[i].target_popularity,
-      target_acousticness: _preferences[i].target_acousticness,
-    });
-  }
+      id: preference.id,
+      name: preference.title || preference.seed_genres,
+      seed_genres: preference.seed_genres,
+      target_energy: preference.target_energy,
+      target_popularity: preference.target_popularity,
+      target_acousticness: preference.target_acousticness,
+    })
+  })
 
   // send data
   res.json({
@@ -90,7 +90,6 @@ router.post('/delete', authenticateToken, function (req, res, next) {
 
   // remove user's preference
   removePreferences(spotifyId, preferenceId).then(() => {
-    console.log('success');
     return res.status(200);
   }).catch((error) => {
     console.error(error);
