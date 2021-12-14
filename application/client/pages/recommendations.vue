@@ -112,7 +112,7 @@ export default {
     }
   },
   created () {
-    if (process.client) {
+    if (process.client && this.$router.query) {
       this.$router.replace({ query: null })
     }
   },
