@@ -40,7 +40,6 @@ router.get('/get', authenticateToken, async function (req, res, next) {
       console.error(error);
       return next(ApiError.internal('Something went wrong'));
     });
-    console.log(preferenceObj);
   }
 
   const seedGenres = `seed_genres=${preferenceObj.seed_genres}&`;
