@@ -153,6 +153,9 @@ nav {
 #nav-container ul {
   list-style: none;
 }
+#nav-container nav {
+  width: 48px;
+}
 #logo {
   font-weight: bold;
   color: white;
@@ -194,6 +197,11 @@ nav {
   align-items: center;
   width: 33%;
   white-space: nowrap;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 @media only screen and (max-width: 650px) {
     nav {
