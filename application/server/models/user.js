@@ -39,7 +39,8 @@ const UserSchema = new Schema({
         required: true
     },
     preferenceId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Preference',
         required: false
     },
     createdAt: {

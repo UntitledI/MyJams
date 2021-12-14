@@ -36,13 +36,13 @@ router.get('/get', authenticateToken, async function (req, res, next) {
       target_energy: _preferences[i].target_energy,
       target_popularity: _preferences[i].target_popularity,
       target_acousticness: _preferences[i].target_acousticness,
-      current: _preferences[i]._id === currentPreference ? true : false
     });
   }
 
   // send data
-  res.status(200).json({
-    preferences: preferences
+  res.json({
+    preferences: preferences,
+    currentPreference: currentPreference
   })
 });
 
@@ -55,8 +55,8 @@ router.post('/set', authenticateToken, function (req, res, next) {
     return next(ApiError.badRequest('preference id is required'));
   }
 
-  setCurrentPreference(spotifyId, preferenceId).then((res) => {
-    if (res) {
+  setCurrentPreference(spotifyId, preferenceId).then((result) => {
+    if (result) {
       return res.status(200);
     } else {
       return next(ApiError.badRequest('preference id did not yield results'));

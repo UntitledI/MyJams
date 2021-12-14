@@ -5,13 +5,13 @@
       <div id="preferences-container">
         <ul v-if="local_preferences" id="preferences-list">
           <li v-for="preference in local_preferences" :key="preference.id">
-            <div v-if="!preference.current" class="preference">
+            <div v-if="preference.id !== local_current_preference" class="preference" @click="deletePreference ? handleDelete(preference.id) : setPreference(preference.id)">
               <h2>{{ preference.name }}</h2>
-              <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
+              <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
-            <div v-if="preference.current" class="preference-current">
+            <div v-if="preference.id === local_current_preference" id="preference-current" class="preference" @click="deletePreference ? handleDelete(preference.id) : setPreference(preference.id)">
               <h2>{{ preference.name }}</h2>
-              <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
+              <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
           </li>
         </ul>
@@ -49,6 +49,12 @@ export default {
       default () {
         return []
       }
+    },
+    currentPreference: {
+      type: Number,
+      default () {
+        return 0
+      }
     }
   },
   async asyncData ({ $config, $auth, redirect }) {
@@ -59,20 +65,21 @@ export default {
           authorization: token
         }
       }).then((res) => {
-        return res.data.preferences
+        return res.data
       }).catch((err) => {
         if (err.status === 401) {
           redirect('/')
         }
       })
 
-      return { local_preferences: data }
+      return { local_preferences: data.preferences, local_current_preference: data.currentPreference }
     }
   },
   data () {
     return {
       deletePreference: false,
-      local_preferences: this.preferences
+      local_preferences: this.preferences,
+      local_current_preference: this.currentPreference
     }
   },
   mounted () {
@@ -84,10 +91,9 @@ export default {
     }
   },
   methods: {
-    async handleDelete (id) {
+    async handleDelete (preferenceId) {
       const token = this.$auth.getToken('local')
-      const index = this.local_preferences.findIndex(pref => pref.id === id)
-      const preferenceId = this.local_preferences[index].id
+      const index = this.local_preferences.findIndex(pref => pref.id === preferenceId)
       if (index > -1) {
         this.local_preferences.splice(index, 1)
       }
@@ -102,10 +108,11 @@ export default {
         console.error(err.response.status)
       })
     },
-    async setPreference () {
+    async setPreference (preferenceId) {
       const token = this.$auth.getToken('local')
+      this.local_current_preference = preferenceId
       await axios.post(this.$config.apiURL + '/preference/set', {
-        preferenceId: ''
+        preferenceId
       }, {
         headers: {
           authorization: token
@@ -123,18 +130,6 @@ export default {
 * {
   padding: 0px;
   margin: 0px;
-}
-
-.preference-current {
-  display: flex;
-  align-items: center;
-  height: 128px;
-  width: 512px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: white;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  border: 2px solid black;
 }
 
 .preference {
@@ -173,7 +168,7 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  height: 50%;
   font-family: "Montserrat", sans-serif;
   background: rgb(255,255,255);
   background: -moz-radial-gradient(circle, rgba(255,255,255,1) 17%, rgba(246,246,246,1) 40%, rgba(235,235,235,1) 100%);
@@ -186,6 +181,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
   width: 1000px;
   margin-top: 82px;
 }
@@ -196,5 +192,10 @@ export default {
 
 #preferences-list li {
   margin: 32px 52px;
+}
+
+#preference-current {
+  border: solid 5px;
+  border-color: rgb(44,177,164);
 }
 </style>

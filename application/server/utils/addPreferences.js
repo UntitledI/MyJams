@@ -1,6 +1,7 @@
 const Preference = require('../models/preference');
+const User = require('../models/user');
 
-module.exports = async function setPreferences(id, preference) {
+module.exports = async function addPreferences(id, preference) {
     return await Preference.create({
         spotifyId: id,
         seed_genres: preference.seed_genres,
@@ -8,8 +9,8 @@ module.exports = async function setPreferences(id, preference) {
         target_popularity: preference.target_popularity,
         target_acousticness: preference.target_acousticness
     }).then((res) => {
-        return res;
-    }).catch((error) => {
-        console.error(error);
+        return User.updateOne({ spotifyId: res.spotifyId }, { preferenceId: res._id });
+    }).catch((err) => {
+        console.error(err);
     });
 }
