@@ -55,8 +55,8 @@ router.post('/set', authenticateToken, function (req, res, next) {
     return next(ApiError.badRequest('preference id is required'));
   }
 
-  setCurrentPreference(spotifyId, preferenceId).then((res) => {
-    if (res) {
+  setCurrentPreference(spotifyId, preferenceId).then((result) => {
+    if (result) {
       return res.status(200);
     } else {
       return next(ApiError.badRequest('preference id did not yield results'));
