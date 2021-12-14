@@ -1,26 +1,16 @@
-const User = require('../models/user');
-const mongoose = require('mongoose');
-const Preference = require('../models/user');
+const Preference = require('../models/preference');
 
-module.exports = async function setPreferences(id,preference){
-    //pick top of bottom.
-    //const documentQuery = await User.findById(id);
-    const documentQuery = await User.findOne({spotifyId: id}).exec();
-    //console.log(documentQuery);
-    /*const query = User.findOneAndUpdate({spotifyId: id},{preferences: preference},overwrite = false,function(err,docs){
-        if(err){
-            console.log(err);
-        }else{
-            console.log("updated " + docs);
-        }
-    });*/
-    documentQuery.preferences.push(preference);
-    /*documentQuery.preferences.genre = preference.Genre;
-    documentQuery.preferences.energetic = preference.Energetic;
-    documentQuery.preferences.popularity = preference.Popularity;
-    documentQuery.preferences.acousticness = preference.Acousticness;*/
-    console.log(documentQuery.preferences);
-    //console.log(query.get('preferences'));
-    await documentQuery.save();
-    return documentQuery.preferences;
+module.exports = async function setPreferences(id, preference) {
+    return await Preference.create({
+        spotifyId: id,
+        seed_genres: preference.seed_genres,
+        target_energy: preference.target_energy,
+        target_popularity: preference.target_popularity,
+        target_acousticness: preference.target_acousticness
+    }).then((res) => {
+        return res;
+    }).catch((err) => {
+        console.log('Error occured in setPreferences() when creating a new preference');
+        console.log(err);
+    });
 }

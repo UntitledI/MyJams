@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <div id="container">
+    <div id="preferences-page-container">
       <div id="preferences-container">
         <ul id="preferences-list">
           <li v-for="preference in local_preferences" :key="preference.id">
@@ -115,7 +115,7 @@ export default {
   margin: 10px;
 }
 
-#container {
+#preferences-page-container {
   display: flex;
   justify-content: center;
   width: 100%;

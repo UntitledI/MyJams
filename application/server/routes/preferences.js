@@ -4,29 +4,35 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const setPreferences = require('../utils/setPreferences');
 
-router.use(function(req,res,next){
-  res.header("Access-Control-Allow-Origin","*")
-  res.setHeader('Access-Control-Allow-Methods','POST,OPTIONS,GET');
-  res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept,Content-Length");
+router.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS,GET');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Content-Length");
   next();
 });
 //app.post()
 //make make this a separate file for setting preferences.
-router.get('/',function(req,res){
+router.get('/', function (req, res) {
   res.send("Preferences home page");
 })
-router.get('/get',function(req,res){
+router.get('/get', function (req, res) {
   res.send("hi");
 });
-router.use('/set',bodyParser.json());
+router.use('/set', bodyParser.json());
 
-router.post('/set',function(req,res,next){
-  res.send("Got post request. You sent "+ req);
-  //console.log(req.body);
-  setPreferences('acedbm',req.body).then((res)=>{
-    console.log("yay " + res);
-  }).catch((error)=>{
-    console.log("fuck "+ error);
+router.post('/set', function (req, res, next) {
+  const spotifyId = req.body.spotifyId;
+  if (!spotifyId) {
+    console.log('No spotify id found!');
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid parameters: spotify id is requred'
+    });
+  }
+  setPreferences(spotifyId, req.body).then((res) => {
+    console.log("yay \n" + res);
+  }).catch((error) => {
+    console.log(error);
   })
   //const Arr = parse(req.query);
   /*setPreferences(req.query.id,req.query.recommendations).then((preferences)=>{

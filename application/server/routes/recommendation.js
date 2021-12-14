@@ -8,148 +8,135 @@ const updateAccessToken = require('../utils/updateAccessToken');
 
 
 router.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS,GET');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Content-Length");
-    next();
-});
-
-router.get('/', function (req, res) {
-    res.send("Recommendation home")
+  res.header("Access-Control-Allow-Origin", "*")
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS,GET');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Content-Length");
+  next();
 });
 
 router.get('/get', async function (req, res) {
-    //call db for user prefernces and token
-    console.log("Im in reccomendations endpoint")
-    const url = 'https://api.spotify.com/v1/recommendations';
-    let preferenceArr = [];
-    let keys;
-    let spotifyRequest = url+`?market=US&`;
+  //call db for user preferences and token
+  const url = 'https://api.spotify.com/v1/recommendations';
+  const token = await getAccessToken(req.query.spotifyId);
+  const preferencesArr = await getPreferences(req.query.spotifyId);
+  let spotifyRequest = url + `?market=US&`;
+  let preferenceObj;
 
-    let token = await getAccessToken(req.query.spotifyId);
-    let preferences = await getPreferences(req.query.spotifyId);
-    preferenceArr = preferences[0];
-    console.log("found preferences");
-    delete preferenceArr._id;
-    keys = Object.keys(preferenceArr);
-    
-    console.log("keys: "+ keys);
-    console.log(keys.length);
-    console.log(preferenceArr);
-    for(var key in preferenceArr){
-     
-        spotifyRequest+=`${key}=${preferenceArr[key]}&`;
-    }
-    spotifyRequest += ('limit=10');
-    // Make request url
-    /*
-    for(x = 0; x < keys.length-1; x ++){
-    if(x == 0 ){
-      spotifyRequest.concat(`?${keys[x]}=${preferencesArr[x]}&`);
-    }else{
-      spotifyRequest.concat(`${keys[x]}=${preferenceArr[x]}`);
-    }
-    if(x + 1 <= preferenceArr.length){
-      spotifyRequest.concat('&');
-    }
+  // Make sure token and preferences actually exist before proceeding
+  if (!token || token === undefined) {
+    console.log("Unable to find user's token!");
+    return res.status(401).json({
+      success: false,
+      message: 'Could not find user token'
+    });
+  } else if (!preferencesArr || preferencesArr.length == 0) {
+    console.log("Unable to find user preferences!");
+    return res.status(401).json({
+      success: false,
+      message: 'Could not find user preferences'
+    });
   }
-    spotifyRequest = spotifyRequest.concat(`?market=ES&seed_genres=${preferenceArr.genre}&`);
-    spotifyRequest = spotifyRequest.concat(`target_energy=${preferenceArr.energetic}&`);
-    spotifyRequest = spotifyRequest.concat(`target_popularity=${preferenceArr.popularity*100}&`);
-    spotifyRequest = spotifyRequest.concat(`target_acousticness=${preferenceArr.acousticness}`);
-    */
 
-    console.log(spotifyRequest);
-    // console.log(token);
+  // Take the first preference object for now. Will need to change this!
+  preferenceObj = preferencesArr[0];
+  const seedGenres = `seed_genres=${preferenceObj.seed_genres}&`;
+  const targetEnergy = `target_energy=${preferenceObj.target_energy}&`;
+  const targetPopularity = `target_popularity=${preferenceObj.target_popularity}&`;
+  const targetAcousticness = `target_acousticness=${preferenceObj.target_acousticness}&`;
+  const limit = 'limit=10';
+  spotifyRequest += seedGenres + targetEnergy + targetPopularity + targetAcousticness + limit;
 
-    // Make request
-    let songArray;
-    try {
-        songArray = await getRecommendations(token, spotifyRequest, req)
-    } catch (e) {
-        throw (e)
-    }
-    res.send(songArray);
-    /*let songArray = [];
-    for(x=0; x < data.tracks.length;x++){
-      const trackURL = data.tracks[x].external_urls.spotify;
-      const songName = data.tracks[x].name;
-      const id = data.tracks[x].id;
-      const albumCover = data.tracks[x].album.images[0].url;
-      const artistName = data.tracks[x].album.artists[0].name;
-      const trackCover = axios.get(`https://api.spotify.com/v1/tracks/${id}`,{
-        headers:{
-          "Authorization": `Bearer ${token}`
-        }
-      }).album.images[0].url;
-      if(trackCover == albumCover){
-        songArray.push({"id": id,
-                      "name" : songName,
-                    "artist": artistName,
-                    "image" : albumCover});
-      }else{
-        songArray.push({"id": id,
-                      "name" : songName,
-                    "artist": artistName,
-                    "image" : trackCover});
-      }
-    }
-    res.send(songArray);*/
+  // Make request
+  let songArray;
+
+  try {
+    songArray = await getRecommendations(token, spotifyRequest, req)
+  } catch (e) {
+    throw (e)
+  }
+
+  res.send(songArray);
 })
 
-async function convertToArray(data,req) {
-    let songArr = [];
-    for (x = 0; x < data.tracks.length; x++) {
-        const trackURL = data.tracks[x].external_urls.spotify;
-        const songName = data.tracks[x].name;
-        const trackId = data.tracks[x].id;
-        const albumCover = data.tracks[x].album.images[0].url;
-        const artistName = data.tracks[x].album.artists[0].name;
-        const artistId = data.tracks[x].album.artists[0].id;
-        const artist = await axios.get(`https://api.spotify.com/v1/artists/${artistId}`,{
-          headers: {Authorization: `Bearer ${await getAccessToken(req.query.spotifyId)}`}
-        })
-        const albumName = data.tracks[x].album.name;
-        /*let albumName = 'n/a';
-        console.log(data.tracks[x].album.album_type);
-        if(data.tracks[x].album.album_type == "ALBUM" || data.tracks[x].album.album_type == 'album')
-        {
-          console.log("I am a match");
-          albnumName = data.tracks[x].album.name;
-        }*/
-        songArr.push({
-            "track_id": trackId,
-            "track_name": songName,
-            "artist": artistName,
-            "album_name": albumName,
-            "album_image": albumCover,
-            "track_url": trackURL,
-            "artist_genres": artist.data.genres
-        });
+async function getRecommendations(token, spotifyRequest, req) {
+  let data;
+
+  data = await axios.get(spotifyRequest, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
-    return songArr;
+  }).then((res) => {
+    return res.data
+  }).catch(async (error) => {
+    if (error.response.status == 401) { // expired access token
+      console.log('expired access token');
+      token = await updateAccessToken(req.query.spotifyId);
+      // try getting recommendations again
+      return await axios.get(spotifyRequest, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }).then((res) => {
+        return res.data;
+      })
+    } else {
+      console.log(error.response.status);
+      console.log(error.response.headers);
+      console.log(error.response.data);
+    }
+  })
+
+  return convertToArray(data, token);
 }
 
-async function getRecommendations(token, spotifyRequest, req) {
-    let songArray;
-    let res
-    console.log("getting reccomendations now")
-    try{
-        res = await axios.get(spotifyRequest, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
-    }catch (e){
-        console.log("failed to get request")
-        //console.log(e)
-        res = await axios.get(spotifyRequest, {
-            headers: {Authorization: `Bearer ${await updateAccessToken(req.query.spotifyId)}`}
-        })
+async function convertToArray(data, token) {
+  let songArr = [];
+  for (let i = 0; i < data.tracks.length; i++) {
+    const trackURL = data.tracks[i].external_urls.spotify;
+    const songName = data.tracks[i].name;
+    const trackId = data.tracks[i].id;
+    const artistId = data.tracks[i].album.artists[0].id;
+    const albumCover = data.tracks[i].album.images[0].url;
+    let artistNames = '';
+    let albumName = '';
+    let genres = '';
+
+    const artist = await axios.get(`https://api.spotify.com/v1/artists/${artistId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    for (let j = 0; j < data.tracks[i].album.artists.length; j++) {
+      if (j >= data.tracks[i].album.artists.length - 1)
+        artistNames += data.tracks[i].album.artists[j].name;
+      else artistNames += data.tracks[i].album.artists[j].name + ', ';
     }
-    console.log(spotifyRequest)
-    console.log("found songs. ")
-    //console.log(res.data);
-    songArray = convertToArray(res.data,req);
-    return songArray
+
+    for (let j = 0; j < artist.data.genres.length; j++) {
+      if (j >= artist.data.genres.length - 1)
+        genres += artist.data.genres[j];
+      else genres += artist.data.genres[j] + ', ';
+    }
+
+    if (data.tracks[i].album.album_type === 'ALBUM') {
+      albumName = data.tracks[i].album.name;
+    }
+
+    songArr.push({
+      "id": trackId,
+      "name": songName,
+      "artist": artistNames,
+      "album": albumName,
+      "image": albumCover,
+      "url": trackURL,
+      "genre": genres
+    });
+  }
+
+  return songArr;
 }
 
 module.exports = router;
