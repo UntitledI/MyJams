@@ -6,7 +6,6 @@ module.exports = async function removePreferences(spotifyId, preferenceId) {
     }).then((result) => {
         return result;
     }).catch((error) => {
-        console.log('Error occured when trying to delete from preferences');
         console.log(error);
     });
 }
