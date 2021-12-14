@@ -8,7 +8,7 @@
             <swiper-slide>
               <div v-if="local_tracks[local_index]">
                 <div id="song-container" class="song-container">
-                  <div class='song-cover'>
+                  <div class="song-cover">
                     <img :src="local_tracks[local_index].image">
                   </div>
                   <div class="song-information">
@@ -48,13 +48,14 @@
 </template>
 
 <script>
+import url from 'url'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
-
 export default {
   components: {
     Navbar
   },
+  middleware: ['auth-user'],
   props: {
     tracks: {
       type: Array,
@@ -67,23 +68,35 @@ export default {
       default: 0
     }
   },
-  async asyncData () {
-    // hard coded spotifyId. needs to be changed!
-    const data = await axios.get('http://localhost:3030/recommendation/get', {
-      params: { spotifyId: 'jik4aa408nl6lk85mvjysfqk1' }
-    }).then((res) => {
-      return res.data
-    }).catch((err) => {
-      console.log('error occured')
-      console.log(err)
-    })
-
-    return { local_tracks: data, local_index: 0 }
+  async asyncData ({ $config, $auth, redirect }) {
+    const token = $auth.getToken('local')
+    if (token) {
+      const data = await axios.get($config.apiURL + '/recommendation/get', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
+      return { local_tracks: data, local_index: 0 }
+    }
   },
   data () {
     return {
       local_tracks: this.tracks,
       local_index: this.index
+    }
+  },
+  mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
     }
   },
   methods: {
@@ -96,7 +109,6 @@ export default {
       if (x < -120) {
         this.dislike()
       }
-      console.log(x)
     },
     like () {
       if (this.local_index < this.local_tracks.length - 1) {
@@ -114,7 +126,6 @@ export default {
 
 <style>
 @import '../assets/css/scrollbar.css';
-
 * {
   padding: 0px;
   margin: 0px;

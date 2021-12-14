@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -15,7 +17,6 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
@@ -23,25 +24,50 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/vue-awesome-swiper',
-    '~plugins/vue-js-modal.js'
+    '~/plugins/vue-js-modal.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   publicRuntimeConfig: {
-    apiURL: process.env.API_URL
+    apiURL: process.env.API_URL,
+    axios: {
+      baseURL: process.env.API_URL
+    }
   },
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module'
   ],
+  // Modules: https://go.nuxtjs.dev/config-modules
+  modules: [
+    '@nuxtjs/dotenv',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    'cookie-universal-nuxt'
+  ],
   server: {
     host: '0.0.0.0'
   },
-  // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/auth/logout', method: 'delete' },
+          user: { url: '/auth/user', method: 'get', propertyName: 'user' }
+        }
+      }
+    },
+    redirect: {
+      login: '/',
+      logout: '/',
+      callback: '/profile',
+      home: '/profile'
+    }
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

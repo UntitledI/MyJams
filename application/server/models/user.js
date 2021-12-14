@@ -6,6 +6,14 @@ const UserSchema = new Schema({
         type: String,
         required: false
     },
+    followers: {
+        type: Number,
+        required: false
+    },
+    image: {
+        type: String,
+        required: false
+    },
     email: {
         type: String,
         required: true
@@ -13,6 +21,10 @@ const UserSchema = new Schema({
     spotifyId: {
         type: String,
         required: true
+    },
+    loginCode: {
+        type: String,
+        required: false
     },
     spotifyAccessToken: {
         type: String,
@@ -25,6 +37,11 @@ const UserSchema = new Schema({
     spotifyExpiresIn: {
         type: Number,
         required: true
+    },
+    preferenceId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Preference',
+        required: false
     },
     createdAt: {
         type: Date,

@@ -1,13 +1,17 @@
 <template>
-  <div>
+  <div v-if="$auth.loggedIn">
     <Navbar />
     <div id="preferences-page-container">
       <div id="preferences-container">
-        <ul id="preferences-list">
+        <ul v-if="local_preferences" id="preferences-list">
           <li v-for="preference in local_preferences" :key="preference.id">
-            <div class="preference">
+            <div v-if="preference.id !== local_current_preference" class="preference" @click="deletePreference ? handleDelete(preference.id) : setPreference(preference.id)">
               <h2>{{ preference.name }}</h2>
-              <img v-if="deletePreference" src="../static/xbutton.png" @click="handleDelete(preference.id)">
+              <img v-if="deletePreference" src="../static/xbutton.png">
+            </div>
+            <div v-if="preference.id === local_current_preference" id="preference-current" class="preference" @click="deletePreference ? handleDelete(preference.id) : setPreference(preference.id)">
+              <h2>{{ preference.name }}</h2>
+              <img v-if="deletePreference" src="../static/xbutton.png">
             </div>
           </li>
         </ul>
@@ -17,7 +21,7 @@
               Add
             </button>
           </NuxtLink>
-          <button v-if="local_preferences.length !== 0" class="preferences-buttons" @click="deletePreference = !deletePreference">
+          <button v-if="local_preferences && local_preferences.length !== 0" class="preferences-buttons" @click="deletePreference = !deletePreference">
             <p v-if="!deletePreference">
               Delete
             </p>
@@ -32,46 +36,91 @@
 </template>
 
 <script>
+import url from 'url'
+import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 export default {
   Navbar,
+  middleware: ['auth-user'],
   props: {
     preferences: {
       type: Array,
       default () {
         return []
       }
+    },
+    currentPreference: {
+      type: Number,
+      default () {
+        return 0
+      }
+    }
+  },
+  async asyncData ({ $config, $auth, redirect }) {
+    const token = $auth.getToken('local')
+    if (token) {
+      const data = await axios.get($config.apiURL + '/preference/get', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
+
+      return { local_preferences: data.preferences, local_current_preference: data.currentPreference }
     }
   },
   data () {
     return {
       deletePreference: false,
-      local_preferences: this.preferences
+      local_preferences: this.preferences,
+      local_current_preference: this.currentPreference
     }
   },
-  created () {
-    this.local_preferences = [
-      {
-        id: '1',
-        name: 'hello'
-      },
-      {
-        id: '2',
-        name: 'rock'
-      },
-      {
-        id: '3',
-        name: 'hiphop'
-      }
-    ]
+  mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
+    }
   },
   methods: {
-    handleDelete (id) {
-      const index = this.local_preferences.findIndex(pref => pref.id === id)
+    async handleDelete (preferenceId) {
+      const token = this.$auth.getToken('local')
+      const index = this.local_preferences.findIndex(pref => pref.id === preferenceId)
       if (index > -1) {
         this.local_preferences.splice(index, 1)
       }
+      await axios.post(this.$config.apiURL + '/preference/delete', {
+        preferenceId
+      }, {
+        headers: {
+          authorization: token
+        }
+      }).catch((err) => {
+        console.log('error occured')
+        console.error(err.response.status)
+      })
+    },
+    async setPreference (preferenceId) {
+      const token = this.$auth.getToken('local')
+      this.local_current_preference = preferenceId
+      await axios.post(this.$config.apiURL + '/preference/set', {
+        preferenceId
+      }, {
+        headers: {
+          authorization: token
+        }
+      }).catch((err) => {
+        console.log('error occured')
+        console.log(err.response.status)
+      })
     }
   }
 }
@@ -119,7 +168,7 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  height: 50%;
   font-family: "Montserrat", sans-serif;
   background: rgb(255,255,255);
   background: -moz-radial-gradient(circle, rgba(255,255,255,1) 17%, rgba(246,246,246,1) 40%, rgba(235,235,235,1) 100%);
@@ -132,6 +181,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
   width: 1000px;
   margin-top: 82px;
 }
@@ -142,5 +192,10 @@ export default {
 
 #preferences-list li {
   margin: 32px 52px;
+}
+
+#preference-current {
+  border: solid 5px;
+  border-color: rgb(44,177,164);
 }
 </style>

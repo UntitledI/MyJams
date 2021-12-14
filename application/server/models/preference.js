@@ -6,6 +6,10 @@ const PreferenceSchema = new Schema({
         type: String,
         required: true
     },
+    title: {
+        type: String,
+        required: true
+    },
     seed_genres: {
         type: String,
         required: true

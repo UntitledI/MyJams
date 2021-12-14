@@ -1,7 +1,7 @@
 <template>
-  <header id="header">
+  <header v-if="$auth.loggedIn" id="header">
     <div id="nav-container">
-      <span id="logo">myJams</span>
+      <span id="logo">MyJams</span>
       <nav>
         <ul id="functions-container" class="menu-items">
           <li id="find-music-container">
@@ -25,6 +25,11 @@
                     Preferences
                   </NuxtLink>
                 </li>
+                <li>
+                  <p class="menu-item" @click="handleLogout">
+                    Logout
+                  </p>
+                </li>
               </ul>
               <!-- <input id="search" type="text" placeholder="Search"> -->
             </div>
@@ -47,8 +52,10 @@ export default {
     return { local_image: this.image }
   },
   created () {
-    // replace this code to get url to user's profile pic from spotify API
-    this.local_image = 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228'
+    const user = this.$auth.user
+    if (user) {
+      this.local_image = user.image
+    }
   },
   methods: {
     showDropdown (selector) {
@@ -64,6 +71,11 @@ export default {
       }
       document.addEventListener('click', outsideClickListener)
       element.setAttribute('class', 'dropdown-menu-visible')
+    },
+    handleLogout () {
+      this.$auth.logout().then(() => {
+        localStorage.clear()
+      })
     }
   }
 }
@@ -109,6 +121,7 @@ nav {
   justify-content: space-between;
   padding-left: 1rem;
   font-size: 1.1rem;
+  color: white;
 }
 #header{
   display: flex;
@@ -139,6 +152,9 @@ nav {
 }
 #nav-container ul {
   list-style: none;
+}
+#nav-container nav {
+  width: 48px;
 }
 #logo {
   font-weight: bold;
@@ -181,6 +197,11 @@ nav {
   align-items: center;
   width: 33%;
   white-space: nowrap;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 @media only screen and (max-width: 650px) {
     nav {

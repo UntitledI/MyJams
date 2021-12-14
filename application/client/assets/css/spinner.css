@@ -1,0 +1,149 @@
+/* SOURCE: https://epic-spinners.epicmax.co/ */
+
+.fulfilling-bouncing-circle-spinner, .fulfilling-bouncing-circle-spinner * {
+  box-sizing: border-box;
+}
+
+.fulfilling-bouncing-circle-spinner {
+  height: 60px;
+  width: 60px;
+  position: relative;
+  animation: fulfilling-bouncing-circle-spinner-animation infinite 4000ms ease;
+}
+
+.fulfilling-bouncing-circle-spinner .orbit {
+  height: 60px;
+  width: 60px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  border: calc(60px * 0.03) solid rgb(13,173,181);
+  animation: fulfilling-bouncing-circle-spinner-orbit-animation infinite 4000ms ease;
+}
+
+.fulfilling-bouncing-circle-spinner .circle {
+  height: 60px;
+  width: 60px;
+  color: rgb(13,173,181);
+  display: block;
+  border-radius: 50%;
+  position: relative;
+  border: calc(60px * 0.1) solid rgb(13,173,181);
+  animation: fulfilling-bouncing-circle-spinner-circle-animation infinite 4000ms ease;
+  transform: rotate(0deg) scale(1);
+}
+
+@keyframes fulfilling-bouncing-circle-spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fulfilling-bouncing-circle-spinner-orbit-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1);
+  }
+  62.5% {
+    transform: scale(0.8);
+  }
+  75% {
+    transform: scale(1);
+  }
+  87.5% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fulfilling-bouncing-circle-spinner-circle-animation {
+  0% {
+    transform: scale(1);
+    border-color: transparent;
+    border-top-color: inherit;
+  }
+  16.7% {
+    border-color: transparent;
+    border-top-color: initial;
+    border-right-color: initial;
+  }
+  33.4% {
+    border-color: transparent;
+    border-top-color: inherit;
+    border-right-color: inherit;
+    border-bottom-color: inherit;
+  }
+  50% {
+    border-color: inherit;
+    transform: scale(1);
+  }
+  62.5% {
+    border-color: inherit;
+    transform: scale(1.4);
+  }
+  75% {
+    border-color: inherit;
+    transform: scale(1);
+    opacity: 1;
+  }
+  87.5% {
+    border-color: inherit;
+    transform: scale(1.4);
+  }
+  100% {
+    border-color: transparent;
+    border-top-color: inherit;
+    transform: scale(1);
+  }
+}
+
+.hollow-dots-spinner, .hollow-dots-spinner * {
+  box-sizing: border-box;
+}
+
+.hollow-dots-spinner {
+  height: 15px;
+  width: calc(30px * 3);
+}
+
+.hollow-dots-spinner .dot {
+  width: 15px;
+  height: 15px;
+  margin: 0 calc(15px / 2);
+  border: calc(15px / 5) solid rgb(13,173,181);
+  border-radius: 50%;
+  float: left;
+  transform: scale(0);
+  animation: hollow-dots-spinner-animation 1000ms ease infinite 0ms;
+}
+
+.hollow-dots-spinner .dot:nth-child(1) {
+  animation-delay: calc(300ms * 1);
+}
+
+.hollow-dots-spinner .dot:nth-child(2) {
+  animation-delay: calc(300ms * 2);
+}
+
+.hollow-dots-spinner .dot:nth-child(3) {
+  animation-delay: calc(300ms * 3);
+}
+
+@keyframes hollow-dots-spinner-animation {
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

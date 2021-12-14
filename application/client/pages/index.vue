@@ -1,26 +1,40 @@
 <template>
   <div>
-    <h1>Tinder for Music Class Demo</h1>
-    <NuxtLink to="/profile">
-      Login
-    </NuxtLink>
-    <!-- <a :href="getLoginUrl"> Login </a> -->
+    <h1>MyJams</h1>
+    <div v-if="!$auth.loggedIn">
+      <a :href="getLoginUrl">Login</a>
+    </div>
+    <div v-else>
+      <NuxtLink to="/profile">
+        Login
+      </NuxtLink>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-export default {
+import url from 'url'
 
+export default {
   computed: {
     getLoginUrl () {
       return this.$config.apiURL + '/oauth/spotify'
     }
   },
   mounted () {
-    axios.get(this.$config.apiURL + '/me').then((response) => {
-      console.log(response)
-    })
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    const loginCode = urlObj.searchParams.get('loginCode')
+    if (loginCode) {
+      this.$auth.loginWith('local', {
+        data: {
+          loginCode
+        }
+      }).catch(() => {
+        urlObj.search = ''
+        window.history.pushState({}, document.title, url.format(urlObj))
+      })
+    }
   }
 }
 </script>

@@ -1,44 +1,47 @@
 const axios = require('axios');
 var express = require('express');
-const app = express();
 const router = express.Router();
-const getPreferences = require('../utils/getPreferences');
+const authenticateToken = require('../middlewares/authenticateToken');
 const getAccessToken = require('../utils/getAccessToken');
 const updateAccessToken = require('../utils/updateAccessToken');
+const getPreference = require('../utils/getPreference');
+const getPreferences = require('../utils/getPreferences');
+const getCurrentPreference = require('../utils/getCurrentPreference');
+const ApiError = require('../error/ApiError');
 
-
-router.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS,GET');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Content-Length");
-  next();
-});
-
-router.get('/get', async function (req, res) {
+router.get('/get', authenticateToken, async function (req, res, next) {
   //call db for user preferences and token
   const url = 'https://api.spotify.com/v1/recommendations';
-  const token = await getAccessToken(req.query.spotifyId);
-  const preferencesArr = await getPreferences(req.query.spotifyId);
+  const token = await getAccessToken(req.user.spotifyId);
+  const currentPreference = await getCurrentPreference(req.user.spotifyId);
   let spotifyRequest = url + `?market=US&`;
   let preferenceObj;
-
+  
   // Make sure token and preferences actually exist before proceeding
   if (!token || token === undefined) {
     console.log("Unable to find user's token!");
-    return res.status(401).json({
-      success: false,
-      message: 'Could not find user token'
-    });
-  } else if (!preferencesArr || preferencesArr.length == 0) {
-    console.log("Unable to find user preferences!");
-    return res.status(401).json({
-      success: false,
-      message: 'Could not find user preferences'
+    return next(ApiError.internal('Could not find info'));
+  }
+  if (!currentPreference) {
+    console.log('spotifyId', req.user.spotifyId)
+    // Take the first preference object if there is no preference set
+    const preferencesArr = await getPreferences(req.user.spotifyId);
+
+    if (!preferencesArr || preferencesArr.length == 0) {
+      console.log("Unable to find user preferences!");
+      return next(ApiError.internal('Could not find info'));
+    } else {
+      preferenceObj = preferencesArr[0];
+    }
+  } else {
+    preferenceObj = await getPreference(currentPreference).then((preference) => {
+      return preference
+    }).catch((error) => {
+      console.error(error);
+      return next(ApiError.internal('Something went wrong'));
     });
   }
 
-  // Take the first preference object for now. Will need to change this!
-  preferenceObj = preferencesArr[0];
   const seedGenres = `seed_genres=${preferenceObj.seed_genres}&`;
   const targetEnergy = `target_energy=${preferenceObj.target_energy}&`;
   const targetPopularity = `target_popularity=${preferenceObj.target_popularity}&`;
@@ -51,11 +54,10 @@ router.get('/get', async function (req, res) {
 
   try {
     songArray = await getRecommendations(token, spotifyRequest, req)
-  } catch (e) {
-    throw (e)
+    return res.json(songArray);
+  } catch {
+    return next(ApiError.internal('Something went wrong....'))
   }
-
-  res.send(songArray);
 })
 
 async function getRecommendations(token, spotifyRequest, req) {
@@ -72,7 +74,7 @@ async function getRecommendations(token, spotifyRequest, req) {
   }).catch(async (error) => {
     if (error.response.status == 401) { // expired access token
       console.log('expired access token');
-      token = await updateAccessToken(req.query.spotifyId);
+      token = await updateAccessToken(req.user.spotifyId);
       // try getting recommendations again
       return await axios.get(spotifyRequest, {
         headers: {
@@ -84,9 +86,8 @@ async function getRecommendations(token, spotifyRequest, req) {
         return res.data;
       })
     } else {
-      console.log(error.response.status);
-      console.log(error.response.headers);
-      console.log(error.response.data);
+      console.error(error.response.data)
+      return error
     }
   })
 

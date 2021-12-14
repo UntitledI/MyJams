@@ -1,44 +1,63 @@
-const createError = require('http-errors');
+require('dotenv').config();
 const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const passport = require('./passport/spotify');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
-const uri = process.env.MONGODB_URL;
 
-const indexRouter = require('./routes/index');
+const oauthRouter = require('./routes/oauth');
+const authRouter = require('./routes/auth')
+const playlistsRouter = require('./routes/playlists');
+const preferenceRouter = require('./routes/preferences');
+const recommendationRouter = require('./routes/recommendation');
+const apiErrorHandler = require('./error/api-error-handler');
+const ApiError = require('./error/ApiError');
 
-mongoose.connect(uri, {
+const port = 3030;
+
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  //useFindAndModify: false,
-  //useCreateIndex: true
 }).then(() => {
   console.log('mongodb connection')
 }).catch(e => console.log(e));
 
 const app = express();
 
-app.use(cors());
+// middlewares
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
+app.use(passport.initialize());
 
-console.log()
+/* GET home page. */
+app.get('/', function (req, res) {
+  console.log(req.user);
+  return res.send('Server is up and running!');
+});
 
-app.use('/', indexRouter);
+// route middlewares
+app.use('/oauth', oauthRouter);
+app.use('/auth', authRouter);
+app.use('/playlists', playlistsRouter);
+app.use('/recommendation', recommendationRouter);
+app.use('/preference', preferenceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  next(ApiError.notFound('Page not found'));
 });
 
+// error handler
+app.use(apiErrorHandler);
 
-
+/*
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
@@ -47,7 +66,13 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send(err);
 });
+*/
+
+app.listen(process.env.port || port, () => {
+  if (process.env.port) console.log(`home page listening at http://localhost:${process.env.port}`)
+  else console.log(`home page listening at http://localhost:${port}`)
+})
 
 module.exports = app;
