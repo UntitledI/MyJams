@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$auth.loggedIn">
+  <div>
     <Navbar />
     <div>
       <div id="recommendations-page-container">
@@ -48,14 +48,14 @@
 </template>
 
 <script>
+import url from 'url'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
-
 export default {
   components: {
     Navbar
   },
-  middleware: 'auth',
+  middleware: ['auth-user'],
   props: {
     tracks: {
       type: Array,
@@ -70,7 +70,6 @@ export default {
   },
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
-    console.log($config.apiURL + '/recommendation/get')
     if (token) {
       const data = await axios.get($config.apiURL + '/recommendation/get', {
         headers: {
@@ -83,7 +82,6 @@ export default {
           redirect('/')
         }
       })
-
       return { local_tracks: data, local_index: 0 }
     }
   },
@@ -93,9 +91,12 @@ export default {
       local_index: this.index
     }
   },
-  created () {
-    if (process.client && this.$router.query) {
-      this.$router.replace({ query: null })
+  mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
     }
   },
   methods: {
@@ -108,7 +109,6 @@ export default {
       if (x < -120) {
         this.dislike()
       }
-      console.log(x)
     },
     like () {
       if (this.local_index < this.local_tracks.length - 1) {
@@ -126,16 +126,6 @@ export default {
 
 <style>
 @import '../assets/css/scrollbar.css';
-
-::-moz-selection {
-    background-color: transparent;
-    color: #000;
-}
-
-::selection {
-    background-color: transparent;
-    color: #000;
-}
 * {
   padding: 0px;
   margin: 0px;

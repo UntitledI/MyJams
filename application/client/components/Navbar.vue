@@ -51,7 +51,7 @@ export default {
   data () {
     return { local_image: this.image }
   },
-  mounted () {
+  created () {
     const user = this.$auth.user
     if (user) {
       this.local_image = user.image
@@ -73,7 +73,9 @@ export default {
       element.setAttribute('class', 'dropdown-menu-visible')
     },
     handleLogout () {
-      this.$auth.logout()
+      this.$auth.logout().then(() => {
+        localStorage.clear()
+      })
     }
   }
 }
@@ -151,6 +153,9 @@ nav {
 #nav-container ul {
   list-style: none;
 }
+#nav-container nav {
+  width: 48px;
+}
 #logo {
   font-weight: bold;
   color: white;
@@ -192,6 +197,11 @@ nav {
   align-items: center;
   width: 33%;
   white-space: nowrap;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 @media only screen and (max-width: 650px) {
     nav {

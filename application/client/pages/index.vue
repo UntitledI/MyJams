@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import url from 'url'
+
 export default {
   computed: {
     getLoginUrl () {
@@ -20,16 +22,17 @@ export default {
     }
   },
   mounted () {
-    let code = null
-    const url = window.location.search
-    if (url.length > 0) {
-      code = url.replace('?loginCode=', '')
-    }
-    if (code) {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    const loginCode = urlObj.searchParams.get('loginCode')
+    if (loginCode) {
       this.$auth.loginWith('local', {
         data: {
-          loginCode: code
+          loginCode
         }
+      }).catch(() => {
+        urlObj.search = ''
+        window.history.pushState({}, document.title, url.format(urlObj))
       })
     }
   }
