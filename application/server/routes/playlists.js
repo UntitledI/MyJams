@@ -12,39 +12,45 @@ function millisToMinutesAndSeconds(millis) {
         const seconds = ((millis % 60000) / 1000).toFixed(0)
         return (
             seconds == 60 ?
-            (minutes+1) + ":00" :
-            minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+                (minutes + 1) + ":00" :
+                minutes + ":" + (seconds < 10 ? "0" : "") + seconds
         )
     } catch {
         return undefined
     }
 }
 
-router.get('/get', authenticateToken, async function (req, res, next) {
+router.get('/', authenticateToken, async function (req, res, next) {
     const spotifyId = req.user.spotifyId
     let token = await getAccessToken(spotifyId).catch(() => {
         return next(ApiError.internal('Something went wrong...'))
     })
+    let response;
+    try {
+        response = await axios.get(`https://api.spotify.com/v1/users/${spotifyId}/playlists`, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
+    } catch (error) {
 
-    const response = await axios.get(`https://api.spotify.com/v1/users/${spotifyId}/playlists`, {
-        headers: { Authorization: `Bearer ${token}` }
-    }).catch(async (error) => {
         if (error.response.status === 401) { // expired token, refresh and try getting playlists again
             token = await updateAccessToken(spotifyId)
-            return await axios.get(`https://api.spotify.com/v1/users/${spotifyId}/playlists`, {
-                headers: { Authorization: `Bearer ${token}` }
-            }).catch(() => {
+            try {
+                return await axios.get(`https://api.spotify.com/v1/users/${spotifyId}/playlists`, {
+                    headers: {Authorization: `Bearer ${token}`}
+                })
+            } catch (e) {
                 return next(ApiError.internal('Something went wrong!'))
-            })
+            }
         } else {
             return next(ApiError.internal('Something went wrong'))
         }
-    })
-    
+    }
+
+
     const items = response.data.items
     const playlists = []
 
-    // format data to send to frontend
+// format data to send to frontend
     items.forEach((item) => {
         const images = item.images ? item.images[0] : undefined
         const image = images ? images.url : undefined
@@ -57,13 +63,13 @@ router.get('/get', authenticateToken, async function (req, res, next) {
         playlists.push(playlist)
     })
 
-    res.json({ playlists })
+    res.json({playlists})
 })
 
-router.get('/songs', authenticateToken, async function (req, res ,next) {
+router.get('/songs', authenticateToken, async function (req, res, next) {
     const playlistId = req.query.playlistId
     const spotifyId = req.user.spotifyId
-    
+
     // Ensure request is good
     if (!playlistId) {
         console.log('No playlist id found!')
@@ -77,12 +83,12 @@ router.get('/songs', authenticateToken, async function (req, res ,next) {
 
     // Use access token to get playlist songs
     const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {Authorization: `Bearer ${token}`}
     }).catch(async (error) => {
         if (error.response.status === 401) { // expired token, refresh and try getting songs again
             token = await updateAccessToken(spotifyId)
             return await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {Authorization: `Bearer ${token}`}
             }).catch((err) => {
                 console.error(err.response)
                 return next(ApiError.internal('Something went wrong!'))
@@ -92,16 +98,16 @@ router.get('/songs', authenticateToken, async function (req, res ,next) {
         }
     })
 
-    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric'}
+    const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'}
     const items = response.data.tracks.items
     const promises = []     // array of promises to be resolved all at once
-    
+
     // format data
     items.forEach((item) => {
         // fetch track album image from spotify api
         const href = item.track.album.href
         promises.push(axios.get(href, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {Authorization: `Bearer ${token}`}
         }).then((response) => {
             const images = response.data.images
             const image = images ? images[0].url : undefined
@@ -131,8 +137,8 @@ router.get('/songs', authenticateToken, async function (req, res ,next) {
         console.error(err)
         return next(ApiError.internal('Something went wrong !'))
     })
-    
-    res.json({ songs })
+
+    res.json({songs})
 })
 
 module.exports = router
