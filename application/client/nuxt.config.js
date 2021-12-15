@@ -24,7 +24,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/vue-awesome-swiper',
-    '~plugins/vue-js-modal.js'
+    '~/plugins/vue-js-modal.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -44,7 +44,8 @@ export default {
   modules: [
     '@nuxtjs/dotenv',
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    'cookie-universal-nuxt'
   ],
   server: {
     host: '0.0.0.0'

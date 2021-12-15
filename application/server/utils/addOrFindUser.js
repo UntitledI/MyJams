@@ -1,4 +1,3 @@
-
 const User = require('../models/user');
 
 module.exports = async function addOrFindUser(spotifyId, email, name, followers, image, loginCode, spotifyAccessToken, spotifyRefreshToken, spotifyExpiresIn) {
@@ -44,7 +43,6 @@ module.exports = async function addOrFindUser(spotifyId, email, name, followers,
         }
         return user;
     }).catch((error) => {
-        console.log('Error occured!');
-        // console.error(error);
+        console.error(error);
     })
 }

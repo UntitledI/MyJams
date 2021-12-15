@@ -2,6 +2,7 @@
   <div v-if="$auth.loggedIn">
     <Navbar />
     <div id="profile-page-container">
+      <Spinner v-if="local_fetching" />
       <main id="profile-container">
         <header id="profile-top">
           <div id="profile-info">
@@ -42,7 +43,7 @@
         <div id="playlist-container">
           <ul v-if="local_playlists.length > 0" id="playlist-list">
             <li v-for="playlist in local_playlists" :key="playlist.id">
-              <div class="playlist" @click="showPlaylist(playlist.name, playlist.description, playlist.image)">
+              <div class="playlist" @click="showPlaylist(playlist.name, playlist.description, playlist.image, playlist.id)">
                 <div class="playlist-image-container">
                   <img :src="playlist.image">
                 </div>
@@ -57,13 +58,17 @@
 </template>
 
 <script>
+import url from 'url'
+import axios from 'axios'
 import Navbar from '../components/Navbar'
 import Playlist from '../components/Playlist'
+import Spinner from '../components/Spinner'
 
 export default {
   Navbar,
   Playlist,
-  middleware: 'auth',
+  Spinner,
+  middleware: ['auth-user'],
   props: {
     playlists: {
       type: Array,
@@ -76,49 +81,105 @@ export default {
       default () {
         return {}
       }
+    },
+    fetching: {
+      type: Boolean,
+      default () {
+        return false
+      }
+    }
+  },
+  async asyncData ({ $config, $auth, redirect }) {
+    const token = $auth.getToken('local')
+    if (token) {
+      const data = await axios.get($config.apiURL + '/playlists/', {
+        headers: {
+          authorization: token
+        }
+      }).then((res) => {
+        return res.data.playlists
+      }).catch((err) => {
+        if (err.status === 401) {
+          redirect('/')
+        }
+      })
+      return { local_playlists: data }
     }
   },
   data () {
     return {
       local_playlists: this.playlists,
-      local_user: this.user
+      local_user: this.user,
+      local_fetching: this.fetching
     }
   },
   created () {
-    if (process.client && this.$router.query) {
-      this.$router.replace({ query: null })
-    }
-  },
-  mounted () {
     const user = this.$auth.user
-
-    // make a call to backend api to populate playlists
-    this.local_playlists = [
-      /*
-      {
-        name: 'Sample Playlist 1',
-        description: 'Sample description 1',
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        id: '1'
-      }
-      */
-    ]
     if (user) {
       this.local_user = {
         name: user ? user.name : '',
         image: user ? user.image : '',
-        description: 'Hello there! Here is some description about me!',
         numPlaylists: this.local_playlists.length,
         numFollowers: user ? user.followers : 0
       }
     }
   },
+  mounted () {
+    const urlString = window.location.href
+    const urlObj = new URL(urlString)
+    if (urlObj.search) {
+      urlObj.search = ''
+      window.history.pushState({}, document.title, url.format(urlObj))
+    }
+  },
   methods: {
-    showPlaylist (_title, _desc, _image) {
-      this.$modal.show(
-        Playlist,
-        { title: _title, desc: _desc, image: _image },
-        { width: '1500px', height: '800px', draggable: true })
+    isExpiredCache (cacheAsString) {
+      const cache = JSON.parse(cacheAsString)
+      const prevDate = new Date(cache.date)
+      const currentDate = new Date()
+      return (currentDate.getTime() - prevDate.getTime()) > cache.expirationTime
+    },
+    async showPlaylist (_title, _desc, _image, id) {
+      const endpoint = `${this.$config.apiURL}/playlists/songs`
+      if (!this.local_fetching) {
+        let cache = localStorage.getItem(endpoint + id)
+        let songs
+        this.local_fetching = true
+        if (!cache || this.isExpiredCache(cache)) {
+          const token = this.$auth.getToken('local')
+          if (token) {
+            axios.default.withCredentials = true
+            await axios.get(endpoint, {
+              params: {
+                playlistId: id
+              },
+              headers: {
+                authorization: token
+              }
+            }).then((res) => {
+              if (res.data) {
+                songs = res.data.songs
+                cache = {
+                  data: songs,
+                  date: new Date(),
+                  expirationTime: 3600 * 1000 // 3,600,000 milliseconds = 1 hour
+                }
+                localStorage.setItem(endpoint + id, JSON.stringify(cache))
+              }
+            }).catch(() => {
+              console.log('error occured')
+            })
+          }
+        } else {
+          cache = JSON.parse(cache)
+          songs = cache.data
+        }
+        this.local_fetching = false
+        this.$modal.show(
+          Playlist,
+          { title: _title, desc: _desc, image: _image, songs },
+          { width: '1500px', height: '800px', draggable: true })
+      }
     }
   }
 }
@@ -173,6 +234,7 @@ export default {
 }
 
 #profile-page-container{
+  position: relative;
   display: flex;
   justify-content: center;
   min-height: 100vh;

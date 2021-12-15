@@ -27,6 +27,7 @@ const strategy = new SpotifyStrategy(spotifyConfig, (accessToken, refreshToken, 
         return done(e, null)
     })
 });
+
 passport.use(strategy);
 
 passport.serializeUser(function (user, done) {

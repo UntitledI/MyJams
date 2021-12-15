@@ -36,7 +36,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(track, index) in local_tracks" :key="index">
+          <tr v-for="(track, index) in local_songs" :key="index">
             <td class="track-number">
               {{ index + 1 }}
             </td>
@@ -84,11 +84,7 @@ export default {
       type: String,
       default: ''
     },
-    playlistId: {
-      type: String,
-      default: ''
-    },
-    tracks: {
+    songs: {
       type: Array,
       default () {
         return []
@@ -97,83 +93,8 @@ export default {
   },
   data () {
     return {
-      local_tracks: this.tracks
+      local_songs: this.songs
     }
-  },
-  created () {
-    // Make a call to backend api to get actual songs from the playlist
-    this.local_tracks = [
-      {
-        name: 'My favorite song 1',
-        artists: [
-          'artist 1',
-          'artist 2'
-        ],
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        album: 'My favorite album',
-        date: '11/3/2021',
-        duration: '3:09',
-        id: '1'
-      },
-      {
-        name: 'My favorite song 2',
-        artists: [
-          'artist 1'
-        ],
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        album: 'My favorite album',
-        date: '11/3/2021',
-        duration: '6:09',
-        id: '2'
-      },
-      {
-        name: 'My favorite song 3',
-        artists: [
-          'artist 1',
-          'artist 2',
-          'artist 3'
-        ],
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        album: 'My favorite album',
-        date: '11/3/2021',
-        duration: '5:09',
-        id: '3'
-      },
-      {
-        name: 'My favorite song 4',
-        artists: [
-          'artist 1',
-          'artist 2'
-        ],
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        album: 'My favorite album',
-        date: '11/3/2021',
-        duration: '4:09',
-        id: '4'
-      },
-      {
-        name: 'My favorite song 5',
-        artists: [
-          'artist 1'
-        ],
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        album: 'My favorite album',
-        date: '11/3/2021',
-        duration: '2:09',
-        id: '5'
-      },
-      {
-        name: 'My favorite song 6',
-        artists: [
-          'artist 1'
-        ],
-        image: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-        album: 'My favorite album',
-        date: '11/3/2021',
-        duration: '1:09',
-        id: '6'
-      }
-    ]
   }
 }
 </script>

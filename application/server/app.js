@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const oauthRouter = require('./routes/oauth');
 const authRouter = require('./routes/auth')
+const playlistsRouter = require('./routes/playlists');
 const preferenceRouter = require('./routes/preferences');
 const recommendationRouter = require('./routes/recommendation');
 const apiErrorHandler = require('./error/api-error-handler');
@@ -44,6 +45,7 @@ app.get('/', function (req, res) {
 // route middlewares
 app.use('/oauth', oauthRouter);
 app.use('/auth', authRouter);
+app.use('/playlists', playlistsRouter);
 app.use('/recommendation', recommendationRouter);
 app.use('/preference', preferenceRouter);
 
