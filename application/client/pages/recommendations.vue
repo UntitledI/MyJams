@@ -131,22 +131,36 @@ export default {
     like () {
       if (this.local_index === 9) {
         this.local_likedTracks.push(this.local_tracks[this.local_index + 1])
+        this.getNewRecommendations();
         // send data to back end
         document.getElementById('after-swipe-container').style.display = 'block'
       } else if (this.local_index < this.local_tracks.length) {
-        this.local_likedTracks.push(this.local_tracks[this.local_index])
+        this.local_likedTracks.push(this.local_tracks[this.local_index].id)
         this.local_index++
       }
     },
     dislike () {
       if (this.local_index === 9) {
         this.local_dislikedTracks.push(this.local_tracks[this.local_index + 1])
+        this.getNewRecommendations();
         // send data to back end
         document.getElementById('after-swipe-container').style.display = 'block'
       } else if (this.local_index < this.local_tracks.length) {
-        this.local_dislikedTracks.push(this.local_tracks[this.local_index])
+        this.local_dislikedTracks.push(this.local_tracks[this.local_index].id)
         this.local_index++
       }
+    },
+    async getNewRecommendations (){
+        const data = await axios.get($$config.apiURL + '/recommendation/newGet',{
+          likes: this.local_likedTracks,
+          dislikes: this.local_dislikedTracks
+        }).then((res) => {
+          console.log("getNewRecommendations res");
+          console.log(res);
+        }).catch((err) => {
+          console.log("getNewRecommendations error");
+          console.log(err)
+        });
     }
   }
 }
