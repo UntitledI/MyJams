@@ -86,48 +86,12 @@ router.post('/new', authenticateToken, async function(req,res){
 });
 
 async function averagePreference(array,token,req){  
-  //let preferenceTerms = ['popularity', 'acousticness','energy'];
   let sumArray = {
                   target_popularity:0,
                   target_energy:0,
                   target_acousticness:0
                 };
-  /*
-  let trackInfo = await axios.get(`https://api.spotify.com/v1/audio-features/${array[0]}`,{
-    headers:{
-      Authorization: `Bearer ${token}`,
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  }).then((res) => {
-    sumArray.target_popularity = res.popularity;
-    sumArray.target_energy = res.energy;
-    sumArray.target_acousticness = res.acousticness;
-  }).catch(async (error) =>{
-    if (error.response.status == 401){
-      console.log('expired access token');
-      token = await updateAccessToken(req.user.spotifyId);
-      trackInfo = await axios.get(`https://api.spotify.com/v1/audio-features/${array[0]}`,{
-        headers:{
-          Authorization: `Bearer ${token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      sumArray.target_popularity = trackInfo.popularity;
-      sumArray.target_energy = trackInfo.energy;
-      sumArray.target_acousticness = trackInfo.acousticness;
-    }
-  });
-  */
   for( let x = 1; x < array.length; x++){
-    /*trackInfo = await axios.get(`https://api.spotify.com/v1/audio-features/${array[x]}`,{
-    headers:{
-      Authorization: `Bearer ${token}`,
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  });*/
     trackInfo = await getTrackPreferences(token,array[x],req);
     console.log(trackInfo);
     sumArray.target_popularity += trackInfo.target_popularity;
