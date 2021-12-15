@@ -92,7 +92,7 @@ export default {
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
     if (token) {
-      const data = await axios.get($config.apiURL + '/playlists/get', {
+      const data = await axios.get($config.apiURL + '/playlists/', {
         headers: {
           authorization: token
         }
