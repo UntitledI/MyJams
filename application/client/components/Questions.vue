@@ -202,8 +202,8 @@ export default {
       axios.post(this.$config.apiURL + '/preference/add', {
         seed_genres: this.responses[0].response.toLowerCase(),
         preference_title: this.responses[1].response,
-        target_energy: this.responses[2].response,
-        target_popularity: this.responses[3].response,
+        target_energy: this.responses[3].response,
+        target_popularity: this.responses[2].response,
         target_acousticness: this.responses[4].response
       }, {
         headers: {
