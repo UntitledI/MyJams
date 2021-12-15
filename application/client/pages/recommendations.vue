@@ -130,8 +130,10 @@ export default {
     },
     like () {
       if (this.local_index === 9) {
-        this.local_likedTracks.push(this.local_tracks[this.local_index + 1])
-        this.getNewRecommendations();
+        this.local_likedTracks.push(this.local_tracks[this.local_index].id)
+        console.log('I am inside the likes recommendation.vue')
+        console.log(this.local_likedTracks)
+        this.getNewRecommendations()
         // send data to back end
         document.getElementById('after-swipe-container').style.display = 'block'
       } else if (this.local_index < this.local_tracks.length) {
@@ -141,8 +143,10 @@ export default {
     },
     dislike () {
       if (this.local_index === 9) {
-        this.local_dislikedTracks.push(this.local_tracks[this.local_index + 1])
-        this.getNewRecommendations();
+        this.local_dislikedTracks.push(this.local_tracks[this.local_index].id)
+        console.log('I am inside the dislikes recommendation.vue')
+        console.log(this.local_dislikedTracks)
+        this.getNewRecommendations()
         // send data to back end
         document.getElementById('after-swipe-container').style.display = 'block'
       } else if (this.local_index < this.local_tracks.length) {
@@ -150,17 +154,26 @@ export default {
         this.local_index++
       }
     },
-    async getNewRecommendations (){
-        const data = await axios.get($$config.apiURL + '/recommendation/newGet',{
+    async getNewRecommendations () {
+      console.log('hi. ')
+      const token = this.$auth.getToken('local')
+      if (token) {
+        console.log('I am inside getnewRecommendation function')
+        await axios.post(this.$config.apiURL + '/recommendation/new', {
           likes: this.local_likedTracks,
           dislikes: this.local_dislikedTracks
+        }, {
+          headers: {
+            authorization: token
+          }
         }).then((res) => {
-          console.log("getNewRecommendations res");
-          console.log(res);
+          console.log('getNewRecommendations res')
+          console.log(res)
         }).catch((err) => {
-          console.log("getNewRecommendations error");
+          console.log('getNewRecommendations error')
           console.log(err)
-        });
+        })
+      }
     }
   }
 }
