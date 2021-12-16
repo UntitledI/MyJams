@@ -103,7 +103,6 @@ async function weightCalculation(jsonObj,preferenceId){
   //console.log("new pop: " + newPopularity);
   //console.log("new energy: " + newEnergy);
   //console.log("new acousticness: " + newAcousticness);
-  
   return {
           target_popularity: newPopularity,
           target_energy: newEnergy,
@@ -114,9 +113,10 @@ async function averagePreference(array,token,req){
   let sumArray = {
                   target_popularity:0,
                   target_energy:0,
-                  target_acousticness:0          };
+                  target_acousticness:0
+                };
   for( let x = 1; x < array.length; x++){
-    trackInfo = await getTrackPreferences(token,array[x],req);
+    let trackInfo = await getTrackPreferences(token,array[x],req);
     //console.log(trackInfo);
     sumArray.target_popularity += trackInfo.target_popularity;
     sumArray.target_energy += trackInfo.target_energy;
@@ -137,7 +137,7 @@ async function getTrackPreferences(token,trackId,req){
     target_energy:0,
     target_acousticness:0
   };
-  let trackAudioFeatures = await axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`,{
+  await axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`,{
     headers:{
       Authorization: `Bearer ${token}`,
       'Accept': 'application/json',
@@ -148,10 +148,11 @@ async function getTrackPreferences(token,trackId,req){
     track.target_energy = res.data.energy;
     track.target_acousticness = res.data.acousticness;
   }).catch( async(err) => {
+    
     if(err.response.status == 401){
       console.log('expired access token');
       token = await updateAccessToken(req.user.spotifyId);
-      trackAudioFeatures = await axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`,{
+      await axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`,{
         headers:{
           Authorization: `Bearer ${token}`,
           'Accept': 'application/json',
@@ -160,7 +161,7 @@ async function getTrackPreferences(token,trackId,req){
       })
     }
   });
-  let trackInfo = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}?market=US`,{
+  await axios.get(`https://api.spotify.com/v1/tracks/${trackId}?market=US`,{
     headers:{
       Authorization: `Bearer ${token}`,
       'Accept': 'application/json',
