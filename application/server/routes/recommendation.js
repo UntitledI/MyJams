@@ -17,14 +17,13 @@ router.get('/get', authenticateToken, async function (req, res, next) {
   const currentPreference = await getCurrentPreference(req.user.spotifyId);
   let spotifyRequest = url + `?market=US&`;
   let preferenceObj;
-  
+  console.log('The user\'s token is:', token, 'and the user\'s current preference is', currentPreference, '\n');
   // Make sure token and preferences actually exist before proceeding
   if (!token || token === undefined) {
     console.log("Unable to find user's token!");
     return next(ApiError.internal('Could not find info'));
   }
   if (!currentPreference) {
-    console.log('spotifyId', req.user.spotifyId)
     // Take the first preference object if there is no preference set
     const preferencesArr = await getPreferences(req.user.spotifyId);
 
@@ -42,14 +41,14 @@ router.get('/get', authenticateToken, async function (req, res, next) {
       return next(ApiError.internal('Something went wrong'));
     });
   }
-
+  console.log('preferenceObj:', preferenceObj, '\n');
   const seedGenres = `seed_genres=${preferenceObj.seed_genres}&`;
   const targetEnergy = `target_energy=${preferenceObj.target_energy}&`;
   const targetPopularity = `target_popularity=${preferenceObj.target_popularity}&`;
   const targetAcousticness = `target_acousticness=${preferenceObj.target_acousticness}&`;
   const limit = 'limit=10';
   spotifyRequest += seedGenres + targetEnergy + targetPopularity + targetAcousticness + limit;
-
+  console.log('spotifyRequest =', spotifyRequest, '\n');
   // Make request
   let songArray;
 
@@ -181,6 +180,7 @@ async function getRecommendations(token, spotifyRequest, req) {
 
 async function convertToArray(data, token) {
   let songArr = [];
+  console.log('Inside convertToArray()\n');
   for (let i = 0; i < data.tracks.length; i++) {
     const trackURL = data.tracks[i].external_urls.spotify;
     const songName = data.tracks[i].name;
@@ -221,7 +221,7 @@ async function convertToArray(data, token) {
       "genre": genres
     });
   }
-
+  console.log('songArr', songArr, '\n');
   return songArr;
 }
 
