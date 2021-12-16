@@ -41,6 +41,11 @@ export default {
 </script>
 
 <style>
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
 #home-page-container{
   display: flex;
   justify-content: center;
