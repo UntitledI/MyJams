@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$auth.loggedIn">
     <Navbar />
     <div>
       <div id="recommendations-page-container">
@@ -44,18 +44,23 @@
         </div>
       </div>
     </div>
+    <div id= "after-swipe-container" class = "after-swipe-container">
+        <RecommendationPopUp />
+    </div>
   </div>
 </template>
 
 <script>
-import url from 'url'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
+import RecommendationPopUp from '../components/RecommendationPopUp'
+
 export default {
   components: {
-    Navbar
+    Navbar,
+    RecommendationPopUp
   },
-  middleware: ['auth-user'],
+  middleware: 'auth',
   props: {
     tracks: {
       type: Array,
@@ -66,10 +71,23 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    dislikedTracks: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    likedTracks: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   async asyncData ({ $config, $auth, redirect }) {
     const token = $auth.getToken('local')
+    // console.log($config.apiURL + '/recommendation/get')
     if (token) {
       const data = await axios.get($config.apiURL + '/recommendation/get', {
         headers: {
@@ -88,15 +106,14 @@ export default {
   data () {
     return {
       local_tracks: this.tracks,
-      local_index: this.index
+      local_index: this.index,
+      local_dislikedTracks: this.dislikedTracks,
+      local_likedTracks: this.likedTracks
     }
   },
-  mounted () {
-    const urlString = window.location.href
-    const urlObj = new URL(urlString)
-    if (urlObj.search) {
-      urlObj.search = ''
-      window.history.pushState({}, document.title, url.format(urlObj))
+  created () {
+    if (process.client && this.$router.query) {
+      this.$router.replace({ query: null })
     }
   },
   methods: {
@@ -109,15 +126,53 @@ export default {
       if (x < -120) {
         this.dislike()
       }
+      // console.log(x)
     },
     like () {
-      if (this.local_index < this.local_tracks.length - 1) {
+      if (this.local_index === 9) {
+        this.local_likedTracks.push(this.local_tracks[this.local_index].id)
+        console.log('I am inside the likes recommendation.vue')
+        console.log(this.local_likedTracks)
+        this.getNewRecommendations()
+        // send data to back end
+        document.getElementById('after-swipe-container').style.display = 'block'
+      } else if (this.local_index < this.local_tracks.length) {
+        this.local_likedTracks.push(this.local_tracks[this.local_index].id)
         this.local_index++
       }
     },
     dislike () {
-      if (this.local_index < this.local_tracks.length - 1) {
+      if (this.local_index === 9) {
+        this.local_dislikedTracks.push(this.local_tracks[this.local_index].id)
+        console.log('I am inside the dislikes recommendation.vue')
+        console.log(this.local_dislikedTracks)
+        this.getNewRecommendations()
+        // send data to back end
+        document.getElementById('after-swipe-container').style.display = 'block'
+      } else if (this.local_index < this.local_tracks.length) {
+        this.local_dislikedTracks.push(this.local_tracks[this.local_index].id)
         this.local_index++
+      }
+    },
+    async getNewRecommendations () {
+      console.log('hi. ')
+      const token = this.$auth.getToken('local')
+      if (token) {
+        console.log('I am inside getnewRecommendation function')
+        await axios.post(this.$config.apiURL + '/recommendation/new', {
+          likes: this.local_likedTracks,
+          dislikes: this.local_dislikedTracks
+        }, {
+          headers: {
+            authorization: token
+          }
+        }).then((res) => {
+          console.log('getNewRecommendations res')
+          console.log(res)
+        }).catch((err) => {
+          console.log('getNewRecommendations error')
+          console.log(err)
+        })
       }
     }
   }
@@ -126,6 +181,14 @@ export default {
 
 <style>
 @import '../assets/css/scrollbar.css';
+::-moz-selection {
+    background-color: transparent;
+    color: #000;
+}
+::selection {
+    background-color: transparent;
+    color: #000;
+}
 * {
   padding: 0px;
   margin: 0px;
@@ -213,9 +276,20 @@ export default {
 .genre {
   padding-top: 20px;
 }
-.swiper-container{
+.swiper-container {
   margin: 0;
   width: 100%;
   overflow: visible;
+}
+.after-swipe-container {
+  display: flex;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: transparent;
+  display: none;
 }
 </style>

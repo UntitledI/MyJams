@@ -8,6 +8,7 @@ const getPreference = require('../utils/getPreference');
 const getPreferences = require('../utils/getPreferences');
 const getCurrentPreference = require('../utils/getCurrentPreference');
 const ApiError = require('../error/ApiError');
+const updatePreference = require('../utils/updatePreference');
 
 router.get('/get', authenticateToken, async function (req, res, next) {
   //call db for user preferences and token
@@ -59,6 +60,90 @@ router.get('/get', authenticateToken, async function (req, res, next) {
   }
 })
 
+router.post('/new', authenticateToken, async function(req,res){
+  console.log("hi i am in getnew " + req.user.spotifyId);
+  const token = await getAccessToken(req.user.spotifyId);
+  let currentPreferenceId = await getCurrentPreference(req.user.spotifyId);
+  //console.log(req); 
+  let likes = req.body.likes;
+  let dislikes = req.body.dislikes;
+  console.log(likes);
+  let sumLikes = await averagePreference(likes,token,req);
+  let sumDislikes = await averagePreference(dislikes,token,req);
+  let result;
+  console.log(sumLikes);
+  if (sumLikes){
+    console.log("I am in the likes")
+    result = await updatePreference(req.user.spotifyId,currentPreferenceId,sumLikes);
+  }else if (sumDislikes){
+    console.log("I am in the dislikes")
+    result = await updatePreference(req.user.spotifyId,currentPreferenceId,sumDislikes);
+  }
+  //result = await updatePreference(req.user.spotifyId,currentPreferenceId,sumLikes);
+  res.send(result);
+  
+});
+
+async function averagePreference(array,token,req){  
+  let sumArray = {
+                  target_popularity:0,
+                  target_energy:0,
+                  target_acousticness:0
+                };
+  for( let x = 1; x < array.length; x++){
+    trackInfo = await getTrackPreferences(token,array[x],req);
+    console.log(trackInfo);
+    sumArray.target_popularity += trackInfo.target_popularity;
+    sumArray.target_energy += trackInfo.target_energy;
+    sumArray.target_acousticness += trackInfo.target_acousticness;
+  }
+  //console.log(sumArray);
+  sumArray.target_popularity = Math.round(sumArray.target_popularity/array.length);
+  sumArray.target_energy /= array.length;
+  sumArray.target_acousticness /= array.length;
+
+  return sumArray;
+}
+async function getTrackPreferences(token,trackId,req){
+  let track = {
+    target_popularity:0,
+    target_energy:0,
+    target_acousticness:0
+  };
+  let trackAudioFeatures = await axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`,{
+    headers:{
+      Authorization: `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then((res) => {
+    track.target_energy = res.data.energy;
+    track.target_acousticness = res.data.acousticness;
+  }).catch( async(err) => {
+    if(err.response.status == 401){
+      console.log('expired access token');
+      token = await updateAccessToken(req.user.spotifyId);
+      trackAudioFeatures = await axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`,{
+        headers:{
+          Authorization: `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+  });
+  let trackInfo = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}?market=US`,{
+    headers:{
+      Authorization: `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then((res) => {
+    console.log(res.data);
+    track.target_popularity = res.data.popularity;
+  })
+  return track;
+}
 async function getRecommendations(token, spotifyRequest, req) {
   let data;
 
