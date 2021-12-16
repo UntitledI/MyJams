@@ -29,6 +29,10 @@ const PreferenceSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    plays: {
+        type: Number,
+        required: true
     }
 });
 

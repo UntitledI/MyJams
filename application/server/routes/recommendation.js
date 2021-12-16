@@ -64,35 +64,60 @@ router.post('/new', authenticateToken, async function(req,res){
   console.log("hi i am in getnew " + req.user.spotifyId);
   const token = await getAccessToken(req.user.spotifyId);
   let currentPreferenceId = await getCurrentPreference(req.user.spotifyId);
+
   //console.log(req); 
   let likes = req.body.likes;
   let dislikes = req.body.dislikes;
-  console.log(likes);
   let sumLikes = await averagePreference(likes,token,req);
   let sumDislikes = await averagePreference(dislikes,token,req);
+ 
   let result;
+  /*
+  console.log("likes:")
   console.log(sumLikes);
-  if (sumLikes){
-    console.log("I am in the likes")
-    result = await updatePreference(req.user.spotifyId,currentPreferenceId,sumLikes);
-  }else if (sumDislikes){
-    console.log("I am in the dislikes")
-    result = await updatePreference(req.user.spotifyId,currentPreferenceId,sumDislikes);
+  console.log("dislikes:")
+  console.log(sumDislikes);
+  */
+
+  //if any preference is NaN, go to the other array. default is like array. 
+  if (!(isNaN(sumLikes.target_energy))){
+    let likesCalculated = await weightCalculation(sumLikes,currentPreferenceId);
+    //console.log("I am in the likes")
+    result = await updatePreference(req.user.spotifyId,currentPreferenceId,likesCalculated);
+  }else if (!(isNaN(sumDislikes.target_energy))){
+    //console.log("I am in the dislikes")
+    let dislikesCalculated = await weightCalculation(sumDislikes,currentPreferenceId)
+    result = await updatePreference(req.user.spotifyId,currentPreferenceId,dislikesCalculated);
   }
   //result = await updatePreference(req.user.spotifyId,currentPreferenceId,sumLikes);
   res.send(result);
   
 });
-
+async function weightCalculation(jsonObj,preferenceId){
+  let currentPreference = await getPreference(preferenceId);
+  let weightFactor = 30;
+  let weight = currentPreference.plays < weightFactor ? 1 : 1/(currentPreference.plays/weightFactor);
+  let newPopularity = parseInt(currentPreference.target_popularity) + (parseInt(jsonObj.target_popularity) - parseInt(currentPreference.target_popularity)) * weight;
+  let newEnergy = parseFloat(currentPreference.target_energy) + (parseFloat(jsonObj.target_energy) - parseFloat(currentPreference.target_energy)) * weight;
+  let newAcousticness = parseFloat(currentPreference.target_acousticness) + (parseFloat(jsonObj.target_acousticness) - parseFloat(currentPreference.target_acousticness)) * weight;
+  //console.log("new pop: " + newPopularity);
+  //console.log("new energy: " + newEnergy);
+  //console.log("new acousticness: " + newAcousticness);
+  
+  return {
+          target_popularity: newPopularity,
+          target_energy: newEnergy,
+          target_acousticness: newAcousticness
+        };
+}
 async function averagePreference(array,token,req){  
   let sumArray = {
                   target_popularity:0,
                   target_energy:0,
-                  target_acousticness:0
-                };
+                  target_acousticness:0          };
   for( let x = 1; x < array.length; x++){
     trackInfo = await getTrackPreferences(token,array[x],req);
-    console.log(trackInfo);
+    //console.log(trackInfo);
     sumArray.target_popularity += trackInfo.target_popularity;
     sumArray.target_energy += trackInfo.target_energy;
     sumArray.target_acousticness += trackInfo.target_acousticness;
@@ -101,9 +126,11 @@ async function averagePreference(array,token,req){
   sumArray.target_popularity = Math.round(sumArray.target_popularity/array.length);
   sumArray.target_energy /= array.length;
   sumArray.target_acousticness /= array.length;
-
+  //console.log("after averaging");
+  //console.log(sumArray);
   return sumArray;
 }
+
 async function getTrackPreferences(token,trackId,req){
   let track = {
     target_popularity:0,
@@ -117,6 +144,7 @@ async function getTrackPreferences(token,trackId,req){
       'Content-Type': 'application/json'
     }
   }).then((res) => {
+    //console.log("energy: "+res.data.energy+"acousticness: " + res.data.acousticness);
     track.target_energy = res.data.energy;
     track.target_acousticness = res.data.acousticness;
   }).catch( async(err) => {
@@ -139,7 +167,7 @@ async function getTrackPreferences(token,trackId,req){
       'Content-Type': 'application/json'
     }
   }).then((res) => {
-    console.log(res.data);
+    //console.log(res.data);
     track.target_popularity = res.data.popularity;
   })
   return track;

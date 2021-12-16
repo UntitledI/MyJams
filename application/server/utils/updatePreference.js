@@ -6,11 +6,14 @@ module.exports = async function updatePreference(spotifyId, preferenceId, newPre
         // If preference exists then set user's current preference
         if (preference) {
             console.log("I found it.")
-            Preference.updateOne({_id:preferenceId},{
+            Preference.updateOne({_id:preferenceId},
+                {
                 target_energy : newPreferences.target_energy,
                 target_popularity : newPreferences.target_popularity,
-                target_acousticness : newPreferences.target_acousticness}).exec().then((res) => {
-                    console.log("aaa"+res);
+                target_acousticness : newPreferences.target_acousticness,
+                $inc:{plays: 10}
+                }).exec().then((res) => {
+                    console.log("updatePreference"+res);
                 });
              
             preference.target_energy = newPreferences.target_energy;
