@@ -198,7 +198,7 @@ export default {
     handleSubmit () {
       const token = this.$auth.getToken('local')
       this.finished = true
-      console.log(this.responses);
+      console.log(this.responses)
       axios.post(this.$config.apiURL + '/preference/add', {
         seed_genres: this.responses[0].response.toLowerCase(),
         preference_title: this.responses[1].response,
