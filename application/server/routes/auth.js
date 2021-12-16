@@ -36,11 +36,11 @@ router.post('/login', async function (req, res, next) {
     res.json({ token: accessToken });
 });
 
-router.get('/user', authenticateToken, function (req, res, next) {
+router.get('/user', authenticateToken, function (req, res) {
     res.json({ user: req.user });
 });
 
-router.delete('/logout', authenticateToken, function (req, res, next) {
+router.delete('/logout', authenticateToken, function (req, res) {
     res.status(200).json({ success: true });
 });
 
