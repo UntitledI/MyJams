@@ -2,16 +2,29 @@ name: 'Tests'
 
 on:
   pull_request:
-
 jobs:
-  run-nuxt-lint:
+  run-nuxt-lint-and-build:
     name: Run Nuxt Linter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
         working-directory: ./application/client
-        run: npm install
+        run: npm ci
       - name: Run Linter
         working-directory: ./application/client
+        run: npm run lint
+      - name: Run Build
+        working-directory: ./application/client
+        run: npm run build
+  run-express-lint:
+    name: Run Nuxt Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        working-directory: ./application/server
+        run: npm ci
+      - name: Run Linter
+        working-directory: ./application/server
         run: npm run lint

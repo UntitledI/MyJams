@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./app.js",
+    "lint": "eslint .",
     "start": "node ./app.js"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "passport-spotify": "^2.0.0"
   },
   "devDependencies": {
+    "eslint": "^8.4.1",
     "nodemon": "^2.0.15"
   }
 }
