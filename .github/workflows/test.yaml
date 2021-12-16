@@ -18,7 +18,7 @@ jobs:
         working-directory: ./application/client
         run: npm run build
   run-express-lint:
-    name: Run Nuxt Linter
+    name: Run Express Linter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
