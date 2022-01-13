@@ -1,7 +1,4 @@
 # MyJams
-
----
-
 SFSU FA2021 Software Engineering Project
 
 ## What is MyJams?
