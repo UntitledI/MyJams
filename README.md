@@ -1,7 +1,10 @@
-MyJams
+#MyJams
+
+---
 
 SFSU FA2021 Software Engineering Project
-What is MyJams?
+
+##What is MyJams?
 
 MyJams is a web application designed to recommend music to Spotify users
 
